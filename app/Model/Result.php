@@ -7,8 +7,7 @@ class Result extends AppModel{
 	public $validate = array(
         'metric_id' => array(
             'metric_id' => array(
-				'rule' => 'notBlank',
-				'required' => 'create'
+				'rule' => 'notBlank'
 			),
 			'numeric' => array(
 				'rule' => 'numeric',
@@ -17,8 +16,7 @@ class Result extends AppModel{
 		),
 		'transformation_id' => array(
             'transformation_id' => array(
-				'rule' => 'notBlank',
-				'required' => 'create'
+				'rule' => 'notBlank'
 			),
 			'numeric' => array(
 				'rule' => 'numeric',
@@ -28,15 +26,13 @@ class Result extends AppModel{
 		'before' => array(
             'before' => array(
 				'rule' => array('decimal', 2),
-				'allowEmpty' => true,
-				'required' => true,
+				'allowEmpty' => true
 			)
 		),
 		'after' => array(
             'after' => array(
 				'rule' => array('decimal', 2),
-				'allowEmpty' => true,
-				'required' => true,
+				'allowEmpty' => true
 			)
 		)
     );

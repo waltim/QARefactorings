@@ -1,5 +1,5 @@
 <?php
-App::uses('AppModel', 'Model');
+App::uses('AppModel', 'Model','AuthComponent', 'Controller/Component');
 
 class User extends AppModel {
 
@@ -9,51 +9,43 @@ class User extends AppModel {
         'username' => array(
             'alphaNumeric' => array(
                 'rule' => 'alphaNumeric',
-                'required' => true,
                 'allowEmpty' => false,
                 'message' => 'Use apenas letras e números.'
             ),
             'unique' => array(
                 'rule' => 'isUnique',
-                'required' => 'create',
                 'message' => 'Este nome de usuário já está sendo usado.'
             )
         ),
         'password' => array(
             'password' => array(
                 'rule' => array('minLength', '8'),
-                'required' => true,
                 'allowEmpty' => false,
                 'message' => 'Mínimo de 8 caracteres permitido.'
             ),
             'required' => array(
                 'rule' => 'notBlank',
-                'required' => 'create'
             )
         ),
         'email' => array(
             'email' => array(
                 'rule' => 'email',
-                'required' => true,
                 'allowEmpty' => false,
                 'on' => 'create',
                 'message' => 'Deve ser informado um e-mail válido.'
             ),
             'unique' => array(
                 'rule' => 'isUnique',
-                'required' => 'create',
                 'message' => 'Este e-mail já está sendo usado.'
             ),
             'required' => array(
                 'rule' => 'notBlank',
-                'required' => 'create',
                 'message' => 'Este campo deve ser preenchido.'
             ),
 		),
-		'idUserType' => array(
+		'user_type_id' => array(
             'user_type_id' => array(
 				'rule' => 'notBlank',
-				'required' => 'create'
 			),
 			'numeric' => array(
 				'rule' => 'numeric',
@@ -64,11 +56,17 @@ class User extends AppModel {
 			'numeric' => array(
 				'rule' => 'numeric',
 				'message' => 'Números apenas.',
-				'allowEmpty' => true,
-				'required' => true,
+				'allowEmpty' => true
 			)
 		)
-    );
+	);
+
+	public function beforeSave($options = array()) {
+		if (isset($this->data[$this->alias]['password'])) {
+			$this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
+		}
+		return true;
+	}
 
     public $belongsTo = array(
         'UserType' => array(

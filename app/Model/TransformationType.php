@@ -9,18 +9,15 @@ class TransformationType extends AppModel {
         'description' => array(
             'alphaNumeric' => array(
                 'rule' => 'alphaNumeric',
-                'required' => true,
                 'message' => 'Use apenas letras e números.'
             ),
             'unique' => array(
                 'rule' => 'isUnique',
-                'required' => 'create',
                 'message' => 'Este tipo já foi cadastrado.'
             ),
             'required' => array(
                 'rule' => 'notBlank',
-                'required' => 'create',
-                'allowEmpty' => false,
+				'allowEmpty' => false,
                 'message' => 'Este campo deve ser preenchido.'
             )
         )

@@ -7,19 +7,16 @@ class Answer extends AppModel {
         'user_id' => array(
             'user_id' => array(
 				'rule' => 'notBlank',
-				'required' => 'create'
 			)
 		),
 		'question_id' => array(
             'question_id' => array(
 				'rule' => 'notBlank',
-				'required' => 'create'
 			)
 		),
 		'choice' => array(
             'choice' => array(
 				'rule' => 'notBlank',
-				'required' => 'create'
 			)
 		)
     );

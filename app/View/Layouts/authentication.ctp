@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 2 | Log in</title>
+  <title>Admin | Log in</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -22,8 +22,9 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="../../index2.html"><b>Admin</b>LTE</a>
-  </div>
+    <a href="<?=$this->webroot?>">Admin<b>QAR</b></a>
+	</div>
+	    <?php echo $this->Session->flash(); ?>
   <!-- /.login-logo -->
 			<?php echo $this->Flash->render(); ?>
 			<?php echo $this->fetch('content'); ?>

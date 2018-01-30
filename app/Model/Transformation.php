@@ -7,7 +7,6 @@ class Transformation extends AppModel {
         'user_id' => array(
             'user_id' => array(
 				'rule' => 'notBlank',
-				'required' => 'create'
 			),
 			'numeric' => array(
 				'rule' => 'numeric',
@@ -16,8 +15,7 @@ class Transformation extends AppModel {
 		),
 		'transformation_type_id' => array(
             'transformation_type_id' => array(
-				'rule' => 'notBlank',
-				'required' => 'create'
+				'rule' => 'notBlank'
 			),
 			'numeric' => array(
 				'rule' => 'numeric',
@@ -26,8 +24,7 @@ class Transformation extends AppModel {
 		),
 		'language_id' => array(
             'language_id' => array(
-				'rule' => 'notBlank',
-				'required' => 'create'
+				'rule' => 'notBlank'
 			),
 			'numeric' => array(
 				'rule' => 'numeric',
@@ -36,14 +33,12 @@ class Transformation extends AppModel {
 		),
 		'code_before' => array(
             'code_before' => array(
-				'rule' => 'notBlank',
-				'required' => true
+				'rule' => 'notBlank'
 			)
 		),
 		'code_after' => array(
             'code_after' => array(
-				'rule' => 'notBlank',
-				'required' => true
+				'rule' => 'notBlank'
 			)
 		)
     );

@@ -9,7 +9,6 @@ class Metric extends AppModel {
         'metric_type_id' => array(
             'metric_type_id' => array(
 				'rule' => 'notBlank',
-				'required' => 'create'
 			),
 			'numeric' => array(
 				'rule' => 'numeric',
@@ -20,7 +19,6 @@ class Metric extends AppModel {
 			'alphaNumeric' => array(
 				'rule' => 'alphaNumeric',
 				'allowEmpty' => false,
-                'required' => true,
                 'message' => 'Letras e números somente.'
             ),
             'between' => array(
@@ -32,7 +30,6 @@ class Metric extends AppModel {
             'description' => array(
 				'rule' => 'notBlank',
 				'allowEmpty' => false,
-				'required' => true,
 			)
 		)
     );

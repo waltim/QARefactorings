@@ -10,7 +10,6 @@ class Question extends AppModel{
         'result_id' => array(
             'result_id' => array(
 				'rule' => 'notBlank',
-				'required' => 'create'
 			),
 			'numeric' => array(
 				'rule' => 'numeric',
@@ -20,7 +19,6 @@ class Question extends AppModel{
 		'question_type_id' => array(
             'question_type_id' => array(
 				'rule' => 'notBlank',
-				'required' => 'create'
 			),
 			'numeric' => array(
 				'rule' => 'numeric',
@@ -30,7 +28,6 @@ class Question extends AppModel{
 		'description' => array(
             'description' => array(
 				'rule' => 'notBlank',
-				'required' => true
 			)
 		)
     );

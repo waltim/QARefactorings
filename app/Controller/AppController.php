@@ -33,9 +33,22 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller
 {
+
+	public $components = array(
+		'Session',
+		'Auth' => array(
+			'loginRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
+			'logoutRedirect' => array('controller' => 'Users', 'action' => 'login'),
+			'Form' => array(
+                'fields' => array('username' => 'email')
+            )
+		)
+	);
+
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
 		$this->layout = 'admin';
+		$this->Auth->allow('login', 'register', 'forgot');
 	}
 }

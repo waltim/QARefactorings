@@ -1,9 +1,9 @@
 <div class="login-box-body">
     <p class="login-box-msg">informe seu e-mail para receber uma nova senha.</p>
 
-    <form action="../../index2.html" method="post">
+    <form action="<?= $this->webroot ?>Users/forgot" method="post">
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email">
+        <input name="data[User][email]" required type="email" class="form-control" placeholder="Email">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 			</div>
 

@@ -1,20 +1,20 @@
 <div class="login-box-body">
     <p class="login-box-msg">Faça login para iniciar sua sessão</p>
 
-    <form action="../../index2.html" method="post">
+    <form action="<?= $this->webroot ?>Users/login" method="post">
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email">
+        <input name="data[User][email]" required type="email" class="form-control" placeholder="Email">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Password">
+        <input name="data[User][password]" required type="password" class="form-control" placeholder="Senha">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
         <div class="col-xs-8">
           <div class="checkbox icheck">
             <label>
-              <input type="checkbox">Lembrar dados
+              <!-- <input type="checkbox">Lembrar dados -->
             </label>
           </div>
         </div>

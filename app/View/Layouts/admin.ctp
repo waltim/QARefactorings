@@ -27,6 +27,7 @@
 <div class="wrapper">
 
 <?php echo $this->element('admin/main-header'); ?>
+<?php echo $this->Session->flash(); ?>
 <?php echo $this->element('admin/main-sidebar'); ?>
 <?php echo $this->element('admin/content-wrapper'); ?>
 <?php echo $this->element('admin/main-footer'); ?>
