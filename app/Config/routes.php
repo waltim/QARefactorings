@@ -19,7 +19,7 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
- 
+
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',
  * its action called 'display', and we pass a param to select the view file
@@ -30,6 +30,8 @@
  * ...and connect the rest of 'Pages' controller's URLs.
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
+
+	Router::connect('/Users', array('controller' => 'Users', 'action' => 'login'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on
