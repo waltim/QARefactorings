@@ -59,6 +59,14 @@ class User extends AppModel {
 				'rule' => 'numeric',
 				'message' => 'Números apenas.'
 			)
+		),
+		'trophy' => array(
+			'numeric' => array(
+				'rule' => 'numeric',
+				'message' => 'Números apenas.',
+				'allowEmpty' => true,
+				'required' => true,
+			)
 		)
     );
 

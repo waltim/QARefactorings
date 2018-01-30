@@ -6,7 +6,7 @@ class Metric extends AppModel {
 	public $displayField = 'acronym';
 
 	public $validate = array(
-        'idMetricType' => array(
+        'metric_type_id' => array(
             'metric_type_id' => array(
 				'rule' => 'notBlank',
 				'required' => 'create'

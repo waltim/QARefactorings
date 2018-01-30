@@ -5,7 +5,7 @@ App::uses('AppModel', 'Model');
 class Result extends AppModel{
 
 	public $validate = array(
-        'idMetric' => array(
+        'metric_id' => array(
             'metric_id' => array(
 				'rule' => 'notBlank',
 				'required' => 'create'
@@ -15,7 +15,7 @@ class Result extends AppModel{
 				'message' => 'Números apenas.'
 			)
 		),
-		'idTransformation' => array(
+		'transformation_id' => array(
             'transformation_id' => array(
 				'rule' => 'notBlank',
 				'required' => 'create'
@@ -28,14 +28,14 @@ class Result extends AppModel{
 		'before' => array(
             'before' => array(
 				'rule' => array('decimal', 2),
-				'allowEmpty' => false,
+				'allowEmpty' => true,
 				'required' => true,
 			)
 		),
 		'after' => array(
             'after' => array(
 				'rule' => array('decimal', 2),
-				'allowEmpty' => false,
+				'allowEmpty' => true,
 				'required' => true,
 			)
 		)

@@ -7,7 +7,7 @@ class Question extends AppModel{
 	public $displayField = 'description';
 
 	public $validate = array(
-        'idResult' => array(
+        'result_id' => array(
             'result_id' => array(
 				'rule' => 'notBlank',
 				'required' => 'create'
@@ -17,7 +17,7 @@ class Question extends AppModel{
 				'message' => 'Números apenas.'
 			)
 		),
-		'idQuestionType' => array(
+		'question_type_id' => array(
             'question_type_id' => array(
 				'rule' => 'notBlank',
 				'required' => 'create'
