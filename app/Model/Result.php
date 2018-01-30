@@ -4,6 +4,43 @@ App::uses('AppModel', 'Model');
 
 class Result extends AppModel{
 
+	public $validate = array(
+        'idMetric' => array(
+            'metric_id' => array(
+				'rule' => 'notBlank',
+				'required' => 'create'
+			),
+			'numeric' => array(
+				'rule' => 'numeric',
+				'message' => 'Números apenas.'
+			)
+		),
+		'idTransformation' => array(
+            'transformation_id' => array(
+				'rule' => 'notBlank',
+				'required' => 'create'
+			),
+			'numeric' => array(
+				'rule' => 'numeric',
+				'message' => 'Números apenas.'
+			)
+		),
+		'before' => array(
+            'before' => array(
+				'rule' => array('decimal', 2),
+				'allowEmpty' => false,
+				'required' => true,
+			)
+		),
+		'after' => array(
+            'after' => array(
+				'rule' => array('decimal', 2),
+				'allowEmpty' => false,
+				'required' => true,
+			)
+		)
+    );
+
     public $belongsTo = array(
         'Transformation' => array(
             'className' => 'Transformation',

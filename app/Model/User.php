@@ -2,7 +2,7 @@
 App::uses('AppModel', 'Model');
 
 class User extends AppModel {
-    
+
     public $displayField = 'username';
 
     public $validate = array(
@@ -49,7 +49,17 @@ class User extends AppModel {
                 'required' => 'create',
                 'message' => 'Este campo deve ser preenchido.'
             ),
-        )
+		),
+		'idUserType' => array(
+            'user_type_id' => array(
+				'rule' => 'notBlank',
+				'required' => 'create'
+			),
+			'numeric' => array(
+				'rule' => 'numeric',
+				'message' => 'Números apenas.'
+			)
+		)
     );
 
     public $belongsTo = array(
