@@ -40,15 +40,14 @@ class AppController extends Controller
 			'loginRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
 			'logoutRedirect' => array('controller' => 'Users', 'action' => 'login'),
 			'Form' => array(
-                'fields' => array('username' => 'email')
-            )
+				'fields' => array('username' => 'email')
+			)
 		)
 	);
 
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
-		$this->layout = 'admin';
 		$this->Auth->allow('login', 'register', 'forgot');
 	}
 }
