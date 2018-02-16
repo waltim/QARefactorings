@@ -5,11 +5,21 @@ class UsersController extends AppController
 {
 	function beforeFilter()
 	{
+		parent::beforeFilter();
 		if ($this->action == 'login' || $this->action == 'register'
 			|| $this->action == 'forgot') {
-			parent::beforeFilter();
 			$this->layout = 'authentication';
+		}else{
+			$this->layout = 'admin';
 		}
+	}
+
+	public function index(){
+
+	}
+
+	public function status(){
+
 	}
 
 	public function login()

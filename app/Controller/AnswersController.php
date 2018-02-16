@@ -1,7 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 
-class TransformationsController extends AppController
+class AnswersController extends AppController
 {
 	function beforeFilter()
 	{
