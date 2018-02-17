@@ -82,7 +82,7 @@ class Transformation extends AppModel {
     public $hasAndBelongsToMany = array(
         'Metric' => array(
                 'className' => 'Metric',
-                'joinTable' => 'Result',
+                'joinTable' => 'results',
                 'foreignKey' => 'transformation_id',
                 'associationForeignKey' => 'metric_id',
                 'unique' => false,
@@ -92,8 +92,7 @@ class Transformation extends AppModel {
                 'order' => '',
                 'limit' => '',
                 'offset' => '',
-                'finderQuery' => '',
-                'with' => ''
+                'finderQuery' => ''
             )
     );
 
