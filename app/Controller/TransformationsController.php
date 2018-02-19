@@ -168,17 +168,17 @@ class TransformationsController extends AppController
 	public function accm($string = null)
 	{
 		$complex = 1;
-		$complex = $complex + substr_count($string, 'if');
-		$complex = $complex + substr_count($string, 'while');
-		$complex = $complex + substr_count($string, 'for');
-		$complex = $complex + substr_count($string, 'forEach');
-		$complex = $complex + substr_count($string, 'catch');
-		$complex = $complex + substr_count($string, '?');
-		$complex = $complex + substr_count($string, '&&');
-		$complex = $complex + substr_count($string, 'case');
-		$complex = $complex + substr_count($string, '||');
+		$complex = $complex + substr_count($string, 'if (');
+		$complex = $complex + substr_count($string, 'while (');
+		$complex = $complex + substr_count($string, 'for (');
+		$complex = $complex + substr_count($string, 'forEach(');
+		$complex = $complex + substr_count($string, 'catch (');
+		$complex = $complex + substr_count($string, ' ? ');
+		$complex = $complex + substr_count($string, ' && ');
+		$complex = $complex + substr_count($string, 'case ');
+		$complex = $complex + substr_count($string, ' || ');
 		$complex = $complex + substr_count($string, 'continue;');
-		$complex = $complex + substr_count($string, 'goto');
+		$complex = $complex + substr_count($string, 'goto ');
 		return $complex;
 	}
 
