@@ -117,18 +117,18 @@
             <li><a href="<?= $this->webroot ?>Transformations/add"><i class="fa fa-edit"></i> Adicionar transformação</a></li>
           </ul>
 				</li>
-				<li>
+				<!-- <li>
           <a href="<?= $this->webroot ?>Users/index">
             <i class="fa fa-user-circle-o"></i> <span>Usuários</span>
           </a>
-				</li>
-				<li>
+				</li> -->
+				<!-- <li>
           <a href="<?= $this->webroot ?>Answers/index">
             <i class="fa fa-check-circle-o"></i> <span>Respostas</span>
           </a>
-				</li>
+				</li> -->
 				<li>
-          <a href="<?= $this->webroot ?>Questions/index">
+          <a href="<?= $this->webroot ?>Questions/responder">
             <i class="fa fa-question-circle-o"></i> <span>Questões</span>
           </a>
         </li>

@@ -1,29 +1,15 @@
-<section class="content-header">
-      <h1>
-        Text Editors
-        <small>Advanced form element</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Forms</a></li>
-        <li class="active">Editors</li>
-      </ol>
-    </section>
-
-    <!-- Main content -->
-    <section class="content">
-      <div class="row">
+		<div class="row">
 				<div class="col-md-12">
 				<!-- general form elements -->
 				<div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">Quick Example</h3>
+              <h3 class="box-title">Atualizar transformações</h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
             <form role="form" method="post" action="/transformations/edit">
               <div class="box-body">
-									<?php if(!empty($metrics)){ ?>
+									<?php if (!empty($metrics)) { ?>
 									<div class="col-md-4">
 										<div class="form-group">
 											<label>Linguagem</label>
@@ -62,7 +48,8 @@
 											)); ?>
 											</div>
 										</div>
-										<?php }else{ ?>
+										<?php
+								} else { ?>
 											<div class="col-md-6">
 										<div class="form-group">
 											<label>Linguagem</label>
@@ -87,7 +74,8 @@
 										)); ?>
 											</div>
 										</div>
-											<?php } ?>
+											<?php
+									} ?>
 								          <!-- /.box -->
 													<div class="col-md-6">
 														<div class="box">
@@ -99,7 +87,7 @@
 															<div class="box-body pad">
 																	<textarea class="textarea" name="data[Transformation][code_before]" placeholder="Cole o código aqui"
 																						style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-																						<?=$transformation['Transformation']['code_before'];?>
+																						<?= $transformation['Transformation']['code_before']; ?>
 																					</textarea>
 															</div>
 														</div>
@@ -114,22 +102,19 @@
 										<div class="box-body pad">
 												<textarea class="textarea" name="data[Transformation][code_after]" placeholder="Cole o código aqui"
 																	style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-																<?=$transformation['Transformation']['code_after'];?>
+																<?= $transformation['Transformation']['code_after']; ?>
 																</textarea>
 										</div>
 									</div>
 								</div>
-								<input type="hidden" value="<?=$transformation['Transformation']['id'];?>" name="data[Transformation][id]" />
+								<input type="hidden" value="<?= $transformation['Transformation']['id']; ?>" name="data[Transformation][id]" />
 							</div>
           <!-- /.box-body -->
 							<div class="box-footer">
 								<button type="submit" class="btn btn-primary">Cadastrar</button>
 							</div>
 						</form>
-          </div>
+          			</div>
 				</div>
         <!-- /.col-->
       </div>
-      <!-- ./row -->
-    </section>
-    <!-- /.content -->

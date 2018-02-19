@@ -54,13 +54,13 @@
 </head>
 <body class="sidebar-mini skin-red-light">
 <div class="wrapper">
-
 <?php echo $this->element('admin/main-header'); ?>
-<?php echo $this->Session->flash(); ?>
 <?php echo $this->element('admin/main-sidebar'); ?>
-<?php echo $this->Flash->render(); ?>
 <div class="content-wrapper">
+<section class="content">
+<?php echo $this->Session->flash(); ?>
 <?php echo $this->fetch('content'); ?>
+</section>
 </div>
 <?php echo $this->element('admin/main-footer'); ?>
 

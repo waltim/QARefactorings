@@ -3,6 +3,8 @@ App::uses('AppModel', 'Model');
 
 class Answer extends AppModel {
 
+	public $actsAs = array('Containable');
+
 	public $validate = array(
         'user_id' => array(
             'user_id' => array(

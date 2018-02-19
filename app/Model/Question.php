@@ -4,6 +4,8 @@ App::uses('AppModel', 'Model');
 
 class Question extends AppModel{
 
+	public $actsAs = array('Containable');
+
 	public $displayField = 'description';
 
 	public $validate = array(
@@ -23,11 +25,6 @@ class Question extends AppModel{
 			'numeric' => array(
 				'rule' => 'numeric',
 				'message' => 'Números apenas.'
-			)
-		),
-		'description' => array(
-            'description' => array(
-				'rule' => 'notBlank',
 			)
 		)
     );

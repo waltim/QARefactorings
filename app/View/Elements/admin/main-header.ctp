@@ -48,10 +48,10 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Perguntas</a>
+                  <a href="<?=$this->webroot?>questions/responder" class="btn btn-default btn-flat">Responder questões</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sair</a>
+                  <a href="<?=$this->webroot?>users/logout" class="btn btn-default btn-flat">Sair</a>
                 </div>
               </li>
             </ul>

@@ -1,6 +1,5 @@
 <?php
 App::uses('AppController', 'Controller');
-
 class TransformationsController extends AppController
 {
 	function beforeFilter()
@@ -11,6 +10,7 @@ class TransformationsController extends AppController
 		$this->loadModel('Metric');
 		$this->loadModel('Language');
 		$this->loadModel('Result');
+		$this->loadModel('Question');
 	}
 
 	public function index()
@@ -18,7 +18,6 @@ class TransformationsController extends AppController
 		$transformations = $this->Transformation->find('all', array(
 			'order' => array('Transformation.id DESC')
 		));
-
 		$this->set('transformations', $transformations);
 	}
 
@@ -47,13 +46,13 @@ class TransformationsController extends AppController
 						);
 						$this->Result->save($result);
 					}
-					$this->redirect(array('action' => 'calculaMetricasQuantitativas', $lastCreated['Transformation']['id']));
+					$this->redirect(array('action' => 'manipulaMetricas', $lastCreated['Transformation']['id']));
 				} else {
-					$this->Session->setFlash(__('Transformação cadastrada com sucesso.'));
+					$this->Session->setFlash(__('Transformação cadastrada com sucesso.'), 'Flash/success');
 					$this->redirect(array('action' => 'view', $lastCreated['Transformation']['id']));
 				}
 			} else {
-				$this->Session->setFlash(__('Houve um erro ao salvar, tente novamente.'));
+				$this->Session->setFlash(__('Houve um erro ao salvar, tente novamente.'), 'Flash/error');
 			}
 		}
 		$this->set('languages', $this->Language->find('list', array('fields' => 'Language.description')));
@@ -79,12 +78,11 @@ class TransformationsController extends AppController
 							);
 							$this->Result->save($result);
 						}
-						$this->Session->setFlash(__('Transformação atualizada com sucesso.'));
-						$this->redirect(array('action' => 'view', $id));
+						$this->redirect(array('action' => 'manipulaMetricas', $refactoring['Transformation']['id']));
 					}
 				}
-				$this->Session->setFlash(__('Transformação atualizada com sucesso.'));
-				$this->redirect(array('action' => 'view', $id));
+				$this->Session->setFlash(__('Transformação atualizada com sucesso.'), 'Flash/success');
+				$this->redirect(array('action' => 'view', $refactoring['Transformation']['id']));
 			}
 		}
 		$transformation = $this->Transformation->findById($id);
@@ -107,12 +105,12 @@ class TransformationsController extends AppController
 			'conditions' => array('Transformation.id' => $id)
 		));
 		if (empty($Selected)) {
-			$this->Session->setFlash(__('Transformação não encontrada.'));
+			$this->Session->setFlash(__('Transformação não encontrada.'), 'Flash/error');
 		} elseif ($Selected['Transformation']['user_id'] != $this->Auth->user('id')) {
-			$this->Session->setFlash(__('Você não tem permissão para isso.'));
+			$this->Session->setFlash(__('Você não tem permissão para isso.'), 'error');
 		} else {
 			$this->Transformation->delete($id);
-			$this->Session->setFlash(__('Deletada com sucesso!'));
+			$this->Session->setFlash(__('Deletada com sucesso!'), 'Flash/success');
 			$this->redirect(array('action' => 'index'));
 		}
 	}
@@ -120,7 +118,7 @@ class TransformationsController extends AppController
 	public function view($id = null)
 	{
 		if ($id == null) {
-			$this->Session->setFlash(__('Esta transformação não existe!'));
+			$this->Session->setFlash(__('Esta transformação não existe!'), 'Flash/error');
 			$this->redirect(array('action' => 'index'));
 		}
 		$show = $this->Transformation->find('first', array(
@@ -139,9 +137,6 @@ class TransformationsController extends AppController
 			)
 		));
 
-		// pr($quantitativas);
-		// exit();
-
 		$this->set('transformation', $show);
 		$this->set('quantitativas', $quantitativas);
 		$this->set('qualitativas', $qualitativas);
@@ -154,6 +149,7 @@ class TransformationsController extends AppController
 		$code = str_replace("x*x", "", $code);
 		$code = str_replace(";", ";#", $code);
 		$code = str_replace(";}", ";}#", $code);
+		$code = str_replace("#{#", "{#", $code);
 		$array = array_filter(explode("#", $code));
 		foreach ($array as $key => $linha) {
 			if (strlen($linha) == 6 || $linha == null) {
@@ -173,33 +169,30 @@ class TransformationsController extends AppController
 	{
 		$complex = 1;
 		$complex = $complex + substr_count($string, 'if');
-		$complex = $complex + substr_count($string, 'elseif');
-		$complex = $complex + substr_count($string, 'else');
 		$complex = $complex + substr_count($string, 'while');
 		$complex = $complex + substr_count($string, 'for');
-		$complex = $complex + substr_count($string, 'foreach');
+		$complex = $complex + substr_count($string, 'forEach');
 		$complex = $complex + substr_count($string, 'catch');
 		$complex = $complex + substr_count($string, '?');
 		$complex = $complex + substr_count($string, '&&');
-		$complex = $complex + substr_count($string, 'switch');
 		$complex = $complex + substr_count($string, 'case');
 		$complex = $complex + substr_count($string, '||');
+		$complex = $complex + substr_count($string, 'continue;');
+		$complex = $complex + substr_count($string, 'goto');
 		return $complex;
 	}
 
-	public function calculaMetricasQuantitativas($id = null)
+	public function manipulaMetricas($id = null)
 	{
 		$this->autoRender = false;
 		$quantitativas = $this->Transformation->Result->find('all', array(
 			'conditions' => array(
-				'Metric.metric_type_id' => 3,
 				'Transformation.id' => $id
 			)
 		));
 		foreach ($quantitativas as $metricas) {
-			$this->Result->id = $metricas['Result']['id'];
-			//pr($this->Result->id);exit();
 			if ($metricas['Metric']['acronym'] == 'LOC' || $metricas['Metric']['acronym'] == 'AMLOC') {
+				$this->Result->id = $metricas['Result']['id'];
 				$result = array(
 					'Result' => array(
 						'before' => (int)$this->locAndAmloc($metricas['Transformation']['code_before']),
@@ -208,6 +201,7 @@ class TransformationsController extends AppController
 				);
 				$this->Result->save($result);
 			} elseif ($metricas['Metric']['acronym'] == 'ACCM') {
+				$this->Result->id = $metricas['Result']['id'];
 				$result = array(
 					'Result' => array(
 						'before' => $this->accm($metricas['Transformation']['code_before']),
@@ -215,9 +209,19 @@ class TransformationsController extends AppController
 					)
 				);
 				$this->Result->save($result);
+			}elseif($metricas['Metric']['acronym'] == 'LIKERT'){
+				$this->Question->create();
+				$question = array(
+					'Question' => array(
+						'result_id' => $metricas['Result']['id'],
+						'question_type_id' => 1,
+						'description' => 'Você concorda que a transformação melhorou a legibilidade do código?'
+					)
+				);
+				$this->Question->save($question);
 			}
 		}
-		$this->Session->setFlash(__('Transformação cadastrada com sucesso.'));
+		$this->Session->setFlash(__('Transformação cadastrada com sucesso.'), 'Flash/success');
 		$this->redirect(array('action' => 'view', $metricas['Transformation']['id']));
 	}
 }
