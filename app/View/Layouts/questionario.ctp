@@ -14,7 +14,7 @@
 		'../bower_components/font-awesome/css/font-awesome.min.css',
 		'../bower_components/Ionicons/css/ionicons.min.css',
 		'../php-form/form.css',
-		'../syntaxhighlighter/styles/shCoreDefault.css',
+		'../highlight/styles/idea.css',
 		));
 		?>
     </head>
@@ -30,13 +30,13 @@
 </html>
 <?php echo $this->Html->script(array(
 	'../bower_components/jquery/dist/jquery.min.js',
-	'../syntaxhighlighter/scripts/XRegExp.js',
-	'../syntaxhighlighter/scripts/shCore.js',
-	'../syntaxhighlighter/scripts/shBrushJava.js',
+	'../highlight/highlight.pack.js',
 ));
 ?>
-<script type="text/javascript">
-	SyntaxHighlighter.config.bloggerMode = false;
-	SyntaxHighlighter.defaults['toolbar'] = false;
-  SyntaxHighlighter.all();
+<script>
+hljs.configure({useBR: true});
+$('div code').each(function(i, block) {
+  hljs.highlightBlock(block);
+});
 </script>
+

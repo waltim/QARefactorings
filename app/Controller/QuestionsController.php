@@ -1,6 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
-App::import('Controller', 'Transformations');
+// App::import('Controller', 'Transformations');
 class QuestionsController extends AppController
 {
 	function beforeFilter()
@@ -100,9 +100,6 @@ class QuestionsController extends AppController
 			$this->Session->setFlash(__('Você não possui questões para responder, volte mais tarde!'), 'Flash/error');
 			$this->redirect(array('controller' => 'pages', 'action' => 'home'));
 		}
-
-		$transformation = new TransformationsController();
-		$this->set('variable', $transformation);
 		$this->set('question', $question);
 	}
 }

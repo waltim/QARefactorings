@@ -43,8 +43,8 @@
 	<?php
 } ?>
 	<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view') { ?>
-		<?php echo $this->Html->css(array(
-		'../syntaxhighlighter/styles/shCoreDefault.css',
+	<?php echo $this->Html->css(array(
+		'../highlight/styles/idea.css',
 	));
 	?>
 	<?php
@@ -123,16 +123,15 @@
 	<?php
 } ?>
 	<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view') { ?>
-	<?php echo $this->Html->script(array(
-	'../syntaxhighlighter/scripts/XRegExp.js',
-	'../syntaxhighlighter/scripts/shCore.js',
-	'../syntaxhighlighter/scripts/shBrushJava.js',
+<?php echo $this->Html->script(array(
+	'../highlight/highlight.pack.js',
 ));
 ?>
-<script type="text/javascript">
-	SyntaxHighlighter.config.bloggerMode = false;
-	SyntaxHighlighter.defaults['toolbar'] = false;
-  SyntaxHighlighter.all();
+<script>
+hljs.configure({useBR: true});
+$('div code').each(function(i, block) {
+  hljs.highlightBlock(block);
+});
 </script>
 	<?php
 } ?>

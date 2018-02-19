@@ -1,6 +1,3 @@
-<?php
-$variable = new TransformationsController();
-?>
       <div class="row">
         <div class="col-md-12">
           <!-- The time line -->
@@ -45,51 +42,15 @@ $variable = new TransformationsController();
 								<div class="timeline-body">
 										<div class="col-md-12">
 										<h3>Código anterior</h3>
-										<?php
-									$i = 0;
-									$contador = count($variable->identCode($transformation['Transformation']['code_before']));
-									foreach ($variable->identCode($transformation['Transformation']['code_before']) as $linha) {
-										$final = substr($linha, -1);
-										if ($i == 0) {
-											echo "<pre class='brush: java;'>";
-										}
-										if($final == "{" || $final == "}"){
-											echo $linha;
-											echo "\n";
-										}else{
-											echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$linha;
-											echo "\n";
-										}
-										if ($i == ($contador - 1)) {
-											echo "</pre>";
-										}
-										$i++;
-									}
-									?>
+										<code id="codigo1" class="java">
+										<?php echo $transformation['Transformation']['code_before'];?>
+										</code>
 									</div>
 										<div class="col-md-12">
 										<h3>Código transformado</h3>
-											<?php
-										$i = 0;
-										$contador = count($variable->identCode($transformation['Transformation']['code_after']));
-										foreach ($variable->identCode($transformation['Transformation']['code_after']) as $linha) {
-											$final = substr($linha, -1);
-										if ($i == 0) {
-											echo "<pre class='brush: java;'>";
-										}
-										if($final == "{" || $final == "}"){
-											echo $linha;
-											echo "\n";
-										}else{
-											echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$linha;
-											echo "\n";
-										}
-										if ($i == ($contador - 1)) {
-											echo "</pre>";
-										}
-										$i++;
-										}
-										?>
+										<code id="codigo2" class="java">
+										<?php echo $transformation['Transformation']['code_after'];?>
+										</code>
 									</div>
 								</div>
 								<div class="timeline-footer">
@@ -137,8 +98,12 @@ $variable = new TransformationsController();
                 <div class="timeline-body">
 								<?php foreach($quantitativas as $key => $metrica){ ?>
 										<p><b><?= $metrica['Metric']['acronym'] ?>:</b> <?= $metrica['Metric']['description'] ?></p>
-										<b>Resultados</b> --> <b>Antes:</b> <?= $metrica['Result']['before'];?> | <b>Depois:</b> <?= $metrica['Result']['after']; ?>
-								 <?php } ?>
+										<?php if($metrica['Metric']['acronym'] == 'AMLOC'){ ?>
+										<b>Resultados</b> --> <b>Antes:</b> <?php if($metrica['Result']['before'] < 15){ echo 'Bom';}else{echo 'Ruim';} ?> | <b>Depois:</b> <?php if($metrica['Result']['after'] < 15){ echo 'Bom';}else{echo 'Ruim';} ?>
+										<?php }else{ ?>
+											<b>Resultados</b> --> <b>Antes:</b> <?= $metrica['Result']['before'];?> | <b>Depois:</b> <?= $metrica['Result']['after']; ?>
+											<?php } ?>
+										<?php } ?>
 								</div>
 								<div class="timeline-footer">
 									.

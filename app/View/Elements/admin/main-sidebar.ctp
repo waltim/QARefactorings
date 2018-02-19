@@ -128,7 +128,7 @@
           </a>
 				</li> -->
 				<li>
-          <a href="<?= $this->webroot ?>Questions/responder">
+          <a href="<?= $this->webroot ?>questions/responder">
             <i class="fa fa-question-circle-o"></i> <span>Questões</span>
           </a>
         </li>

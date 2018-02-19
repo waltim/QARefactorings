@@ -8,53 +8,17 @@
 							<?=$question['Question']['description'];?>
 						</h3>
 					</div>
-					<div class="form-group col-md-6">
+					<div class="form-group col-md-12">
 					<h4>Código anterior</h4>
-					<?php
-						$i = 0;
-						$contador = count($variable->identCode($question['Result']['Transformation']['code_before']));
-						foreach ($variable->identCode($question['Result']['Transformation']['code_before']) as $linha) {
-							$final = substr($linha, -1);
-							if ($i == 0) {
-								echo "<pre class='brush: java;'>";
-							}
-							if($final == "{" || $final == "}"){
-								echo $linha;
-								echo "\n";
-							}else{
-								echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$linha;
-								echo "\n";
-							}
-							if ($i == ($contador - 1)) {
-								echo "</pre>";
-							}
-							$i++;
-						}
-						?>
+					<code id="codigo1" class="java">
+						<?php echo $question['Result']['Transformation']['code_before'];?>
+					</code>
 					</div>
-					<div class="form-group col-md-6">
+					<div class="form-group col-md-12">
 					<h4>Código transformado</h4>
-					<?php
-						$i = 0;
-						$contador = count($variable->identCode($question['Result']['Transformation']['code_after']));
-						foreach ($variable->identCode($question['Result']['Transformation']['code_after']) as $linha) {
-							$final = substr($linha, -1);
-							if ($i == 0) {
-								echo "<pre class='brush: java;'>";
-							}
-							if($final == "{" || $final == "}"){
-								echo $linha;
-								echo "\n";
-							}else{
-								echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$linha;
-								echo "\n";
-							}
-							if ($i == ($contador - 1)) {
-								echo "</pre>";
-							}
-							$i++;
-						}
-						?>
+					<code id="codigo2" class="java">
+							<?php echo $question['Result']['Transformation']['code_after'];?>
+					</code>
 					</div>
 					<div class="form-group">
 						<label>Justificativa</label>
