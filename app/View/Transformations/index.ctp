@@ -23,31 +23,39 @@
               <table id="example2" class="table table-bordered table-hover">
                 <thead>
                 <tr>
-                  <th>Rendering engine</th>
-                  <th>Browser</th>
-                  <th>Platform(s)</th>
-                  <th>Engine version</th>
-                  <th>CSS grade</th>
+                  <th>Linguagem</th>
+                  <th>Tipo</th>
+                  <th>Transformação</th>
+                  <th>Ações</th>
                 </tr>
                 </thead>
                 <tbody>
+								<?php foreach($transformations as $transformation){ ?>
                 <tr>
-                  <td>Trident</td>
-                  <td>Internet
-                    Explorer 4.0
-                  </td>
-                  <td>Win 95+</td>
-                  <td> 4</td>
-                  <td>X</td>
-                </tr>
+                  <td><?=$transformation['Language']['description'];?></td>
+                  <td><?=$transformation['TransformationType']['description'];?></td>
+                  <td> <?=$transformation['Transformation']['code_after'];?></td>
+                  <td>
+									<a href="<?= $this->webroot ?>transformations/view/<?=$transformation['Transformation']['id']?>" title="Visualizar">
+										<i class="fa fa-television fa-lg"></i>
+									</a>
+									<a href="<?= $this->webroot ?>transformations/edit/<?=$transformation['Transformation']['id']?>" title="Editar">
+										<i class="fa fa-edit fa-lg"></i>
+									</a>
+									<a href="<?= $this->webroot ?>transformations/delete/<?=$transformation['Transformation']['id']?>"
+										 onclick="return confirm('Tem certeza?')" title="Deletar">
+										<i class="fa fa-eraser fa-lg"></i>
+									</a>
+									</td>
+								</tr>
+								<?php } ?>
                 </tbody>
                 <tfoot>
                 <tr>
-                  <th>Rendering engine</th>
-                  <th>Browser</th>
-                  <th>Platform(s)</th>
-                  <th>Engine version</th>
-                  <th>CSS grade</th>
+                  <th>Linguagem</th>
+                  <th>Tipo</th>
+                  <th>Transformação</th>
+                  <th>Ações</th>
                 </tr>
                 </tfoot>
               </table>

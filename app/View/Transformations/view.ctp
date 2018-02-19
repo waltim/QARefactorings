@@ -1,3 +1,6 @@
+<?php
+$variable = new TransformationsController();
+?>
 <section class="content-header">
       <h1>
         Timeline
@@ -21,45 +24,86 @@
             <!-- timeline time label -->
             <li class="time-label">
                   <span class="bg-red">
-                    10 Feb. 2014
+                    Dados da transformação
                   </span>
             </li>
             <!-- /.timeline-label -->
             <!-- timeline item -->
             <li>
-              <i class="fa fa-envelope bg-blue"></i>
+              <i class="fa fa-code bg-aqua"></i>
 
               <div class="timeline-item">
-                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+                <!-- <span class="time"><i class="fa fa-clock-o"></i> 12:05</span> -->
 
-                <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
+                <h3 class="timeline-header"><a><?= $transformation['Language']['description'] ?></a></h3>
 
                 <div class="timeline-body">
-                  Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                  weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                  jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                  quora plaxo ideeli hulu weebly balihoo...
+								 <p><b>Responsável:</b> <?= $transformation['User']['email'] ?></p>
+								 <p><b>Tipo de transformação:</b> <?= $transformation['TransformationType']['description'] ?></p>
+								 <p><b>Data cadastro:</b> <?= date('d/m/Y', strtotime($transformation['Transformation']['created'])); ?></p>
                 </div>
                 <div class="timeline-footer">
-                  <a class="btn btn-primary btn-xs">Read more</a>
-                  <a class="btn btn-danger btn-xs">Delete</a>
+                  <!-- <a class="btn btn-primary btn-xs">editar</a>
+									<a class="btn btn-danger btn-xs">deletar</a> -->
+									.
                 </div>
               </div>
             </li>
             <!-- END timeline item -->
             <!-- timeline item -->
             <li>
-              <i class="fa fa-user bg-aqua"></i>
+              <i class="fa fa-code bg-blue"></i>
 
               <div class="timeline-item">
-                <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
+                <!-- <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span> -->
 
-                <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request</h3>
+								<h3 class="timeline-header no-border"><a>Códigos</a></h3>
+								<div class="timeline-body">
+										<div class="col-md-12">
+										<h3>Código anterior</h3>
+										<?php
+									$i = 0;
+									$contador = count($variable->identCode($transformation['Transformation']['code_before']));
+									foreach ($variable->identCode($transformation['Transformation']['code_before']) as $linha) {
+										if ($i == 0) {
+											echo "<pre class='brush: java;'>";
+										}
+										echo $linha;
+										echo "\n";
+										if ($i == ($contador - 1)) {
+											echo "</pre>";
+										}
+										$i++;
+									}
+									?>
+									</div>
+										<div class="col-md-12">
+										<h3>Código transformado</h3>
+											<?php
+										$i = 0;
+										$contador = count($variable->identCode($transformation['Transformation']['code_after']));
+										foreach ($variable->identCode($transformation['Transformation']['code_after']) as $linha) {
+											if ($i == 0) {
+												echo "<pre class='brush: java;'>";
+											}
+											echo $linha;
+											echo "\n";
+											if ($i == ($contador - 1)) {
+												echo "</pre>";
+											}
+											$i++;
+										}
+										?>
+									</div>
+								</div>
+								<div class="timeline-footer">
+									.
+                </div>
               </div>
             </li>
             <!-- END timeline item -->
             <!-- timeline item -->
-            <li>
+            <!-- <li>
               <i class="fa fa-comments bg-yellow"></i>
 
               <div class="timeline-item">
@@ -76,17 +120,61 @@
                   <a class="btn btn-warning btn-flat btn-xs">View comment</a>
                 </div>
               </div>
-            </li>
+            </li> -->
             <!-- END timeline item -->
             <!-- timeline time label -->
             <li class="time-label">
                   <span class="bg-green">
-                    3 Jan. 2014
+                    Métricas Quantitativas
                   </span>
             </li>
             <!-- /.timeline-label -->
             <!-- timeline item -->
             <li>
+              <i class="fa fa-pie-chart bg-purple"></i>
+
+              <div class="timeline-item">
+                <!-- <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span> -->
+
+                <h3 class="timeline-header"><a>Detalhe e resultados</a></h3>
+
+                <div class="timeline-body">
+								<?php foreach($quantitativas as $key => $metrica){ ?>
+										<p><b><?= $metrica['Metric']['acronym'] ?>:</b> <?= $metrica['Metric']['description'] ?></p>
+										<b>Resultados</b> --> <b>Antes:</b> <?= $metrica['Result']['before'];?> | <b>Depois:</b> <?= $metrica['Result']['after']; ?>
+								 <?php } ?>
+								</div>
+								<div class="timeline-footer">
+									.
+                </div>
+              </div>
+						</li>
+						<li class="time-label">
+                  <span class="bg-yellow">
+                    Métricas Qualitativas
+                  </span>
+            </li>
+            <!-- /.timeline-label -->
+            <!-- timeline item -->
+            <li>
+              <i class="fa fa-pie-chart bg-purple"></i>
+
+              <div class="timeline-item">
+                <!-- <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span> -->
+
+                <h3 class="timeline-header"><a>Detalhe e respostas</a></h3>
+
+                <div class="timeline-body">
+								<?php foreach($qualitativas as $key => $metrica){ ?>
+										<p><b><?= $metrica['Metric']['acronym'] ?>:</b> <?= $metrica['Metric']['description'] ?></p>
+								 <?php } ?>
+								</div>
+								<div class="timeline-footer">
+									.
+                </div>
+              </div>
+						</li>
+						<!-- <li>
               <i class="fa fa-camera bg-purple"></i>
 
               <div class="timeline-item">
@@ -101,10 +189,10 @@
                   <img src="http://placehold.it/150x100" alt="..." class="margin">
                 </div>
               </div>
-            </li>
+            </li> -->
             <!-- END timeline item -->
             <!-- timeline item -->
-            <li>
+            <!-- <li>
               <i class="fa fa-video-camera bg-maroon"></i>
 
               <div class="timeline-item">
@@ -122,7 +210,7 @@
                   <a href="#" class="btn btn-xs bg-maroon">See comments</a>
                 </div>
               </div>
-            </li>
+            </li> -->
             <!-- END timeline item -->
             <li>
               <i class="fa fa-clock-o bg-gray"></i>
@@ -137,45 +225,13 @@
         <div class="col-md-12">
           <div class="box box-primary">
             <div class="box-header">
-              <h3 class="box-title"><i class="fa fa-code"></i> Timeline Markup</h3>
+              <h3 class="box-title"><i class="fa fa-check-circle-o"></i> Tabela de respostas</h3>
             </div>
             <div class="box-body">
-                  <pre style="font-weight: 600;">
-&lt;ul class="timeline">
 
-    &lt;!-- timeline time label -->
-    &lt;li class="time-label">
-        &lt;span class="bg-red">
-            10 Feb. 2014
-        &lt;/span>
-    &lt;/li>
-    &lt;!-- /.timeline-label -->
-
-    &lt;!-- timeline item -->
-    &lt;li>
-        &lt;!-- timeline icon -->
-        &lt;i class="fa fa-envelope bg-blue">&lt;/i>
-        &lt;div class="timeline-item">
-            &lt;span class="time">&lt;i class="fa fa-clock-o">&lt;/i> 12:05&lt;/span>
-
-            &lt;h3 class="timeline-header">&lt;a href="#">Support Team&lt;/a> ...&lt;/h3>
-
-            &lt;div class="timeline-body">
-                ...
-                Content goes here
-            &lt;/div>
-
-            &lt;div class="timeline-footer">
-                &lt;a class="btn btn-primary btn-xs">...&lt;/a>
-            &lt;/div>
-        &lt;/div>
-    &lt;/li>
-    &lt;!-- END timeline item -->
-
-    ...
-
-&lt;/ul>
-                  </pre>
+						</div>
+						<div class="timeline-footer">
+								.
             </div>
             <!-- /.box-body -->
           </div>

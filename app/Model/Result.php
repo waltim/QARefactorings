@@ -22,18 +22,6 @@ class Result extends AppModel{
 				'rule' => 'numeric',
 				'message' => 'Números apenas.'
 			)
-		),
-		'before' => array(
-            'before' => array(
-				'rule' => array('decimal', 2),
-				'allowEmpty' => true
-			)
-		),
-		'after' => array(
-            'after' => array(
-				'rule' => array('decimal', 2),
-				'allowEmpty' => true
-			)
 		)
     );
 

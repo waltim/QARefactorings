@@ -27,7 +27,7 @@ class MetricType extends AppModel {
         'Metric' => array(
             'className' => 'Metric',
             'joinTable' => '',
-            'foreignKey' => 'metric_id',
+            'foreignKey' => 'metric_type_id',
             'associationForeignKey' => '',
             'dependent' => true,
             'unique' => '',
