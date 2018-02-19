@@ -153,7 +153,6 @@ class TransformationsController extends AppController
 		$code = str_replace(" ", "x*x", $string);
 		$code = str_replace("x*x", "", $code);
 		$code = str_replace(";", ";#", $code);
-		$code = str_replace("{", "{#", $code);
 		$code = str_replace(";}", ";}#", $code);
 		$array = array_filter(explode("#", $code));
 		foreach ($array as $key => $linha) {

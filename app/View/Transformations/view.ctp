@@ -65,11 +65,17 @@ $variable = new TransformationsController();
 									$i = 0;
 									$contador = count($variable->identCode($transformation['Transformation']['code_before']));
 									foreach ($variable->identCode($transformation['Transformation']['code_before']) as $linha) {
+										$final = substr($linha, -1);
 										if ($i == 0) {
 											echo "<pre class='brush: java;'>";
 										}
-										echo $linha;
-										echo "\n";
+										if($final == "{" || $final == "}"){
+											echo $linha;
+											echo "\n";
+										}else{
+											echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$linha;
+											echo "\n";
+										}
 										if ($i == ($contador - 1)) {
 											echo "</pre>";
 										}
@@ -83,15 +89,21 @@ $variable = new TransformationsController();
 										$i = 0;
 										$contador = count($variable->identCode($transformation['Transformation']['code_after']));
 										foreach ($variable->identCode($transformation['Transformation']['code_after']) as $linha) {
-											if ($i == 0) {
-												echo "<pre class='brush: java;'>";
-											}
+											$final = substr($linha, -1);
+										if ($i == 0) {
+											echo "<pre class='brush: java;'>";
+										}
+										if($final == "{" || $final == "}"){
 											echo $linha;
 											echo "\n";
-											if ($i == ($contador - 1)) {
-												echo "</pre>";
-											}
-											$i++;
+										}else{
+											echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$linha;
+											echo "\n";
+										}
+										if ($i == ($contador - 1)) {
+											echo "</pre>";
+										}
+										$i++;
 										}
 										?>
 									</div>
