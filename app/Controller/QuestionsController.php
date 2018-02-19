@@ -40,40 +40,11 @@ class QuestionsController extends AppController
 	public function responder()
 	{
 		if ($this->request->is('post')) {
-			$this->Answer->create();
 			$this->request->data['Answer']['user_id'] = $this->Auth->user('id');
-			$this->Answer->save($this->request->data);
-			$this->Session->setFlash(__('Respondido com sucesso.'), 'Flash/success');
-			$this->redirect(array('action' => 'responder'));
-		}
-
-		$random = $this->Question->find('first', array(
-			'conditions' => array(
-				'Result.metric_id' => 4,
-			),
-			'order' => 'rand()',
-			'recursive' => -1,
-			'contain' => array(
-				'Answer',
-				'Result'
-			)
-		));
-
-		$contador = $this->Answer->find('count', array(
-			'conditions' => array(
-				'Answer.user_id' => $this->Auth->user('id'),
-				'Answer.question_id' => $random['Question']['id'],
-			),
-			'recursive' => -1,
-			'contain' => array(
-				'User',
-				'Question'
-			)
-		));
-		if ($contador > 0) {
-			$respostas = $this->Answer->find('count', array(
+			$contador = $this->Answer->find('count', array(
 				'conditions' => array(
-					'Answer.user_id' => $this->Auth->user('id'),
+					'Answer.user_id' => $this->request->data['Answer']['user_id'],
+					'Answer.question_id' => $this->request->data['Answer']['question_id']
 				),
 				'recursive' => -1,
 				'contain' => array(
@@ -81,50 +52,50 @@ class QuestionsController extends AppController
 					'Question'
 				)
 			));
-			$respondidas = $this->Question->find('count', array(
-				'conditions' => array(
-					'Result.metric_id' => 4,
-				),
-				'recursive' => -1,
-				'contain' => array(
-					'Answer',
-					'Result'
-				)
-			));
-			if ($respostas >= $respondidas) {
-				$this->Session->setFlash(__('Você não possui questões para responder, volte mais tarde!'), 'Flash/error');
-				$this->redirect(array('controller' => 'pages', 'action' => 'home'));
+			if ($contador < 1) {
+				$this->Answer->create();
+				$this->Answer->save($this->request->data);
+				$this->Session->setFlash(__('Respondido com sucesso.'), 'Flash/success');
+				$this->redirect(array('action' => 'responder'));
 			} else {
-				$question = $this->Question->find('first', array(
-					'conditions' => array(
-						'Result.metric_id' => 4,
-						'Question.id !=' => $random['Question']['id'],
-					),
-					'recursive' => -1,
-					'order' => 'rand()',
-					'contain' => array(
-						'Result' => array(
-							'Transformation'
-						),
-						'Answer'
-					)
-				));
+				$this->Session->setFlash(__('Esta questão já foi respondida!'), 'Flash/error');
+				$this->redirect(array('controller' => 'pages', 'action' => 'home'));
 			}
-		} else {
-			$question = $this->Question->find('first', array(
-				'conditions' => array(
-					'Result.metric_id' => 4,
-					'Question.id' => $random['Question']['id'],
-				),
-				'recursive' => -1,
-				'contain' => array(
-					'Result' => array(
-						'Transformation'
-					),
-					'Answer'
-				)
-			));
 		}
+
+		$respondidas = $this->Answer->find('all', array(
+			'conditions' => array(
+				'Answer.user_id' => $this->Auth->user('id'),
+			),
+			'recursive' => -1,
+			'contain' => array(
+				'User',
+				'Question'
+			),
+			'order' => array('Question.id ASC')
+		));
+		$array = array();
+		$key = 0;
+		foreach ($respondidas as $resp) {
+			$array[$key]['Question.id !='] = $resp['Question']['id'];
+			$key++;
+		}
+
+		$question = $this->Question->find('first', array(
+			'conditions' => array(
+				'Result.metric_id' => 4,
+				'AND' => $array
+			),
+			'recursive' => -1,
+			'order' => 'rand()',
+			'contain' => array(
+				'Result' => array(
+					'Transformation'
+				),
+				'Answer'
+			)
+		));
+
 		if (empty($question)) {
 			$this->Session->setFlash(__('Você não possui questões para responder, volte mais tarde!'), 'Flash/error');
 			$this->redirect(array('controller' => 'pages', 'action' => 'home'));
