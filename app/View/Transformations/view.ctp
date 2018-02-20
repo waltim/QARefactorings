@@ -40,13 +40,13 @@
 
 								<h3 class="timeline-header no-border"><a>Códigos</a></h3>
 								<div class="timeline-body">
-										<div class="col-md-12">
+										<div class="col-md-12 div-borda">
 										<h3>Código anterior</h3>
 										<code id="codigo1" class="java">
 										<?php echo $transformation['Transformation']['code_before'];?>
 										</code>
 									</div>
-										<div class="col-md-12">
+										<div class="col-md-12 div-borda">
 										<h3>Código transformado</h3>
 										<code id="codigo2" class="java">
 										<?php echo $transformation['Transformation']['code_after'];?>
