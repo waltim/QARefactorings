@@ -26,13 +26,13 @@
 					</div>
 					<input type="hidden" name="data[Answer][question_id]" value="<?=$question['Question']['id'];?>">
 					<div class="form-group text-center">
-						<a href="<?=$this->webroot?>" class="pull-left"><button value="sair" name="data[Answer][choice]" class="btn btn-raised btn-danger">Sair</button></a>
-						<button id="DP" name="data[Answer][choice]" value="1" class="btn btn-raised btn-success" type="submit">Discordo plenamente</button>
-						<button id="D" name="data[Answer][choice]" value="2" class="btn btn-raised btn-success" type="submit">Discordo</button>
-						<button id="NDNC" name="data[Answer][choice]" value="3" class="btn btn-raised btn-success" type="submit">Não discordo nem concordo</button>
-						<button id="C" name="data[Answer][choice]" value="4" class="btn btn-raised btn-success" type="submit">Concordo</button>
-						<button id="CP" name="data[Answer][choice]" value="5" class="btn btn-raised btn-success" type="submit">Concordo plenamente</button>
-						<a href="<?=$this->webroot?>questions/responder" class="pull-right"><button value="pular" name="data[Answer][choice]" class="btn btn-raised btn-warning">Pular questão</button></a>
+						<a href="<?=$this->webroot?>" class="pull-left"><button value="sair" name="data[Answer][choice]" class="btn btn-raised btn-default">Sair</button></a>
+						<button id="DP" name="data[Answer][choice]" value="1" class="btn btn-raised btn-default" type="submit">Discordo plenamente</button>
+						<button id="D" name="data[Answer][choice]" value="2" class="btn btn-raised btn-default" type="submit">Discordo</button>
+						<button id="NDNC" name="data[Answer][choice]" value="3" class="btn btn-raised btn-default" type="submit">Não discordo nem concordo</button>
+						<button id="C" name="data[Answer][choice]" value="4" class="btn btn-raised btn-default" type="submit">Concordo</button>
+						<button id="CP" name="data[Answer][choice]" value="5" class="btn btn-raised btn-default" type="submit">Concordo plenamente</button>
+						<a href="<?=$this->webroot?>questions/responder" class="pull-right"><button value="pular" name="data[Answer][choice]" class="btn btn-raised btn-primary">Pular questão</button></a>
 					</div>
 				</form>
 			</div>

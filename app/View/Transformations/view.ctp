@@ -4,7 +4,7 @@
           <ul class="timeline">
             <!-- timeline time label -->
             <li class="time-label">
-                  <span class="bg-red">
+                  <span class="bg-blue">
                     Dados da transformação
                   </span>
             </li>
@@ -81,7 +81,7 @@
             <!-- END timeline item -->
             <!-- timeline time label -->
             <li class="time-label">
-                  <span class="bg-green">
+                  <span class="bg-blue">
                     Métricas Quantitativas
                   </span>
             </li>
@@ -111,7 +111,7 @@
               </div>
 						</li>
 						<li class="time-label">
-                  <span class="bg-yellow">
+                  <span class="bg-blue">
                     Métricas Qualitativas
                   </span>
             </li>
