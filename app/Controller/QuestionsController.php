@@ -58,7 +58,7 @@ class QuestionsController extends AppController
 				$this->Session->setFlash(__('Respondido com sucesso.'), 'Flash/success');
 				$this->redirect(array('action' => 'responder'));
 			} else {
-				$this->Session->setFlash(__('Esta questão já foi respondida!'), 'Flash/error');
+				$this->Session->setFlash(__('Esta questão já foi respondida!'), 'Flash/info');
 				$this->redirect(array('controller' => 'pages', 'action' => 'home'));
 			}
 		}
@@ -97,7 +97,7 @@ class QuestionsController extends AppController
 		));
 
 		if (empty($question)) {
-			$this->Session->setFlash(__('Você não possui questões para responder, volte mais tarde!'), 'Flash/error');
+			$this->Session->setFlash(__('Você não possui questões para responder, volte mais tarde!'), 'Flash/info');
 			$this->redirect(array('controller' => 'pages', 'action' => 'home'));
 		}
 		$this->set('question', $question);

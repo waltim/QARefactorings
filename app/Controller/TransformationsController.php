@@ -11,6 +11,7 @@ class TransformationsController extends AppController
 		$this->loadModel('Language');
 		$this->loadModel('Result');
 		$this->loadModel('Question');
+		$this->loadModel('Answer');
 	}
 
 	public function index()
@@ -137,6 +138,20 @@ class TransformationsController extends AppController
 			)
 		));
 
+		$questão = $this->Result->find('first', array(
+			'conditions' => array(
+				'Metric.metric_type_id' => 2,
+				'Transformation.id' => $id
+			)
+		));
+
+		$respostas = $this->Answer->find('all', array(
+			'conditions' => array(
+				'Answer.question_id' => $questão['Question'][0]['id']
+			)
+		));
+
+		$this->set('respostas', $respostas);
 		$this->set('transformation', $show);
 		$this->set('quantitativas', $quantitativas);
 		$this->set('qualitativas', $qualitativas);

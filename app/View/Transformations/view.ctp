@@ -189,7 +189,34 @@
               <h3 class="box-title"><i class="fa fa-check-circle-o"></i> Tabela de respostas</h3>
             </div>
             <div class="box-body">
-
+						<table id="example2" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>Usuário</th>
+                  <th>Questão</th>
+                  <th>Escolha</th>
+                  <th>Justificativa</th>
+                </tr>
+                </thead>
+                <tbody>
+								<?php foreach($respostas as $resp){ ?>
+                <tr>
+                  <td><?=$resp['User']['email']?></td>
+                  <td><?=$resp['Question']['id']?></td>
+									<td><?=$resp['Answer']['choice']?></td>
+									<td><?=$resp['Answer']['justify']?></td>
+								</tr>
+								<?php } ?>
+                </tbody>
+                <tfoot>
+                <tr>
+									<th>Usuário</th>
+                  <th>Questão</th>
+                  <th>Escolha</th>
+                  <th>Justificativa</th>
+                </tr>
+                </tfoot>
+              </table>
 						</div>
 						<div class="timeline-footer">
 								.

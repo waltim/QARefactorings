@@ -21,7 +21,7 @@
 					</code>
 					</div>
 					<div class="form-group">
-						<label>Justificativa</label>
+						<label>(Opcional) Justificativa</label>
 						<textarea rows="5" maxlength="200" name="data[Answer][justify]" class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>
 					</div>
 					<input type="hidden" name="data[Answer][question_id]" value="<?=$question['Question']['id'];?>">

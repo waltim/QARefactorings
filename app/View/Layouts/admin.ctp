@@ -45,6 +45,8 @@
 	<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view') { ?>
 	<?php echo $this->Html->css(array(
 		'../highlight/styles/idea.css',
+		'jquery.dataTables.min.css',
+		'buttons.dataTables.min.css'
 	));
 	?>
 	<?php
@@ -108,7 +110,7 @@
 	'../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js'
 ));
 ?>
-	<script>
+<script>
   $(function () {
     $('#example2').DataTable({
       'paging'      : true,
@@ -125,12 +127,29 @@
 	<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view') { ?>
 <?php echo $this->Html->script(array(
 	'../highlight/highlight.pack.js',
+	'jquery.dataTables.min.js',
+	'dataTables.buttons.min.js',
+	'jszip.min.js',
+	'pdfmake.min.js',
+	'vfs_fonts.js',
+	'buttons.html5.min.js',
 ));
 ?>
 <script>
 hljs.configure({useBR: true});
 $('div code').each(function(i, block) {
   hljs.highlightBlock(block);
+});
+	$(document).ready(function() {
+    $('#example2').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5',
+            'pdfHtml5'
+        ]
+    });
 });
 </script>
 	<?php
