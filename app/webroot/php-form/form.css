@@ -3,7 +3,8 @@ html {
 }
 
 body {
-    background: url('images/jurassic-coast-1406284_1920.jpg') no-repeat;
+    /* background: url('images/jurassic-coast-1406284_1920.jpg') no-repeat; */
+    background-color: #DCDCDC;
     background-size: cover;
     height: 100%;
     width: 100%;

@@ -47,6 +47,7 @@ class TransformationsController extends AppController
 						);
 						$this->Result->save($result);
 					}
+					$this->Session->setFlash(__('Transformação cadastrada com sucesso.'), 'Flash/success');
 					$this->redirect(array('action' => 'manipulaMetricas', $lastCreated['Transformation']['id']));
 				} else {
 					$this->Session->setFlash(__('Transformação cadastrada com sucesso.'), 'Flash/success');
@@ -79,11 +80,10 @@ class TransformationsController extends AppController
 							);
 							$this->Result->save($result);
 						}
-						$this->redirect(array('action' => 'manipulaMetricas', $refactoring['Transformation']['id']));
 					}
 				}
 				$this->Session->setFlash(__('Transformação atualizada com sucesso.'), 'Flash/success');
-				$this->redirect(array('action' => 'view', $refactoring['Transformation']['id']));
+				$this->redirect(array('action' => 'manipulaMetricas', $refactoring['Transformation']['id']));
 			}
 		}
 		$transformation = $this->Transformation->findById($id);
@@ -157,26 +157,9 @@ class TransformationsController extends AppController
 		$this->set('qualitativas', $qualitativas);
 	}
 
-	public function identCode($string = null)
-	{
-		$string = strip_tags(str_replace("{", "{#", $string));
-		$code = str_replace(" ", "x*x", $string);
-		$code = str_replace("x*x", "", $code);
-		$code = str_replace(";", ";#", $code);
-		$code = str_replace(";}", ";}#", $code);
-		$code = str_replace("#{#", "{#", $code);
-		$array = array_filter(explode("#", $code));
-		foreach ($array as $key => $linha) {
-			if (strlen($linha) == 6 || $linha == null) {
-				unset($array[$key]);
-			}
-		}
-		return $array;
-	}
-
 	public function locAndAmloc($string = null)
 	{
-		$numLoc = count($this->identCode($string));
+		$numLoc = substr_count($string, '<br>');
 		return $numLoc;
 	}
 
@@ -224,19 +207,26 @@ class TransformationsController extends AppController
 					)
 				);
 				$this->Result->save($result);
-			}elseif($metricas['Metric']['acronym'] == 'LIKERT'){
-				$this->Question->create();
-				$question = array(
-					'Question' => array(
-						'result_id' => $metricas['Result']['id'],
-						'question_type_id' => 1,
-						'description' => 'Você concorda que a transformação melhorou a legibilidade do código?'
+			} elseif ($metricas['Metric']['acronym'] == 'LIKERT') {
+				$QuestionForResult = $this->Result->Question->find('count', array(
+					'conditions' => array(
+						'Question.result_id' => $metricas['Result']['id']
 					)
-				);
-				$this->Question->save($question);
+				));
+				if ($QuestionForResult < 1) {
+					$this->Question->create();
+					$question = array(
+						'Question' => array(
+							'result_id' => $metricas['Result']['id'],
+							'question_type_id' => 1,
+							'description' => 'Você concorda que a transformação melhorou a legibilidade do código?'
+						)
+					);
+					$this->Question->save($question);
+				}
 			}
 		}
-		$this->Session->setFlash(__('Transformação cadastrada com sucesso.'), 'Flash/success');
+		$this->Session->setFlash(__('Métricas calculadas com sucesso.'), 'Flash/success');
 		$this->redirect(array('action' => 'view', $metricas['Transformation']['id']));
 	}
 }

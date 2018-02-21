@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 2 | Dashboard</title>
+  <title>QARefactorings | Analyser</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
 	<?php echo $this->Html->css(array(
@@ -54,7 +54,7 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="sidebar-mini skin-red-light">
+<body class="sidebar-mini wysihtml5-supported skin-blue">
 <div class="wrapper">
 <?php echo $this->element('admin/main-header'); ?>
 <?php echo $this->element('admin/main-sidebar'); ?>

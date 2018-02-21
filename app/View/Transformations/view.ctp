@@ -1,4 +1,4 @@
-      <div class="row">
+			<div class="row">
         <div class="col-md-12">
           <!-- The time line -->
           <ul class="timeline">
@@ -43,13 +43,13 @@
 										<div class="col-md-12 div-borda">
 										<h3>Código anterior</h3>
 										<code id="codigo1" class="java">
-										<?php echo $transformation['Transformation']['code_before'];?>
+										<?php echo str_replace("&nbsp; }","}",$transformation['Transformation']['code_before']);?>
 										</code>
 									</div>
 										<div class="col-md-12 div-borda">
 										<h3>Código transformado</h3>
 										<code id="codigo2" class="java">
-										<?php echo $transformation['Transformation']['code_after'];?>
+										<?php echo str_replace("&nbsp; }","}",$transformation['Transformation']['code_after']);?>
 										</code>
 									</div>
 								</div>

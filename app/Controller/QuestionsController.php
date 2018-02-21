@@ -40,6 +40,12 @@ class QuestionsController extends AppController
 	public function responder()
 	{
 		if ($this->request->is('post')) {
+			if ($this->request->data['Answer']['choice'] == 'pular') {
+				$this->redirect(array('action' => 'responder'));
+			}
+			if ($this->request->data['Answer']['choice'] == 'sair') {
+				$this->redirect(array('controller'=>'pages','action' => 'home'));
+			}
 			$this->request->data['Answer']['user_id'] = $this->Auth->user('id');
 			$contador = $this->Answer->find('count', array(
 				'conditions' => array(
