@@ -108,7 +108,7 @@ class TransformationsController extends AppController
 		if (empty($Selected)) {
 			$this->Session->setFlash(__('Transformação não encontrada.'), 'Flash/error');
 		} elseif ($Selected['Transformation']['user_id'] != $this->Auth->user('id')) {
-			$this->Session->setFlash(__('Você não tem permissão para isso.'), 'error');
+			$this->Session->setFlash(__('Você não tem permissão para isso.'), 'Flash/error');
 		} else {
 			$this->Transformation->delete($id);
 			$this->Session->setFlash(__('Deletada com sucesso!'), 'Flash/success');

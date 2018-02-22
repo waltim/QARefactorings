@@ -58,13 +58,21 @@ class UsersController extends AppController
 			} else {
 				$this->request->data['User']['username'] = $name[0];
 			}
-
+			$this->request->data['User']['status'] = 1;
+			$this->request->data['User']['username'] = $this->sanitizeString($this->request->data['User']['username']);
 			$this->User->create();
 			if ($this->User->validates() != false && $this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('Usuário cadastrado com sucesso.'), 'Flash/success');
 				$this->redirect(array('action' => 'login'));
 			} else {
-				$this->Session->setFlash(__('Houve um erro com seu cadastro, tente novamente.'), 'Flash/error');
+				$errors = $this->User->validationErrors;
+				if (count($errors) > 0) {
+					foreach ($errors as $key => $err) {
+						$this->Session->setFlash(__($key . ': ' . $err[0]), 'Flash/error');
+					}
+				} else {
+					$this->Session->setFlash(__('Houve um erro com seu cadastro, tente novamente.'), 'Flash/error');
+				}
 			}
 		}
 	}
@@ -77,5 +85,18 @@ class UsersController extends AppController
 	public function logout()
 	{
 		$this->redirect($this->Auth->logout());
+	}
+
+	function sanitizeString($str)
+	{
+		$str = preg_replace('/[áàãâä]/ui', 'a', $str);
+		$str = preg_replace('/[éèêë]/ui', 'e', $str);
+		$str = preg_replace('/[íìîï]/ui', 'i', $str);
+		$str = preg_replace('/[óòõôö]/ui', 'o', $str);
+		$str = preg_replace('/[úùûü]/ui', 'u', $str);
+		$str = preg_replace('/[ç]/ui', 'c', $str);
+		$str = preg_replace('/[^a-z0-9]/i', '_', $str);
+		$str = preg_replace('/_+/', '', $str);
+		return $str;
 	}
 }

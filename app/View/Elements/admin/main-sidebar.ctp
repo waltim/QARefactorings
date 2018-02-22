@@ -113,8 +113,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="<?= $this->webroot ?>Transformations/index"><i class="fa fa-television"></i> Tabela de transformações</a></li>
-            <li><a href="<?= $this->webroot ?>Transformations/add"><i class="fa fa-edit"></i> Adicionar transformação</a></li>
+            <li><a href="<?= $this->webroot ?>transformations/index"><i class="fa fa-television"></i> Tabela de transformações</a></li>
+            <li><a href="<?= $this->webroot ?>transformations/add"><i class="fa fa-edit"></i> Adicionar transformação</a></li>
           </ul>
 				</li>
 				<!-- <li>

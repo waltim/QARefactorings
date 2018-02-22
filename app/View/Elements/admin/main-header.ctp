@@ -19,7 +19,7 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="<?=$this->webroot?>dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Usuário</span>
+              <span class="hidden-xs"><?=$this->Session->read('Auth.User.name')?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -27,8 +27,8 @@
                 <img src="<?=$this->webroot?>dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Email do usuário logado
-                  <small>data de cadastro</small>
+								<?=$this->Session->read('Auth.User.email')?>
+                  <small><?=date('d/m/Y', strtotime($this->Session->read('Auth.User.created')));?></small>
                 </p>
               </li>
               <!-- Menu Body -->

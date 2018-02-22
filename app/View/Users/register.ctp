@@ -1,8 +1,21 @@
 <div class="register-box-body">
     <p class="login-box-msg">Cadastro de usuário</p>
 
-    <form action="<?= $this->webroot ?>Users/register" method="post">
-		<div class="form-group has-feedback">
+		<form action="<?= $this->webroot ?>Users/register" method="post">
+	<div class="form-group has-feedback">
+		<input name="data[User][name]" required type="text" class="form-control" placeholder="Nome e Sobrenome">
+		<span class="glyphicon glyphicon-user form-control-feedback"></span>
+	</div>
+	<div class="form-group has-feedback">
+		<select name="data[User][sex]" required class="form-control">
+		<option disabled selected value> -- Sexo -- </option>
+			<option value="Masculino">Masculino</option>
+			<option value="Feminino">Feminino</option>
+			<option value="Não informado">Não informar</option>
+		</select>
+		<span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
+	</div>
+	<div class="form-group has-feedback">
 		<input name="data[User][email]" required type="email" class="form-control" placeholder="Email">
 		<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 	</div>

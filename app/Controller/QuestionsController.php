@@ -15,6 +15,7 @@ class QuestionsController extends AppController
 		$this->loadModel('Result');
 		$this->loadModel('Answer');
 		$this->loadModel('Question');
+		$this->loadModel('User');
 	}
 
 	public function index()
@@ -44,7 +45,7 @@ class QuestionsController extends AppController
 				$this->redirect(array('action' => 'responder'));
 			}
 			if ($this->request->data['Answer']['choice'] == 'sair') {
-				$this->redirect(array('controller'=>'pages','action' => 'home'));
+				$this->redirect(array('controller' => 'pages', 'action' => 'home'));
 			}
 			$this->request->data['Answer']['user_id'] = $this->Auth->user('id');
 			$contador = $this->Answer->find('count', array(
@@ -80,23 +81,54 @@ class QuestionsController extends AppController
 			),
 			'order' => array('Question.id ASC')
 		));
+
+		$transformcoesPorUsuario = $this->User->Transformation->find('all', array(
+			'conditions' => array(
+				'Transformation.user_id' => $this->Auth->user('id'),
+			),
+			'recursive' => -1
+		));
 		$array = array();
 		$key = 0;
+		foreach ($transformcoesPorUsuario as $transf) {
+			$QuestoesPorUsuario = $this->Result->find('first', array(
+				'conditions' => array(
+					'Result.transformation_id' => $transf['Transformation']['id'],
+					'Result.metric_id' => 4
+				),
+				'recursive' => 1
+			));
+			if (!empty($QuestoesPorUsuario)) {
+				$array[$key] = $QuestoesPorUsuario['Question'][0]['id'];
+				$key++;
+			}
+		}
+
 		foreach ($respondidas as $resp) {
-			$array[$key]['Question.id !='] = $resp['Question']['id'];
+			$array[$key] = $resp['Question']['id'];
 			$key++;
+		}
+
+		$array = array_unique($array);
+
+		$k = 0;
+		$arrayFiltrado = array();
+
+		foreach ($array as $ar) {
+			$arrayFiltrado[$k]['Question.id !='] = $ar;
+			$k++;
 		}
 
 		$question = $this->Question->find('first', array(
 			'conditions' => array(
 				'Result.metric_id' => 4,
-				'AND' => $array
+				'AND' => $arrayFiltrado
 			),
 			'recursive' => -1,
 			'order' => 'rand()',
 			'contain' => array(
 				'Result' => array(
-					'Transformation'
+					'Transformation' => array('Language')
 				),
 				'Answer'
 			)
