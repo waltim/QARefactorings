@@ -57,11 +57,10 @@ class AppController extends Controller
 		if (isset($user['status']) && $user['UserType']['description'] === 'administrador') {
 			return true; // Admin pode acessar todas as actions;
 		} elseif (isset($user['status']) && $user['UserType']['description'] === 'pesquisador') {
-			if (in_array($this->action, array('logout', 'display', 'languages', 'responder')) || ($this->params['controller'] === 'transformations' && in_array($this->action, array('add', 'view', 'index')))) {
+			if (in_array($this->action, array('logout', 'display', 'languages', 'responder', 'relatorios')) || ($this->params['controller'] === 'transformations' && in_array($this->action, array('add', 'view', 'index')))) {
 					// Todos os pesquisadores podem criar transformações;
 				return true;
-			}
-			if (in_array($this->action, array('edit', 'delete'))) {
+			} elseif (in_array($this->action, array('edit', 'delete'))) {
 				$postId = (int)$this->request->params['pass'][0];
 				if ($this->Transformation->isOwnedBy($postId, $user['id']) === true) {
 					return true;
@@ -69,12 +68,29 @@ class AppController extends Controller
 					$this->Session->setFlash(__('Você não tem permissão para isso.'), 'Flash/error');
 					return false;
 				}
+			} elseif (in_array($this->action, array('alterar'))) {
+				if ($this->User->isOwnedBy($user['id']) === true) {
+					return true;
+				} else {
+					$this->Session->setFlash(__('Você não tem permissão para isso.'), 'Flash/error');
+					return false;
+				}
+			} else {
+				$this->Session->setFlash(__('Você não tem permissão para isso.'), 'Flash/error');
+				return false;
 			}
 		} elseif (isset($user['status']) && $user['UserType']['description'] === 'candidato') {
 			if ($this->params['action'] === 'responder' || $this->params['action'] === 'display'
 				|| $this->params['action'] === 'logout' || $this->params['action'] === 'languages') {
 				// Todos os candidatos podem ver a página inicial, responder questões e sair do sistema.
 				return true;
+			} elseif (in_array($this->action, array('alterar'))) {
+				if ($this->User->isOwnedBy($user['id']) === true) {
+					return true;
+				} else {
+					$this->Session->setFlash(__('Você não tem permissão para isso.'), 'Flash/error');
+					return false;
+				}
 			} else {
 				$this->Session->setFlash(__('Você não tem permissão para isso.'), 'Flash/error');
 				return false;

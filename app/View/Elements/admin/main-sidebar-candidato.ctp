@@ -104,54 +104,7 @@
             <li><a href="pages/forms/advanced.html"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
             <li><a href="pages/forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
           </ul>
-				</li> -->
-				<li class="treeview">
-          <a href="#">
-            <i class="fa fa-table"></i> <span>Tipos de transformações</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="<?= $this->webroot ?>transformationTypes/index"><i class="fa fa-television"></i> Tabela de tipos</a></li>
-            <li><a href="<?= $this->webroot ?>transformationTypes/add"><i class="fa fa-edit"></i> Adicionar tipo</a></li>
-          </ul>
-				</li>
-				<li class="treeview">
-          <a href="#">
-            <i class="fa fa-table"></i> <span>Linguagens</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="<?= $this->webroot ?>languages/index"><i class="fa fa-television"></i> Tabela de linguagens</a></li>
-            <li><a href="<?= $this->webroot ?>languages/add"><i class="fa fa-edit"></i> Adicionar linguagem</a></li>
-          </ul>
-				</li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-table"></i> <span>Transformação</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="<?= $this->webroot ?>transformations/index"><i class="fa fa-television"></i> Tabela de transformações</a></li>
-            <li><a href="<?= $this->webroot ?>transformations/add"><i class="fa fa-edit"></i> Adicionar transformação</a></li>
-          </ul>
-				</li>
-				<li>
-          <a href="<?= $this->webroot ?>users/index">
-            <i class="fa fa-user-circle-o"></i> <span>Usuários</span>
-          </a>
-				</li>
-				<li>
-          <a href="<?= $this->webroot ?>answers/relatorios">
-            <i class="fa fa-check-circle-o"></i> <span>Relatórios</span>
-          </a>
-				</li>
-
+        </li> -->
 				<li>
           <a href="<?= $this->webroot ?>questions/responder">
             <i class="fa fa-question-circle-o"></i> <span>Responder questões</span>

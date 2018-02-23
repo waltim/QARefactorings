@@ -19,15 +19,14 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="<?=$this->webroot?>dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs"><?=$this->Session->read('Auth.User.name')?></span>
+              <span class="hidden-xs"><?=$this->Session->read('Auth.User.email')?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
                 <img src="<?=$this->webroot?>dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
                 <p>
-								<?=$this->Session->read('Auth.User.email')?>
+								<?=$this->Session->read('Auth.User.name')?>
                   <small><?=date('d/m/Y', strtotime($this->Session->read('Auth.User.created')));?></small>
                 </p>
               </li>
@@ -48,7 +47,7 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="<?=$this->webroot?>questions/responder" class="btn btn-default btn-flat">Responder questões</a>
+                  <a href="<?=$this->webroot?>users/alterar" class="btn btn-default btn-flat">Alterar dados</a>
                 </div>
                 <div class="pull-right">
                   <a href="<?=$this->webroot?>users/logout" class="btn btn-default btn-flat">Sair</a>

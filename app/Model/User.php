@@ -134,4 +134,18 @@ class User extends AppModel
 		)
 	);
 
+	public function isOwnedBy($user)
+	{
+		$pending = $this->find('first', array(
+			'conditions' => array(
+				'User.id' => $user,
+			),
+		));
+		if ($pending['User']['email'] === AuthComponent::user('email')) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }

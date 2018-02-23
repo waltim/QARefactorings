@@ -21,7 +21,7 @@ class TransformationTypesController extends AppController
 
 	}
 
-	public function view(){
+	public function delete(){
 
 	}
 }

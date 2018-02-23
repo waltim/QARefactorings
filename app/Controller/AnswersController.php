@@ -9,19 +9,7 @@ class AnswersController extends AppController
 		$this->layout = 'admin';
 	}
 
-	public function index(){
-
-	}
-
-	public function add(){
-
-	}
-
-	public function edit(){
-
-	}
-
-	public function view(){
+	public function relatorios(){
 
 	}
 }

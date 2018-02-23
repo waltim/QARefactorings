@@ -28,28 +28,32 @@
 	));
 	?>
 	<?php
-} elseif ($this->request->params['action'] == 'index') { ?>
+
+} elseif ($this->request->params['action'] == 'index' || $this->request->params['action'] == 'relatorios') { ?>
 		<?php echo $this->Html->css(array(
 		'../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
 		'../dist/css/AdminLTE.min.css'
 	));
 	?>
 	<?php
+
 } else { ?>
 		<?php echo $this->Html->css(array(
 		'../dist/css/AdminLTE.min.css',
 	));
 	?>
 	<?php
+
 } ?>
 	<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view') { ?>
 	<?php echo $this->Html->css(array(
-		'../highlight/styles/idea.css',
-		'jquery.dataTables.min.css',
-		'buttons.dataTables.min.css'
-	));
-	?>
+	'../highlight/styles/idea.css',
+	'jquery.dataTables.min.css',
+	'buttons.dataTables.min.css'
+));
+?>
 	<?php
+
 } ?>
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -57,7 +61,15 @@
 <body class="sidebar-mini wysihtml5-supported skin-blue">
 <div class="wrapper">
 <?php echo $this->element('admin/main-header'); ?>
-<?php echo $this->element('admin/main-sidebar'); ?>
+<?php
+if ($this->session->read('Auth.User.UserType.description') === 'administrador') {
+	echo $this->element('admin/main-sidebar');
+} elseif ($this->session->read('Auth.User.UserType.description') === 'pesquisador') {
+	echo $this->element('admin/main-sidebar-pesquisador');
+} else {
+	echo $this->element('admin/main-sidebar-candidato');
+}
+?>
 <div class="content-wrapper">
 <section class="content">
 <?php echo $this->Session->flash(); ?>
@@ -104,7 +116,8 @@
   })
 </script>
 <?php
-} elseif ($this->request->params['action'] == 'index') { ?>
+
+} elseif ($this->request->params['action'] == 'index' || $this->request->params['action'] == 'relatorios') { ?>
 	<?php echo $this->Html->script(array(
 	'../bower_components/datatables.net/js/jquery.dataTables.min.js',
 	'../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js'
@@ -123,6 +136,7 @@
   })
 </script>
 	<?php
+
 } ?>
 	<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view') { ?>
 <?php echo $this->Html->script(array(
@@ -153,6 +167,7 @@ $('div code').each(function(i, block) {
 });
 </script>
 	<?php
+
 } ?>
 </body>
 </html>

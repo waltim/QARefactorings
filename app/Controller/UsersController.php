@@ -19,6 +19,40 @@ class UsersController extends AppController
 
 	}
 
+	public function alterar()
+	{
+		if ($this->request->is('post')) {
+			if($this->request->data['User']['funcao'] == 'cancelar'){
+				$this->redirect(array('controller'=>'pages', 'action' => 'display'));
+			}
+			//pr($this->request->data);exit();
+			$this->User->id = $this->Auth->user('id');
+			if($this->request->data['User']['password'] != '' || $this->request->data['User']['password'] != null){
+				$update = array(
+					'User' => array(
+						'name' => $this->request->data['User']['name'],
+						'sex' => $this->request->data['User']['sex'],
+						'password' => $this->request->data['User']['password']
+					)
+				);
+			}else{
+				$update = array(
+					'User' => array(
+						'name' => $this->request->data['User']['name'],
+						'sex' => $this->request->data['User']['sex']
+					)
+				);
+			}
+			if($this->User->save($update)){
+				$this->Session->setFlash(__('Atualizado com sucesso! Suas alterações seram mostradas a partir do proxímo login.'), 'Flash/success');
+				$this->redirect(array('controller'=>'pages', 'action' => 'display'));
+			}else{
+				$this->Session->setFlash(__('Houve um erro, tente novamente.'), 'Flash/error');
+				$this->redirect(array('controller'=>'users', 'action' => 'alterar'));
+			}
+		}
+	}
+
 	public function status()
 	{
 
