@@ -54,6 +54,13 @@ class AppController extends Controller
 
 	public function isAuthorized($user)
 	{
+		$usuarioLogado = ClassRegistry::init('User')->find('first', array(
+			'conditions' => array('User.id' => $user['id'])
+		));
+		if ($usuarioLogado['User']['status'] == 0) {
+			$this->Session->setFlash(__('Você foi banido.'), 'Flash/error');
+			$this->redirect($this->Auth->logout());
+		}
 		if (isset($user['status']) && $user['UserType']['description'] === 'administrador') {
 			return true; // Admin pode acessar todas as actions;
 		} elseif (isset($user['status']) && $user['UserType']['description'] === 'pesquisador') {

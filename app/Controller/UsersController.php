@@ -16,18 +16,21 @@ class UsersController extends AppController
 
 	public function index()
 	{
-
+		$usuarios = $this->User->find('all', array(
+			'order' => array('User.name DESC')
+		));
+		$this->set('usuarios', $usuarios);
 	}
 
 	public function alterar()
 	{
 		if ($this->request->is('post')) {
-			if($this->request->data['User']['funcao'] == 'cancelar'){
-				$this->redirect(array('controller'=>'pages', 'action' => 'display'));
+			if ($this->request->data['User']['funcao'] == 'cancelar') {
+				$this->redirect(array('controller' => 'pages', 'action' => 'display'));
 			}
 			//pr($this->request->data);exit();
 			$this->User->id = $this->Auth->user('id');
-			if($this->request->data['User']['password'] != '' || $this->request->data['User']['password'] != null){
+			if ($this->request->data['User']['password'] != '' || $this->request->data['User']['password'] != null) {
 				$update = array(
 					'User' => array(
 						'name' => $this->request->data['User']['name'],
@@ -35,7 +38,7 @@ class UsersController extends AppController
 						'password' => $this->request->data['User']['password']
 					)
 				);
-			}else{
+			} else {
 				$update = array(
 					'User' => array(
 						'name' => $this->request->data['User']['name'],
@@ -43,19 +46,43 @@ class UsersController extends AppController
 					)
 				);
 			}
-			if($this->User->save($update)){
+			if ($this->User->save($update)) {
 				$this->Session->setFlash(__('Atualizado com sucesso! Suas alterações seram mostradas a partir do proxímo login.'), 'Flash/success');
-				$this->redirect(array('controller'=>'pages', 'action' => 'display'));
-			}else{
+				$this->redirect(array('controller' => 'pages', 'action' => 'display'));
+			} else {
 				$this->Session->setFlash(__('Houve um erro, tente novamente.'), 'Flash/error');
-				$this->redirect(array('controller'=>'users', 'action' => 'alterar'));
+				$this->redirect(array('controller' => 'users', 'action' => 'alterar'));
 			}
 		}
 	}
 
-	public function status()
+	public function status($id = null)
 	{
-
+		$this->User->id = $id;
+		$usuario = $this->User->find('first', array(
+			'conditions' => array('User.id' => $this->User->id)
+		));
+		if ($usuario['User']['status'] == 1) {
+			$update = array(
+				'User' => array(
+					'status' => 0
+				)
+			);
+			if ($this->User->save($update)) {
+				$this->Session->setFlash(__('Usuário bloqueado com sucesso!'), 'Flash/success');
+				$this->redirect(array('controller' => 'users', 'action' => 'index'));
+			}
+		} else {
+			$update = array(
+				'User' => array(
+					'status' => 1
+				)
+			);
+			if ($this->User->save($update)) {
+				$this->Session->setFlash(__('Usuário liberado com sucesso!'), 'Flash/success');
+				$this->redirect(array('controller' => 'users', 'action' => 'index'));
+			}
+		}
 	}
 
 	public function login()
@@ -66,11 +93,16 @@ class UsersController extends AppController
 				$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');
 			} else {
 				$this->request->data['User']['username'] = $user['User']['username'];
-				if ($this->Auth->login()) {
-					$this->Session->setFlash(__('Seja bem vindo!'), 'Flash/success');
-					$this->redirect($this->Auth->redirect());
-				} else {
-					$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');
+				if ($user['User']['status'] == 1) {
+					if ($this->Auth->login()) {
+						$this->Session->setFlash(__('Seja bem vindo!'), 'Flash/success');
+						$this->redirect($this->Auth->redirect());
+					} else {
+						$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');
+					}
+				}else{
+					$this->Session->setFlash(__('Você foi banido.'), 'Flash/error');
+					return false;
 				}
 			}
 		}
