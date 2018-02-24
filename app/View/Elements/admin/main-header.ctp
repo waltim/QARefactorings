@@ -18,13 +18,21 @@
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="<?=$this->webroot?>dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs"><?=$this->Session->read('Auth.User.email')?></span>
+						<?php if($this->Session->read('Auth.User.sex') == 'Masculino'){ ?>
+              <img src="<?=$this->webroot?>dist/img/male.jpg" class="user-image" alt="User Image">
+						<?php } else { ?>
+							<img src="<?=$this->webroot?>dist/img/female.jpg" class="user-image" alt="User Image">
+						<?php } ?>
+							<span class="hidden-xs"><?=$this->Session->read('Auth.User.email')?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                <img src="<?=$this->webroot?>dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+								<?php if($this->Session->read('Auth.User.sex') == 'Masculino'){ ?>
+								<img src="<?=$this->webroot?>dist/img/male.jpg" class="img-circle" alt="User Image">
+							<?php } else { ?>
+								<img src="<?=$this->webroot?>dist/img/female.jpg" class="img-circle" alt="User Image">
+							<?php } ?>
                 <p>
 								<?=$this->Session->read('Auth.User.name')?>
                   <small><?=date('d/m/Y', strtotime($this->Session->read('Auth.User.created')));?></small>
