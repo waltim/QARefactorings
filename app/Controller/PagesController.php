@@ -37,13 +37,12 @@ class PagesController extends AppController
 	 *
 	 * @var array
 	 */
-	public $uses = array();
+	public $uses = array('Transformation', 'Metric', 'Language', 'Result', 'Question', 'Answer', 'User');
 
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
 		$this->layout = 'admin';
-		$this->Auth->allow('login', 'register', 'forgot');
 	}
 
 	/**
@@ -86,5 +85,59 @@ class PagesController extends AppController
 			}
 			throw new NotFoundException();
 		}
+
+
+	}
+
+	public function home()
+	{
+		if ($this->Auth->user('UserType.description') == 'administrador') {
+			$transformations = $this->Transformation->find('count');
+			$users = $this->User->find('count');
+			$answers = $this->Answer->find('count');
+			$questions = $this->Question->find('count');
+			$this->set(compact('transformations', 'answers', 'questions', 'users'));
+		} elseif ($this->Auth->user('UserType.description') == 'pesquisador') {
+			$transformations = $this->Transformation->find('count', array(
+				'conditions' => array('Transformation.user_id' => $this->Auth->user('id'))
+			));
+			$answers = $this->Answer->find('count', array(
+				'conditions' => array('Answer.user_id' => $this->Auth->user('id'))
+			));
+			$transformtionsAll = $this->Transformation->find('all', array(
+				'conditions' => array(
+					'Transformation.user_id' => $this->Auth->user('id')
+				)
+			));
+			$questions = 0;
+			if (!empty($transformtionsAll)) {
+				foreach ($transformtionsAll as $metrica) {
+					foreach ($metrica['Metric'] as $met) {
+						if ($met['id'] == 4) {
+							$questions++;
+						}
+					}
+				}
+			}
+			$this->set(compact('transformations', 'answers', 'questions'));
+		} else {
+			$answers = $this->Answer->find('count', array(
+				'conditions' => array('Answer.user_id' => $this->Auth->user('id'))
+			));
+			$questions = $this->Question->find('count');
+			$this->set(compact('answers', 'questions'));
+		}
+
+		$totalQuestions = $this->Result->find('count', array(
+			'conditions' => array(
+				'Result.metric_id' => 4
+			)
+		));
+
+		$ranking = $this->User->find('all', array(
+			'order' => array('User.trophy DESC'),
+			'limit' => 10
+		));
+		$this->set(compact('ranking', 'totalQuestions'));
 	}
 }

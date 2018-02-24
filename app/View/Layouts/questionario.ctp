@@ -32,6 +32,10 @@
 <?php echo $this->Html->script(array(
 	'../bower_components/jquery/dist/jquery.min.js',
 	'../highlight/highlight.pack.js',
+	'../bower_components/bootstrap/dist/js/bootstrap.min.js',
+	'../bower_components/fastclick/lib/fastclick.js',
+	'../dist/js/adminlte.min.js',
+	'../dist/js/demo.js',
 ));
 ?>
 <script>

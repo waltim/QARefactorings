@@ -28,7 +28,6 @@ class UsersController extends AppController
 			if ($this->request->data['User']['funcao'] == 'cancelar') {
 				$this->redirect(array('controller' => 'pages', 'action' => 'display'));
 			}
-			//pr($this->request->data);exit();
 			$this->User->id = $this->Auth->user('id');
 			if ($this->request->data['User']['password'] != '' || $this->request->data['User']['password'] != null) {
 				$update = array(
@@ -125,6 +124,7 @@ class UsersController extends AppController
 				$this->request->data['User']['username'] = $name[0];
 			}
 			$this->request->data['User']['status'] = 1;
+			$this->request->data['User']['trophy'] = 0;
 			$this->request->data['User']['username'] = $this->sanitizeString($this->request->data['User']['username']);
 			$this->User->create();
 			if ($this->User->validates() != false && $this->User->save($this->request->data)) {

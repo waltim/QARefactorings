@@ -16,6 +16,7 @@ class QuestionsController extends AppController
 		$this->loadModel('Answer');
 		$this->loadModel('Question');
 		$this->loadModel('User');
+		$this->loadModel('UsersLanguage');
 	}
 
 	public function index()
@@ -61,9 +62,22 @@ class QuestionsController extends AppController
 			));
 			if ($contador < 1) {
 				$this->Answer->create();
-				$this->Answer->save($this->request->data);
-				$this->Session->setFlash(__('Respondido com sucesso.'), 'Flash/success');
-				$this->redirect(array('action' => 'responder'));
+				if ($this->Answer->save($this->request->data)) {
+					$this->User->id = $this->Auth->user('id');
+					$usuario = $this->User->find('first', array(
+						'conditions' => array(
+							'User.id' => $this->Auth->user('id'),
+						)
+					));
+					$update = array(
+						'User' => array(
+							'trophy' => $usuario['User']['trophy'] + 1
+						)
+					);
+					$this->User->save($update);
+					$this->Session->setFlash(__('Respondido com sucesso.'), 'Flash/success');
+					$this->redirect(array('action' => 'responder'));
+				}
 			} else {
 				$this->Session->setFlash(__('Esta questão já foi respondida!'), 'Flash/info');
 				$this->redirect(array('controller' => 'pages', 'action' => 'home'));
@@ -137,6 +151,18 @@ class QuestionsController extends AppController
 		if (empty($question)) {
 			$this->Session->setFlash(__('Você não possui questões para responder, volte mais tarde!'), 'Flash/info');
 			$this->redirect(array('controller' => 'pages', 'action' => 'home'));
+		}
+
+		$userLanguage = $this->UsersLanguage->find('count', array(
+			'conditions' => array(
+				'UsersLanguage.languages_id' => $question['Result']['Transformation']['language_id'],
+				'UsersLanguage.users_id' => $this->Auth->user('id')
+			)
+		));
+
+		if ($userLanguage < 1) {
+			$this->Session->setFlash(__('Qual sua experiência com a linguagem abaixo?'), 'Flash/info');
+			$this->redirect(array('controller' => 'languages', 'action' => 'languages', $question['Result']['Transformation']['language_id']));
 		}
 		$this->set('question', $question);
 	}

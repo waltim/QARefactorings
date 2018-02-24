@@ -16,9 +16,18 @@ class TransformationsController extends AppController
 
 	public function index()
 	{
-		$transformations = $this->Transformation->find('all', array(
-			'order' => array('Transformation.id DESC')
-		));
+		if ($this->Auth->user('UserType.description') == 'administrador') {
+			$transformations = $this->Transformation->find('all', array(
+				'order' => array('Transformation.id DESC')
+			));
+		} else {
+			$transformations = $this->Transformation->find('all', array(
+				'conditions' => array(
+					'Transformation.user_id' => $this->Auth->user('id')
+				),
+				'order' => array('Transformation.id DESC')
+			));
+		}
 		$this->set('transformations', $transformations);
 	}
 

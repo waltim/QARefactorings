@@ -25,8 +25,8 @@ class Language extends AppModel
 	);
 
 	public $hasMany = array(
-		'Language' => array(
-			'className' => 'Language',
+		'Transformation' => array(
+			'className' => 'Transformation',
 			'joinTable' => '',
 			'foreignKey' => 'language_id',
 			'associationForeignKey' => '',

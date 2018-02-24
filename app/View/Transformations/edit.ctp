@@ -7,7 +7,7 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form role="form" method="post" action="/transformations/edit">
+            <form role="form" method="post" action="/transformations/edit/<?=$transformation['Transformation']['id'];?>">
               <div class="box-body">
 									<?php if (!empty($metrics)) { ?>
 									<div class="col-md-4">

@@ -33,11 +33,10 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller
 {
-
 	public $components = array(
 		'Session',
 		'Auth' => array(
-			'loginRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
+			'loginRedirect' => array('controller' => 'pages', 'action' => 'home'),
 			'logoutRedirect' => array('controller' => 'Users', 'action' => 'login'),
 			'Form' => array(
 				'fields' => array('username' => 'email')
@@ -64,7 +63,10 @@ class AppController extends Controller
 		if (isset($user['status']) && $user['UserType']['description'] === 'administrador') {
 			return true; // Admin pode acessar todas as actions;
 		} elseif (isset($user['status']) && $user['UserType']['description'] === 'pesquisador') {
-			if (in_array($this->action, array('logout', 'display', 'languages', 'responder', 'relatorios')) || ($this->params['controller'] === 'transformations' && in_array($this->action, array('add', 'view', 'index')))) {
+			if (in_array($this->action, array(
+				'logout', 'home', 'languages', 'responder',
+				'relatorios', 'locAndAmloc', 'accm', 'manipulaMetricas'
+			)) || ($this->params['controller'] === 'transformations' && in_array($this->action, array('add', 'view', 'index')))) {
 					// Todos os pesquisadores podem criar transformações;
 				return true;
 			} elseif (in_array($this->action, array('edit', 'delete'))) {
@@ -87,7 +89,7 @@ class AppController extends Controller
 				return false;
 			}
 		} elseif (isset($user['status']) && $user['UserType']['description'] === 'candidato') {
-			if ($this->params['action'] === 'responder' || $this->params['action'] === 'display'
+			if ($this->params['action'] === 'responder' || $this->params['action'] === 'home'
 				|| $this->params['action'] === 'logout' || $this->params['action'] === 'languages') {
 				// Todos os candidatos podem ver a página inicial, responder questões e sair do sistema.
 				return true;
