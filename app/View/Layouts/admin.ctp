@@ -112,6 +112,8 @@ if ($this->session->read('Auth.User.UserType.description') === 'administrador') 
     $('.textarea').wysihtml5()
   })
 	$(function () {
+		var arrayOfValues = ["1","2","4"];
+		$('.select2').val(arrayOfValues)
 		$('.select2').select2()
   })
 </script>

@@ -28,7 +28,37 @@ class TransformationsController extends AppController
 				'order' => array('Transformation.id DESC')
 			));
 		}
-		$this->set('transformations', $transformations);
+		$aics = $this->Transformation->find('count', array(
+			'conditions' => array(
+				'Transformation.transformation_type_id' => 1
+			)
+		));
+
+		$foreachs = $this->Transformation->find('count', array(
+			'conditions' => array(
+				'Transformation.transformation_type_id' => 2
+			)
+		));
+
+		$filters = $this->Transformation->find('count', array(
+			'conditions' => array(
+				'Transformation.transformation_type_id' => 3
+			)
+		));
+
+		$exists = $this->Transformation->find('count', array(
+			'conditions' => array(
+				'Transformation.transformation_type_id' => 4
+			)
+		));
+
+		$maps = $this->Transformation->find('count', array(
+			'conditions' => array(
+				'Transformation.transformation_type_id' => 5
+			)
+		));
+
+		$this->set(compact('transformations','aics','foreachs','filters','exists','maps'));
 	}
 
 	public function add()
@@ -116,8 +146,6 @@ class TransformationsController extends AppController
 		));
 		if (empty($Selected)) {
 			$this->Session->setFlash(__('Transformação não encontrada.'), 'Flash/error');
-		} elseif ($Selected['Transformation']['user_id'] != $this->Auth->user('id')) {
-			$this->Session->setFlash(__('Você não tem permissão para isso.'), 'Flash/error');
 		} else {
 			$this->Transformation->delete($id);
 			$this->Session->setFlash(__('Deletada com sucesso!'), 'Flash/success');
@@ -198,7 +226,7 @@ class TransformationsController extends AppController
 			)
 		));
 		foreach ($quantitativas as $metricas) {
-			if ($metricas['Metric']['acronym'] == 'LOC' || $metricas['Metric']['acronym'] == 'AMLOC') {
+			if ($metricas['Metric']['acronym'] == 'LOC') {
 				$this->Result->id = $metricas['Result']['id'];
 				$result = array(
 					'Result' => array(

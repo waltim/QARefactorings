@@ -22,6 +22,55 @@ class UsersController extends AppController
 		$this->set('usuarios', $usuarios);
 	}
 
+	public function view($id = null)
+	{
+		$usuario = $this->User->find('first', array(
+			'conditions' => array('User.id' => $id)
+		));
+		$this->set(compact('usuario'));
+	}
+
+	public function edit($id = null)
+	{
+		$this->loadModel('UserType');
+		if ($this->request->is('post')) {
+			if ($this->request->data['User']['funcao'] == 'cancelar') {
+				$this->redirect(array('controller' => 'users', 'action' => 'index'));
+			}
+			$this->User->id = $id;
+			if ($this->request->data['User']['password'] != '' || $this->request->data['User']['password'] != null) {
+				$update = array(
+					'User' => array(
+						'name' => $this->request->data['User']['name'],
+						'sex' => $this->request->data['User']['sex'],
+						'user_type_id' => $this->request->data['User']['user_type_id'],
+						'password' => $this->request->data['User']['password']
+					)
+				);
+			} else {
+				$update = array(
+					'User' => array(
+						'name' => $this->request->data['User']['name'],
+						'sex' => $this->request->data['User']['sex'],
+						'user_type_id' => $this->request->data['User']['user_type_id']
+					)
+				);
+			}
+			if ($this->User->save($update)) {
+				$this->Session->setFlash(__('Usuário atualizado com sucesso!'), 'Flash/success');
+				$this->redirect(array('controller' => 'users', 'action' => 'view', $id));
+			} else {
+				$this->Session->setFlash(__('Houve um erro, tente novamente.'), 'Flash/error');
+				$this->redirect(array('controller' => 'users', 'action' => 'edit', $id));
+			}
+		}
+		$usuario = $this->User->find('first', array(
+			'conditions' => array('User.id' => $id)
+		));
+		$tipos = $this->UserType->find('list');
+		$this->set(compact('usuario', 'tipos'));
+	}
+
 	public function alterar()
 	{
 		if ($this->request->is('post')) {
@@ -99,7 +148,7 @@ class UsersController extends AppController
 					} else {
 						$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');
 					}
-				}else{
+				} else {
 					$this->Session->setFlash(__('Você foi banido.'), 'Flash/error');
 					return false;
 				}

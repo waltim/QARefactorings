@@ -69,6 +69,7 @@
             </div>
           </div>
 				</div>
+				<?php if($totalQuestions > 0){ ?>
 				<div class="col-md-6 pull-right">
 				<div class="box">
             <div class="box-header">
@@ -109,6 +110,7 @@
             <!-- /.box-body -->
 					</div>
 					</div>
+					<?php } ?>
           <!-- /.box -->
         <!-- ./col -->
       </div>

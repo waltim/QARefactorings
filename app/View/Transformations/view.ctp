@@ -98,11 +98,7 @@
                 <div class="timeline-body">
 								<?php foreach($quantitativas as $key => $metrica){ ?>
 										<p><b><?= $metrica['Metric']['acronym'] ?>:</b> <?= $metrica['Metric']['description'] ?></p>
-										<?php if($metrica['Metric']['acronym'] == 'AMLOC'){ ?>
-										<b>Resultados</b> --> <b>Antes:</b> <?php if($metrica['Result']['before'] < 15){ echo 'Bom';}else{echo 'Ruim';} ?> | <b>Depois:</b> <?php if($metrica['Result']['after'] < 15){ echo 'Bom';}else{echo 'Ruim';} ?>
-										<?php }else{ ?>
 											<b>Resultados</b> --> <b>Antes:</b> <?= $metrica['Result']['before'];?> | <b>Depois:</b> <?= $metrica['Result']['after']; ?>
-											<?php } ?>
 										<?php } ?>
 								</div>
 								<div class="timeline-footer">
