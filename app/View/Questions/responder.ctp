@@ -8,18 +8,19 @@
 							<?=$question['Question']['description'];?>
 						</h3>
 					</div>
-					<div class="form-group col-md-12 div-borda">
-					<h4>Código anterior</h4>
-					<code id="codigo1" class="<?=$question['Result']['Transformation']['Language']['brush'];?>">
-						<?php echo str_replace("&nbsp; }","}",$question['Result']['Transformation']['code_before']);?>
-					</code>
-					</div>
-					<div class="form-group col-md-12 div-borda">
-					<h4>Código transformado</h4>
-					<code id="codigo2" class="<?=$question['Result']['Transformation']['Language']['brush'];?>">
-							<?php echo str_replace("&nbsp; }","}",$question['Result']['Transformation']['code_after']);?>
-					</code>
-					</div>
+						<div id="codigo-antes" class="form-group">
+						<h4>Código anterior</h4>
+						<code id="codigo1" class="<?=$question['Result']['Transformation']['Language']['brush'];?> div-borda">
+							<?php echo str_replace("&nbsp; }","}",$question['Result']['Transformation']['code_before']);?>
+						</code>
+						</div>
+						<div id="codigo-depois" class="form-group">
+						<h4>Código transformado</h4>
+						<code id="codigo2" class="<?=$question['Result']['Transformation']['Language']['brush'];?> div-borda">
+								<?php echo str_replace("&nbsp; }","}",$question['Result']['Transformation']['code_after']);?>
+						</code>
+						</div>
+						<div class="clearfix"></div>
 					<div class="form-group">
 						<label>(Opcional) Justificativa</label>
 						<textarea rows="5" maxlength="200" name="data[Answer][justify]" class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>

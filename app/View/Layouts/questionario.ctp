@@ -21,8 +21,8 @@
     </head>
     <body>
 		<?php echo $this->Session->flash(); ?>
-        <div class="container">
-            <div class="container form-top">
+        <div class="container-fluid">
+            <div class="container-fluid form-top">
 			<?php echo $this->Flash->render(); ?>
 			<?php echo $this->fetch('content'); ?>
             </div>
@@ -43,5 +43,13 @@ hljs.configure({useBR: true});
 $('div code').each(function(i, block) {
   hljs.highlightBlock(block);
 });
+
+if($('#codigo1').width() > '50%' || $('#codigo2').width() > '50%'){
+	$("#codigo-antes").addClass('col-md-12')
+	$("#codigo-depois").addClass('col-md-12')
+} else {
+	$("#codigo-antes").addClass('col-md-6')
+	$("#codigo-depois").addClass('col-md-6')
+}
 </script>
 

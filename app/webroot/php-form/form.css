@@ -27,8 +27,6 @@ body {
 }
 
 .div-borda {
-    width: 100%;
     border: solid 1px;
-    /* box-shadow: 10px 10px 10px 5px black; */
     margin-bottom: 20px;
 }
