@@ -16,19 +16,19 @@
                   <div class="col-sm-10">
                     <input type="text" name="data[User][name]" value="<?=$this->Session->read('Auth.User.name');?>" class="form-control" id="inputEmail3" placeholder="Nome e Sobrenome">
                   </div>
-				</div>
-				<div class="form-group">
-                  <label for="inputEmail3" class="col-sm-2 control-label">Sexo</label>
-				  <div class="col-sm-10">
-				<?php echo $this->Form->input('User.sex', array(
-				'type'=>'select',
-				'label'=>false,
-				'options'=> array('Masculino' => 'Masculino', 'Feminino'=>'Feminino', 'Não informado'=>'Não informar'),
-				'default'=>$this->Session->read('Auth.User.sex'),
-				'class' => 'form-control'
-				)); ?>
-				</div>
-				</div>
+								</div>
+								<div class="form-group">
+										<label for="inputEmail3" class="col-sm-2 control-label">Sexo</label>
+									<div class="col-sm-10">
+										<?php echo $this->Form->input('User.sex', array(
+										'type'=>'select',
+										'label'=>false,
+										'options'=> array('Masculino' => 'Masculino', 'Feminino'=>'Feminino', 'Não informado'=>'Não informar'),
+										'default'=>$this->Session->read('Auth.User.sex'),
+										'class' => 'form-control'
+										)); ?>
+									</div>
+								</div>
                 <div class="form-group">
                   <label for="inputPassword3" class="col-sm-2 control-label">Senha</label>
                   <div class="col-sm-10">

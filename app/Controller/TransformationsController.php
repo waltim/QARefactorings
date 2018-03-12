@@ -58,7 +58,7 @@ class TransformationsController extends AppController
 			)
 		));
 
-		$this->set(compact('transformations','aics','foreachs','filters','exists','maps'));
+		$this->set(compact('transformations', 'aics', 'foreachs', 'filters', 'exists', 'maps'));
 	}
 
 	public function add()
@@ -113,7 +113,7 @@ class TransformationsController extends AppController
 							$this->Result->create();
 							$result = array(
 								'Result' => array(
-									'transformation_id' => $id = null,
+									'transformation_id' => $id,
 									'metric_id' => $metrica
 								)
 							);
@@ -159,6 +159,30 @@ class TransformationsController extends AppController
 			$this->Session->setFlash(__('Esta transformação não existe!'), 'Flash/error');
 			$this->redirect(array('action' => 'index'));
 		}
+
+		if ($this->request->is('post')) {
+			$this->Transformation->id = $id;
+			if (array_key_exists("deletions", $this->request->data['Transformation'])) {
+				$result = array(
+					'Transformation' => array(
+						'transformation_id' => $id,
+						'deletions' => $this->request->data['Transformation']['deletions']
+					)
+				);
+			} else {
+				$result = array(
+					'Transformation' => array(
+						'transformation_id' => $id,
+						'additions' => $this->request->data['Transformation']['additions']
+					)
+				);
+			}
+			if ($this->Transformation->save($result)) {
+				$this->Session->setFlash(__('linhas destacadas com sucesso.'), 'Flash/success');
+				$this->redirect(array('action' => 'view', $id));
+			}
+		}
+
 		$show = $this->Transformation->find('first', array(
 			'conditions' => array('Transformation.id' => $id)
 		));
@@ -192,6 +216,7 @@ class TransformationsController extends AppController
 		$this->set('transformation', $show);
 		$this->set('quantitativas', $quantitativas);
 		$this->set('qualitativas', $qualitativas);
+
 	}
 
 	public function locAndAmloc($string = null)

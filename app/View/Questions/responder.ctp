@@ -10,15 +10,19 @@
 					</div>
 						<div id="codigo-antes" class="form-group">
 						<h4>Código anterior</h4>
-						<code id="codigo1" class="<?=$question['Result']['Transformation']['Language']['brush'];?> div-borda">
-							<?php echo str_replace("&nbsp; }","}",$question['Result']['Transformation']['code_before']);?>
-						</code>
+						<?php
+						$codigoAntigo = str_replace("&nbsp; }","}",$question['Result']['Transformation']['code_before']);
+						$codigoAntigo = strip_tags($codigoAntigo, '<br>');
+						?>
+						<code id="codigo1" class="brush: <?=$question['Result']['Transformation']['Language']['brush'];?>"><?php echo $codigoAntigo; ?></code>
 						</div>
 						<div id="codigo-depois" class="form-group">
 						<h4>Código transformado</h4>
-						<code id="codigo2" class="<?=$question['Result']['Transformation']['Language']['brush'];?> div-borda">
-								<?php echo str_replace("&nbsp; }","}",$question['Result']['Transformation']['code_after']);?>
-						</code>
+						<?php
+						$codigoDepois = str_replace("&nbsp; }","}",$question['Result']['Transformation']['code_after']);
+						$codigoDepois = strip_tags($codigoDepois, '<br>');
+						?>
+						<code id="codigo2" class="brush: <?=$question['Result']['Transformation']['Language']['brush'];?>"><?php echo $codigoDepois;?></code>
 						</div>
 						<div class="clearfix"></div>
 					<div class="form-group">

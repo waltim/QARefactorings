@@ -47,7 +47,7 @@
 } ?>
 	<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view') { ?>
 	<?php echo $this->Html->css(array(
-	'../highlight/styles/idea.css',
+	'../syntaxhighlighter/styles/shCoreEclipse.css',
 	'jquery.dataTables.min.css',
 	'buttons.dataTables.min.css'
 ));
@@ -77,10 +77,8 @@ if ($this->session->read('Auth.User.UserType.description') === 'administrador') 
 </section>
 </div>
 <?php echo $this->element('admin/main-footer'); ?>
-
   <div class="control-sidebar-bg"></div>
 </div>
-<!-- ./wrapper -->
 <?php echo $this->Html->script(array(
 	'../bower_components/jquery/dist/jquery.min.js',
 	'../bower_components/bootstrap/dist/js/bootstrap.min.js',
@@ -142,20 +140,30 @@ if ($this->session->read('Auth.User.UserType.description') === 'administrador') 
 } ?>
 	<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view') { ?>
 <?php echo $this->Html->script(array(
-	'../highlight/highlight.pack.js',
 	'jquery.dataTables.min.js',
 	'dataTables.buttons.min.js',
 	'jszip.min.js',
 	'pdfmake.min.js',
 	'vfs_fonts.js',
 	'buttons.html5.min.js',
+	'../syntaxhighlighter/scripts/XRegExp.js',
+	'../syntaxhighlighter/scripts/shCore.js',
+	'../syntaxhighlighter/scripts/shBrushXml.js'
 ));
 ?>
+<script type="text/javascript" src="<?=$this->webroot;?>syntaxhighlighter/scripts/shBrush<?=$transformation['Language']['description'];?>.js"></script>
 <script>
-hljs.configure({useBR: true});
-$('div code').each(function(i, block) {
-  hljs.highlightBlock(block);
-});
+SyntaxHighlighter.config.tagName = "code";
+SyntaxHighlighter.defaults['gutter'] = true;
+SyntaxHighlighter.defaults['toolbar'] = false;
+SyntaxHighlighter.config.bloggerMode = true;
+var element1 = document.getElementById('codigo1');
+var element2 = document.getElementById('codigo2');
+SyntaxHighlighter.defaults['highlight'] = [<?=$transformation['Transformation']['deletions']?>];
+SyntaxHighlighter.highlight(undefined, element1);
+SyntaxHighlighter.defaults['highlight'] = [<?=$transformation['Transformation']['additions']?>];
+SyntaxHighlighter.highlight(undefined, element2);
+
 	$(document).ready(function() {
     $('#example2').DataTable( {
         dom: 'Bfrtip',

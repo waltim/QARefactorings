@@ -40,17 +40,37 @@
 
 								<h3 class="timeline-header no-border"><a>Códigos</a></h3>
 								<div class="timeline-body">
-										<div class="col-md-12 div-borda">
+										<div class="col-md-12">
 										<h3>Código anterior</h3>
-										<code id="codigo1" class="<?= $transformation['Language']['brush'];?>">
-										<?php echo str_replace("&nbsp; }","}",$transformation['Transformation']['code_before']);?>
-										</code>
-									</div>
-										<div class="col-md-12 div-borda">
+										<?php
+										$codigoAntigo = str_replace("&nbsp; }","}",$transformation['Transformation']['code_before']);
+										$codigoAntigo = strip_tags($codigoAntigo, '<br>');
+										?>
+										<code id="codigo1" class="brush: <?=$transformation['Language']['brush'];?>"><?php echo $codigoAntigo; ?></code>
+										<form class="form-horizontal" method="post" action="<?=$this->webroot?>transformations/view/<?=$transformation['Transformation']['id'];?>">
+												<div class="box-body">
+													<div class="form-group">
+														<input name="data[Transformation][deletions]" value="<?=$transformation['Transformation']['deletions']?>" required type="text" class="form-control" placeholder="Destacar uma linha, ex: 1 ou para varias linhas, ex: 1,2,3...n">
+														<button type="submit" class="btn btn-info">Atualizar</button>
+													</div>
+												</div>
+											</form>
+										</div>
+										<div class="col-md-12">
 										<h3>Código transformado</h3>
-										<code id="codigo2" class="<?= $transformation['Language']['brush'];?>">
-										<?php echo str_replace("&nbsp; }","}",$transformation['Transformation']['code_after']);?>
-										</code>
+										<?php
+										$codigoDepois = str_replace("&nbsp; }","}",$transformation['Transformation']['code_after']);
+										$codigoDepois = strip_tags($codigoDepois, '<br>');
+										?>
+										<code id="codigo2" class="brush: <?= $transformation['Language']['brush'];?>"><?php echo $codigoDepois;?></code>
+										<form class="form-horizontal" method="post" action="<?=$this->webroot?>transformations/view/<?=$transformation['Transformation']['id'];?>">
+												<div class="box-body">
+													<div class="form-group">
+														<input name="data[Transformation][additions]" value="<?=$transformation['Transformation']['additions']?>" required type="text" class="form-control" placeholder="Destacar uma linha, ex: 1 ou para varias linhas, ex: 1,2,3...n">
+														<button type="submit" class="btn btn-info">Atualizar</button>
+													</div>
+												</div>
+											</form>
 									</div>
 								</div>
 								<div class="timeline-footer">

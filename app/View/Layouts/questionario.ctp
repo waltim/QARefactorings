@@ -5,17 +5,13 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Quality analysis of Refactoring of code | Questions</title>
-        <!-- Latest compiled and minified CSS -->
-        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" > -->
-        <!-- Optional theme -->
-        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"> -->
 		<?php echo $this->Html->css(array(
 		'../bower_components/bootstrap/dist/css/bootstrap.min.css',
 		'../bower_components/font-awesome/css/font-awesome.min.css',
 		'../bower_components/Ionicons/css/ionicons.min.css',
 		'../dist/css/AdminLTE.min.css',
 		'../php-form/form.css',
-		'../highlight/styles/idea.css',
+		'../syntaxhighlighter/styles/shCoreEclipse.css'
 		));
 		?>
     </head>
@@ -31,25 +27,27 @@
 </html>
 <?php echo $this->Html->script(array(
 	'../bower_components/jquery/dist/jquery.min.js',
-	'../highlight/highlight.pack.js',
 	'../bower_components/bootstrap/dist/js/bootstrap.min.js',
 	'../bower_components/fastclick/lib/fastclick.js',
 	'../dist/js/adminlte.min.js',
 	'../dist/js/demo.js',
+	'../syntaxhighlighter/scripts/XRegExp.js',
+	'../syntaxhighlighter/scripts/shCore.js',
+	'../syntaxhighlighter/scripts/shBrushXml.js'
 ));
 ?>
+ <script type="text/javascript" src="<?=$this->webroot;?>syntaxhighlighter/scripts/shBrush<?=$question['Result']['Transformation']['Language']['description'];?>.js"></script>
 <script>
-hljs.configure({useBR: true});
-$('div code').each(function(i, block) {
-  hljs.highlightBlock(block);
-});
-
-if($('#codigo1').width() > '50%' || $('#codigo2').width() > '50%'){
-	$("#codigo-antes").addClass('col-md-12')
-	$("#codigo-depois").addClass('col-md-12')
-} else {
-	$("#codigo-antes").addClass('col-md-6')
-	$("#codigo-depois").addClass('col-md-6')
-}
+SyntaxHighlighter.config.tagName = "code";
+SyntaxHighlighter.defaults['gutter'] = false;
+SyntaxHighlighter.defaults['toolbar'] = false;
+SyntaxHighlighter.config.bloggerMode = true;
+var element1 = document.getElementById('codigo1');
+var element2 = document.getElementById('codigo2');
+SyntaxHighlighter.defaults['highlight'] = [<?=$question['Result']['Transformation']['deletions']?>];
+SyntaxHighlighter.highlight(undefined, element1);
+SyntaxHighlighter.defaults['highlight'] = [<?=$question['Result']['Transformation']['additions']?>];
+SyntaxHighlighter.highlight(undefined, element2);
+$("#codigo-antes").addClass('col-md-6')
+$("#codigo-depois").addClass('col-md-6')
 </script>
-

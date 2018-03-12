@@ -105,7 +105,7 @@
             <li><a href="pages/forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
           </ul>
 				</li> -->
-				<li class="treeview">
+				<!-- <li class="treeview">
           <a href="#">
             <i class="fa fa-table"></i> <span>Tipos de transformações</span>
             <span class="pull-right-container">
@@ -128,7 +128,7 @@
             <li><a href="<?= $this->webroot ?>languages/index"><i class="fa fa-television"></i> Tabela de linguagens</a></li>
             <li><a href="<?= $this->webroot ?>languages/add"><i class="fa fa-edit"></i> Adicionar linguagem</a></li>
           </ul>
-				</li>
+				</li> -->
         <li class="treeview">
           <a href="#">
             <i class="fa fa-table"></i> <span>Transformação</span>
