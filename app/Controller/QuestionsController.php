@@ -62,6 +62,7 @@ class QuestionsController extends AppController
 			));
 			if ($contador < 1) {
 				$this->Answer->create();
+				$this->request->data['Answer']['end_time'] = date('H:i:s');
 				if ($this->Answer->save($this->request->data)) {
 					$this->User->id = $this->Auth->user('id');
 					$usuario = $this->User->find('first', array(
