@@ -30,6 +30,7 @@
 						<textarea rows="5" maxlength="200" name="data[Answer][justify]" class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>
 					</div>
 					<input type="hidden" name="data[Answer][question_id]" value="<?=$question['Question']['id'];?>">
+					<input type="hidden" name="data[Answer][start_time]" value="<?=$tempo = date('H:i:s');?>">
 					<div class="form-group text-center">
 						<a href="<?=$this->webroot?>" class="pull-left"><button value="sair" name="data[Answer][choice]" class="btn btn-raised btn-default">Sair</button></a>
 						<button id="DP" name="data[Answer][choice]" value="1" class="btn btn-raised btn-default" type="submit">Discordo plenamente</button>
