@@ -46,9 +46,9 @@ class Language extends AppModel
 	public $hasAndBelongsToMany = array(
 		'User' => array(
 			'className' => 'User',
-			'joinTable' => 'users_languages',
-			'foreignKey' => 'languages_id',
-			'associationForeignKey' => 'users_id',
+			'joinTable' => 'user_languages',
+			'foreignKey' => 'language_id',
+			'associationForeignKey' => 'user_id',
 			'unique' => false,
 			'dependent' => true,
 			'conditions' => '',
@@ -57,6 +57,35 @@ class Language extends AppModel
 			'limit' => '',
 			'offset' => '',
 			'finderQuery' => ''
-		)
+		),
+        'SearchEvent' => array(
+            'className' => 'SearchEvent',
+            'joinTable' => 'language_search_events',
+            'foreignKey' => 'language_id',
+            'associationForeignKey' => 'search_event_id',
+            'unique' => false,
+            'dependent' => true,
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+            'offset' => '',
+            'finderQuery' => ''
+        ),
+        'TransformationType' => array(
+            'className' => 'TransformationType',
+            'joinTable' => 'transformation_type_languages',
+            'foreignKey' => 'language_id',
+            'associationForeignKey' => 'transformation_type_id',
+            'unique' => false,
+            'dependent' => true,
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+            'offset' => '',
+            'finderQuery' => ''
+        )
 	);
+
 }

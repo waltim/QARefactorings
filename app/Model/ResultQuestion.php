@@ -1,13 +1,14 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: walter
+ * Date: 02/04/18
+ * Time: 11:51
+ */
 
 App::uses('AppModel', 'Model');
 
-class Question extends AppModel
-{
-
-    public $actsAs = array('Containable');
-
-    public $displayField = 'description';
+class ResultQuestion extends AppModel{
 
     public $validate = array(
         'result_id' => array(
@@ -19,8 +20,8 @@ class Question extends AppModel
                 'message' => 'Números apenas.'
             )
         ),
-        'question_type_id' => array(
-            'question_type_id' => array(
+        'question_id' => array(
+            'question_id' => array(
                 'rule' => 'notBlank',
             ),
             'numeric' => array(
@@ -31,9 +32,9 @@ class Question extends AppModel
     );
 
     public $belongsTo = array(
-        'Participant' => array(
-            'className' => 'Participant',
-            'foreignKey' => 'participant_id',
+        'Result' => array(
+            'className' => 'Result',
+            'foreignKey' => 'result_id',
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -42,9 +43,9 @@ class Question extends AppModel
             'finderQuery' => '',
             'with' => '',
         ),
-        'QuestionType' => array(
-            'className' => 'QuestionType',
-            'foreignKey' => 'question_type_id',
+        'Question' => array(
+            'className' => 'Question',
+            'foreignKey' => 'question_id',
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -55,20 +56,22 @@ class Question extends AppModel
         )
     );
 
-    public $hasAndBelongsToMany = array(
-        'ResultQuestion' => array(
-            'className' => 'ResultQuestion',
-            'joinTable' => 'results',
-            'foreignKey' => 'question_id',
-            'associationForeignKey' => 'result_id',
-            'unique' => false,
+    public $hasMany = array(
+        'Answer' => array(
+            'className' => 'Answer',
+            'joinTable' => '',
+            'foreignKey' => 'result_question_id',
+            'associationForeignKey' => '',
             'dependent' => true,
+            'unique' => '',
             'conditions' => '',
             'fields' => '',
             'order' => '',
             'limit' => '',
+            'exclusive' => '',
+            'finderQuery' => '',
             'offset' => '',
-            'finderQuery' => ''
+            'with' => '',
         )
     );
 }

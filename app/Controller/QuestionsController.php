@@ -16,7 +16,7 @@ class QuestionsController extends AppController
 		$this->loadModel('Answer');
 		$this->loadModel('Question');
 		$this->loadModel('User');
-		$this->loadModel('UsersLanguage');
+		$this->loadModel('UserLanguage');
 	}
 
 	public function index()
@@ -156,8 +156,8 @@ class QuestionsController extends AppController
 
 		$userLanguage = $this->UsersLanguage->find('count', array(
 			'conditions' => array(
-				'UsersLanguage.languages_id' => $question['Result']['Transformation']['language_id'],
-				'UsersLanguage.users_id' => $this->Auth->user('id')
+				'UserLanguage.languages_id' => $question['Result']['Transformation']['language_id'],
+				'UserLanguage.users_id' => $this->Auth->user('id')
 			)
 		));
 

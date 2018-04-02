@@ -5,8 +5,8 @@ class Transformation extends AppModel
 {
 
 	public $validate = array(
-		'user_id' => array(
-			'user_id' => array(
+		'search_event_id' => array(
+			'search_event_id' => array(
 				'rule' => 'notBlank',
 			),
 			'numeric' => array(
@@ -45,17 +45,17 @@ class Transformation extends AppModel
 	);
 
 	public $belongsTo = array(
-		'User' => array(
-			'className' => 'User',
-			'foreignKey' => 'user_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'finderQuery' => '',
-			'with' => '',
-		),
+        'SearchEvent' => array(
+            'className' => 'SearchEvent',
+            'foreignKey' => 'search_event_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+            'offset' => '',
+            'finderQuery' => '',
+            'with' => '',
+        ),
 		'Language' => array(
 			'className' => 'Language',
 			'foreignKey' => 'language_id',

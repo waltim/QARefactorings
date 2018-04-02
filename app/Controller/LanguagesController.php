@@ -8,7 +8,7 @@ class LanguagesController extends AppController
 		parent::beforeFilter();
 		$this->layout = 'admin';
 		$this->loadModel('User');
-		$this->loadModel('UsersLanguage');
+		$this->loadModel('UserLanguage');
 	}
 
 	public function index()
@@ -24,7 +24,7 @@ class LanguagesController extends AppController
 	public function languages($language = null)
 	{
 		if ($this->request->is('post')) {
-			$this->request->data['UsersLanguage']['users_id'] = $this->Auth->user('id');
+			$this->request->data['UserLanguage']['users_id'] = $this->Auth->user('id');
 			$this->UsersLanguage->create();
 			if ($this->UsersLanguage->save($this->request->data)) {
 				$this->Session->setFlash(__('Experiência vinculada com sucesso.'), 'Flash/success');

@@ -35,9 +35,9 @@ class Answer extends AppModel {
             'finderQuery' => '',
             'with' => '',
         ),
-        'Question' => array(
-            'className' => 'Question',
-            'foreignKey' => 'question_id',
+        'ResultQuestion' => array(
+            'className' => 'ResultQuestion',
+            'foreignKey' => 'result_question_id',
             'conditions' => '',
             'fields' => '',
             'order' => '',

@@ -114,15 +114,30 @@ class User extends AppModel
 			'offset' => '',
 			'finderQuery' => '',
 			'with' => '',
-		)
+		),
+        'Participant' => array(
+            'className' => 'Participant',
+            'joinTable' => '',
+            'foreignKey' => 'user_id',
+            'associationForeignKey' => '',
+            'dependent' => true,
+            'unique' => '',
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+            'offset' => '',
+            'finderQuery' => '',
+            'with' => '',
+        )
 	);
 
 	public $hasAndBelongsToMany = array(
 		'Language' => array(
 			'className' => 'Language',
-			'joinTable' => 'users_languages',
-			'foreignKey' => 'users_id',
-			'associationForeignKey' => 'languages_id',
+			'joinTable' => 'user_languages',
+			'foreignKey' => 'user_id',
+			'associationForeignKey' => 'language_id',
 			'unique' => false,
 			'dependent' => true,
 			'conditions' => '',

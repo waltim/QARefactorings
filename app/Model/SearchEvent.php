@@ -1,12 +1,17 @@
 <?php
-App::uses('AppModel', 'Model');
+/**
+ * Created by PhpStorm.
+ * User: walter
+ * Date: 02/04/18
+ * Time: 12:00
+ */
 
-class TransformationType extends AppModel {
-
-    public $displayField = 'description';
+class SearchEvent extends AppModel
+{
+    public $displayField = 'title';
 
     public $validate = array(
-        'description' => array(
+        'title' => array(
             'alphaNumeric' => array(
                 'rule' => 'alphaNumeric',
                 'message' => 'Use apenas letras e números.'
@@ -17,7 +22,7 @@ class TransformationType extends AppModel {
             ),
             'required' => array(
                 'rule' => 'notBlank',
-				'allowEmpty' => false,
+                'allowEmpty' => false,
                 'message' => 'Este campo deve ser preenchido.'
             )
         )
@@ -27,7 +32,23 @@ class TransformationType extends AppModel {
         'Transformation' => array(
             'className' => 'Transformation',
             'joinTable' => '',
-            'foreignKey' => 'transformation_type_id',
+            'foreignKey' => 'search_event_id',
+            'associationForeignKey' => '',
+            'dependent' => true,
+            'unique' => '',
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+            'exclusive' => '',
+            'finderQuery' => '',
+            'offset' => '',
+            'with' => '',
+        ),
+        'Participant' => array(
+            'className' => 'Participant',
+            'joinTable' => '',
+            'foreignKey' => 'search_event_id',
             'associationForeignKey' => '',
             'dependent' => true,
             'unique' => '',
@@ -45,8 +66,8 @@ class TransformationType extends AppModel {
     public $hasAndBelongsToMany = array(
         'Language' => array(
             'className' => 'Language',
-            'joinTable' => 'transformation_type_languages',
-            'foreignKey' => 'transformation_type_id',
+            'joinTable' => 'language_search_events',
+            'foreignKey' => 'search_event_id',
             'associationForeignKey' => 'language_id',
             'unique' => false,
             'dependent' => true,

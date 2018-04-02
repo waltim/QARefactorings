@@ -14,7 +14,7 @@
 								<div class="form-group">
 													<label for="inputEmail3" class="col-sm-2 control-label">Tempo de experiência</label>
 									<div class="col-sm-10">
-								<?php echo $this->Form->input('UsersLanguage.experience', array(
+								<?php echo $this->Form->input('UserLanguage.experience', array(
 								'type'=>'select',
 								'label'=>false,
 								'options'=> array('1' => '1 ano', '2'=>'2 anos', '3'=>'3 anos','4'=>'4 anos','5'=>'5 anos',
