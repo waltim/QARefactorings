@@ -12,10 +12,6 @@ class SearchEvent extends AppModel
 
     public $validate = array(
         'title' => array(
-            'alphaNumeric' => array(
-                'rule' => 'alphaNumeric',
-                'message' => 'Use apenas letras e números.'
-            ),
             'unique' => array(
                 'rule' => 'isUnique',
                 'message' => 'Este tipo já foi cadastrado.'

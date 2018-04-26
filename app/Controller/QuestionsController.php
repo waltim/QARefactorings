@@ -92,62 +92,62 @@ class QuestionsController extends AppController
 			'recursive' => -1,
 			'contain' => array(
 				'User',
-				'Question'
+				'ResultQuestion'
 			),
-			'order' => array('Question.id ASC')
+			'order' => array('Answer.result_question_id ASC')
 		));
 
-		$transformcoesPorUsuario = $this->User->Transformation->find('all', array(
-			'conditions' => array(
-				'Transformation.user_id' => $this->Auth->user('id'),
-			),
-			'recursive' => -1
-		));
-		$array = array();
-		$key = 0;
-		foreach ($transformcoesPorUsuario as $transf) {
-			$QuestoesPorUsuario = $this->Result->find('first', array(
-				'conditions' => array(
-					'Result.transformation_id' => $transf['Transformation']['id'],
-					'Result.metric_id' => 4
-				),
-				'recursive' => 1
-			));
-			if (!empty($QuestoesPorUsuario)) {
-				$array[$key] = $QuestoesPorUsuario['Question'][0]['id'];
-				$key++;
-			}
-		}
-
-		foreach ($respondidas as $resp) {
-			$array[$key] = $resp['Question']['id'];
-			$key++;
-		}
-
-		$array = array_unique($array);
-
-		$k = 0;
-		$arrayFiltrado = array();
-
-		foreach ($array as $ar) {
-			$arrayFiltrado[$k]['Question.id !='] = $ar;
-			$k++;
-		}
-
-		$question = $this->Question->find('first', array(
-			'conditions' => array(
-				'Result.metric_id' => 4,
-				'AND' => $arrayFiltrado
-			),
-			'recursive' => -1,
-			'order' => 'rand()',
-			'contain' => array(
-				'Result' => array(
-					'Transformation' => array('Language')
-				),
-				'Answer'
-			)
-		));
+//		$transformcoesPorUsuario = $this->User->Transformation->find('all', array(
+//			'conditions' => array(
+//				'Transformation.user_id' => $this->Auth->user('id'),
+//			),
+//			'recursive' => -1
+//		));
+//		$array = array();
+//		$key = 0;
+//		foreach ($transformcoesPorUsuario as $transf) {
+//			$QuestoesPorUsuario = $this->Result->find('first', array(
+//				'conditions' => array(
+//					'Result.transformation_id' => $transf['Transformation']['id'],
+//					'Result.metric_id' => 4
+//				),
+//				'recursive' => 1
+//			));
+//			if (!empty($QuestoesPorUsuario)) {
+//				$array[$key] = $QuestoesPorUsuario['Question'][0]['id'];
+//				$key++;
+//			}
+//		}
+//
+//		foreach ($respondidas as $resp) {
+//			$array[$key] = $resp['Question']['id'];
+//			$key++;
+//		}
+//
+//		$array = array_unique($array);
+//
+//		$k = 0;
+//		$arrayFiltrado = array();
+//
+//		foreach ($array as $ar) {
+//			$arrayFiltrado[$k]['Question.id !='] = $ar;
+//			$k++;
+//		}
+//
+//		$question = $this->Question->find('first', array(
+//			'conditions' => array(
+//				'Result.metric_id' => 4,
+//				'AND' => $arrayFiltrado
+//			),
+//			'recursive' => -1,
+//			'order' => 'rand()',
+//			'contain' => array(
+//				'Result' => array(
+//					'Transformation' => array('Language')
+//				),
+//				'Answer'
+//			)
+//		));
 
 		if (empty($question)) {
 			$this->Session->setFlash(__('Você não possui questões para responder, volte mais tarde!'), 'Flash/info');
