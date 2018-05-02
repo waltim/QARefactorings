@@ -15,6 +15,7 @@
                 <table id="example2" class="table table-bordered table-hover">
                     <thead>
                     <tr>
+                        <th>Pesquisador</th>
                         <th>Titulo</th>
                         <th>Escola</th>
                         <th>Ações</th>
@@ -23,6 +24,7 @@
                     <tbody>
                     <?php foreach ($pesquisas as $pesquisa) { ?>
                         <tr>
+                            <td><?= $pesquisa['User']['name'] ?></td>
                             <td><?= $pesquisa['SearchEvent']['title'] ?></td>
                             <td>
                                 <?= $pesquisa['SearchEvent']['school'] ?>
@@ -39,12 +41,12 @@
                                     </a>
 
                                     <a href="<?= $this->webroot ?>transformations/add/<?= $pesquisa['SearchEvent']['id'] ?>"
-                                       title="Cadastrar transformalções">
+                                       title="Cadastrar transformações">
                                         <i class="fa fa-save fa-lg"></i>
                                     </a>
                                 <?php } else { ?>
                                     <a href="<?= $this->webroot ?>transformations/add/<?= $pesquisa['SearchEvent']['id'] ?>"
-                                       title="Cadastrar transformalções">
+                                       title="Cadastrar transformações">
                                         <i class="fa fa-save fa-lg"></i>
                                     </a>
                                 <?php } ?>
@@ -54,6 +56,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
+                        <th>Pesquisador</th>
                         <th>Titulo</th>
                         <th>Escola</th>
                         <th>Ações</th>

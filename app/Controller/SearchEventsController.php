@@ -26,12 +26,16 @@ class SearchEventsController extends AppController
     {
         if ($this->Auth->user('UserType.description') == 'administrador') {
             $participations = $this->Participant->find('all', array(
+                'conditions' => array(
+                    'Participant.participant_type_id' => 1
+                ),
                 'order' => array('Participant.search_event_id DESC')
             ));
             $pesquisas = array();
             foreach ($participations as $key => $participation) {
                 $pesquisas[$key]['SearchEvent'] = $participation['SearchEvent'];
                 $pesquisas[$key]['Participant'] = $participation['Participant'];
+                $pesquisas[$key]['User'] = $participation['User'];
             }
         } else {
             $participations = $this->Participant->find('all', array(
@@ -44,10 +48,11 @@ class SearchEventsController extends AppController
             foreach ($participations as $key => $participation) {
                 $pesquisas[$key]['SearchEvent'] = $participation['SearchEvent'];
                 $pesquisas[$key]['Participant'] = $participation['Participant'];
+                $pesquisas[$key]['User'] = $participation['User'];
             }
         }
 
-        $this->set('pesquisas',$pesquisas);
+        $this->set('pesquisas', $pesquisas);
     }
 
     public function add()

@@ -71,11 +71,11 @@ class TransformationsController extends AppController
 			$metricas = $this->request->data['Transformation']['metricas'];
 			$this->Transformation->create();
 			if ($this->Transformation->validates() != false && $this->Transformation->save($refactoring)) {
+                $lastCreated = $this->Transformation->find('first', array(
+                    'conditions' => array('Transformation.user_id' => $uid),
+                    'order' => array('Transformation.id DESC')
+                ));
 				if (count($metricas) > 0) {
-					$lastCreated = $this->Transformation->find('first', array(
-						'conditions' => array('Transformation.user_id' => $uid),
-						'order' => array('Transformation.id DESC')
-					));
 					foreach ($metricas as $metrica) {
 						$this->Result->create();
 						$result = array(
