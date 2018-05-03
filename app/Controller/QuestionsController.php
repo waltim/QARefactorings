@@ -16,6 +16,7 @@ class QuestionsController extends AppController
         $this->loadModel('Result');
         $this->loadModel('Answer');
         $this->loadModel('Question');
+        $this->loadModel('ResultQuestion');
         $this->loadModel('User');
         $this->loadModel('UserLanguage');
         $this->loadModel('Participant');
@@ -24,6 +25,48 @@ class QuestionsController extends AppController
     public function index()
     {
 
+    }
+
+    public function survey($id = null)
+    {
+
+        $transformacoes = $this->Transformation->find('all', array(
+            'conditions' => array(
+                'Transformation.search_event_id' => $id
+            )
+        ));
+        if ($transformacoes) {
+            foreach ($transformacoes as $transformation) {
+                $resultado = $this->Result->find('first', array(
+                    'conditions' => array(
+                        'Result.transformation_id' => $transformation['Transformation']['id'],
+                        'Result.metric_id' => 4
+                    )
+                ));
+                $questoes = $this->Participant->find('all', array(
+                    'conditions' => array(
+                        'Participant.search_event_id' => $id,
+                        'Participant.participant_type_id' => 4
+                    )
+                ));
+
+                foreach ($questoes as $participations) {
+                    foreach ($participations['Question'] as $question) {
+                        $this->ResultQuestion->create();
+                        $survey = array(
+                            'ResultQuestion' => array(
+                                'result_id' => $resultado['Result']['id'],
+                                'question_id' => $question['id']
+                            )
+                        );
+                        $this->ResultQuestion->save($survey);
+                    }
+                }
+            }
+
+            $this->Session->setFlash(__('Survey gerado com sucesso!'), 'Flash/success');
+            $this->redirect(array('controller' => 'searchEvents', 'action' => 'index'));
+        }
     }
 
     public function cadastrar($pesquisa = null)
@@ -103,12 +146,14 @@ class QuestionsController extends AppController
             $contador = $this->Answer->find('count', array(
                 'conditions' => array(
                     'Answer.user_id' => $this->request->data['Answer']['user_id'],
-                    'Answer.question_id' => $this->request->data['Answer']['question_id']
+                    'Answer.result_question_id' => $this->request->data['Answer']['result_question_id']
                 ),
                 'recursive' => -1,
                 'contain' => array(
                     'User',
-                    'Question'
+                    'ResultQuestion' => array(
+                        'Question'
+                    )
                 )
             ));
             if ($contador < 1) {
@@ -148,67 +193,22 @@ class QuestionsController extends AppController
             'order' => array('Answer.result_question_id ASC')
         ));
 
-//		$transformcoesPorUsuario = $this->User->Transformation->find('all', array(
-//			'conditions' => array(
-//				'Transformation.user_id' => $this->Auth->user('id'),
-//			),
-//			'recursive' => -1
-//		));
-//		$array = array();
-//		$key = 0;
-//		foreach ($transformcoesPorUsuario as $transf) {
-//			$QuestoesPorUsuario = $this->Result->find('first', array(
-//				'conditions' => array(
-//					'Result.transformation_id' => $transf['Transformation']['id'],
-//					'Result.metric_id' => 4
-//				),
-//				'recursive' => 1
-//			));
-//			if (!empty($QuestoesPorUsuario)) {
-//				$array[$key] = $QuestoesPorUsuario['Question'][0]['id'];
-//				$key++;
-//			}
-//		}
-//
-//		foreach ($respondidas as $resp) {
-//			$array[$key] = $resp['Question']['id'];
-//			$key++;
-//		}
-//
-//		$array = array_unique($array);
-//
-//		$k = 0;
-//		$arrayFiltrado = array();
-//
-//		foreach ($array as $ar) {
-//			$arrayFiltrado[$k]['Question.id !='] = $ar;
-//			$k++;
-//		}
-//
-//		$question = $this->Question->find('first', array(
-//			'conditions' => array(
-//				'Result.metric_id' => 4,
-//				'AND' => $arrayFiltrado
-//			),
-//			'recursive' => -1,
-//			'order' => 'rand()',
-//			'contain' => array(
-//				'Result' => array(
-//					'Transformation' => array('Language')
-//				),
-//				'Answer'
-//			)
-//		));
+        $question = $this->ResultQuestion->find('first', array(
+            'recursive' => 3,
+            'order' => 'rand()'
+        ));
+
+        //pr($question);exit();
 
         if (empty($question)) {
             $this->Session->setFlash(__('Você não possui questões para responder, volte mais tarde!'), 'Flash/info');
             $this->redirect(array('controller' => 'pages', 'action' => 'home'));
         }
 
-        $userLanguage = $this->UsersLanguage->find('count', array(
+        $userLanguage = $this->UserLanguage->find('count', array(
             'conditions' => array(
-                'UserLanguage.languages_id' => $question['Result']['Transformation']['language_id'],
-                'UserLanguage.users_id' => $this->Auth->user('id')
+                'UserLanguage.language_id' => $question['Result']['Transformation']['language_id'],
+                'UserLanguage.user_id' => $this->Auth->user('id')
             )
         ));
 

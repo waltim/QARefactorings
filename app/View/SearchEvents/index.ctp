@@ -52,6 +52,10 @@
                                        title="Colaborar">
                                         <i class="fa fa-edit fa-lg"></i>
                                     </a>
+                                    <a href="<?= $this->webroot ?>questions/survey/<?= $pesquisa['SearchEvent']['id'] ?>"
+                                       title="Gerar Survey">
+                                        <i class="fa fa-question-circle fa-lg"></i>
+                                    </a>
                                 <?php } else { ?>
                                     <a href="<?= $this->webroot ?>transformations/add/<?= $pesquisa['SearchEvent']['id'] ?>"
                                        title="Cadastrar transformações">
@@ -64,6 +68,10 @@
                                     <a href="<?= $this->webroot ?>questions/cadastrar/<?= $pesquisa['SearchEvent']['id'] ?>"
                                        title="Colaborar">
                                         <i class="fa fa-edit fa-lg"></i>
+                                    </a>
+                                    <a href="<?= $this->webroot ?>questions/survey/<?= $pesquisa['SearchEvent']['id'] ?>"
+                                       title="Gerar Survey">
+                                        <i class="fa fa-question-circle fa-lg"></i>
                                     </a>
                                 <?php } ?>
                             </td>

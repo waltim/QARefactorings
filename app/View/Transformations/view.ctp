@@ -231,7 +231,7 @@
                         <?php foreach ($respostas as $resp) { ?>
                             <tr>
                                 <td><?= $resp['User']['email'] ?></td>
-                                <td><?= $resp['Question']['id'] ?></td>
+                                <td><?= $resp['ResultQuestion']['question_id'] ?></td>
                                 <td><?= $resp['Answer']['choice'] ?></td>
                                 <td><?= $resp['Answer']['justify'] ?></td>
                             </tr>

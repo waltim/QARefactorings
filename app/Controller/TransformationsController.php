@@ -181,12 +181,18 @@ class TransformationsController extends AppController
                 'Transformation.id' => $id
             )
         ));
+        //pr($questao);exit();
         if (!empty($questao['ResultQuestion'])) {
-            $respostas = $this->Answer->find('all', array(
-                'conditions' => array(
-                    'Answer.result_question_id' => $questao['ResultQuestion'][0]['id']
-                )
-            ));
+            $k = 0;
+            foreach ($questao['ResultQuestion'] as $rq) {
+                $respostas[$k] = $this->Answer->find('first', array(
+                    'conditions' => array(
+                        'Answer.result_question_id' => $rq['id']
+                    )
+                ));
+                $k++;
+            }
+            $respostas = array_filter($respostas);
             $this->set('respostas', $respostas);
         }
         $this->set('transformation', $show);
