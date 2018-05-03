@@ -50,20 +50,22 @@ class Result extends AppModel{
         )
     );
 
-    public $hasAndBelongsToMany = array(
+    public $hasMany = array(
         'ResultQuestion' => array(
             'className' => 'ResultQuestion',
-            'joinTable' => 'questions',
+            'joinTable' => '',
             'foreignKey' => 'result_id',
-            'associationForeignKey' => 'question_id',
-            'unique' => false,
+            'associationForeignKey' => '',
             'dependent' => true,
+            'unique' => '',
             'conditions' => '',
             'fields' => '',
             'order' => '',
             'limit' => '',
+            'exclusive' => '',
+            'finderQuery' => '',
             'offset' => '',
-            'finderQuery' => ''
+            'with' => '',
         )
     );
 

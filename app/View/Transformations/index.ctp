@@ -1,10 +1,11 @@
 <div class="row">
     <div class="col-xs-12">
-        Aics = <?= $aics ?>; ForEachs = <?= $foreachs ?>; Filters = <?= $filters ?>; Exists = <?= $exists ?>; Maps
-        = <?= $maps ?>;
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">Tabela de transformações</h3>
+                <a href="/transformations/add/<?= $pesquisa ?>">
+                    <button type="button" class="btn btn-primary pull-right">Cadastrar Transformações</button>
+                </a>
             </div>
             <!-- /.box-header -->
             <div class="box-body">

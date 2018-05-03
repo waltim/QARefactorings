@@ -44,10 +44,26 @@
                                        title="Cadastrar transformações">
                                         <i class="fa fa-save fa-lg"></i>
                                     </a>
+                                    <a href="<?= $this->webroot ?>transformations/index/<?= $pesquisa['SearchEvent']['id'] ?>"
+                                       title="Trasformações da pesquisa">
+                                        <i class="fa fa-database fa-lg"></i>
+                                    </a>
+                                    <a href="<?= $this->webroot ?>questions/cadastrar/<?= $pesquisa['SearchEvent']['id'] ?>"
+                                       title="Colaborar">
+                                        <i class="fa fa-edit fa-lg"></i>
+                                    </a>
                                 <?php } else { ?>
                                     <a href="<?= $this->webroot ?>transformations/add/<?= $pesquisa['SearchEvent']['id'] ?>"
                                        title="Cadastrar transformações">
                                         <i class="fa fa-save fa-lg"></i>
+                                    </a>
+                                    <a href="<?= $this->webroot ?>transformations/index/<?= $pesquisa['SearchEvent']['id'] ?>"
+                                       title="Trasformações da pesquisa">
+                                        <i class="fa fa-database fa-lg"></i>
+                                    </a>
+                                    <a href="<?= $this->webroot ?>questions/cadastrar/<?= $pesquisa['SearchEvent']['id'] ?>"
+                                       title="Colaborar">
+                                        <i class="fa fa-edit fa-lg"></i>
                                     </a>
                                 <?php } ?>
                             </td>

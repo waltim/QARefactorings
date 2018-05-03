@@ -10,15 +10,6 @@ class Question extends AppModel
     public $displayField = 'description';
 
     public $validate = array(
-        'result_id' => array(
-            'result_id' => array(
-                'rule' => 'notBlank',
-            ),
-            'numeric' => array(
-                'rule' => 'numeric',
-                'message' => 'Números apenas.'
-            )
-        ),
         'question_type_id' => array(
             'question_type_id' => array(
                 'rule' => 'notBlank',
@@ -55,20 +46,22 @@ class Question extends AppModel
         )
     );
 
-    public $hasAndBelongsToMany = array(
+    public $hasMany = array(
         'ResultQuestion' => array(
             'className' => 'ResultQuestion',
-            'joinTable' => 'results',
+            'joinTable' => '',
             'foreignKey' => 'question_id',
-            'associationForeignKey' => 'result_id',
-            'unique' => false,
+            'associationForeignKey' => '',
             'dependent' => true,
+            'unique' => '',
             'conditions' => '',
             'fields' => '',
             'order' => '',
             'limit' => '',
+            'exclusive' => '',
+            'finderQuery' => '',
             'offset' => '',
-            'finderQuery' => ''
+            'with' => '',
         )
     );
 }

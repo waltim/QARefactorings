@@ -45,7 +45,7 @@
 	<?php
 
 } ?>
-	<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view') { ?>
+	<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view' || $this->request->params['controller'] == 'questions' && $this->request->params['action'] == 'cadastrar') { ?>
 	<?php echo $this->Html->css(array(
 	'../syntaxhighlighter/styles/shCoreEclipse.css',
 	'jquery.dataTables.min.css',
@@ -138,7 +138,7 @@ if ($this->session->read('Auth.User.UserType.description') === 'administrador') 
 	<?php
 
 } ?>
-	<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view') { ?>
+	<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view' || $this->request->params['controller'] == 'questions' && $this->request->params['action'] == 'cadastrar') { ?>
 <?php echo $this->Html->script(array(
 	'jquery.dataTables.min.js',
 	'dataTables.buttons.min.js',
