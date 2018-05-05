@@ -29,21 +29,20 @@
 						<label>(Opcional) Justificativa</label>
 						<textarea rows="5" maxlength="200" name="data[Answer][justify]" class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>
 					</div>
-					<input type="hidden" name="data[Answer][result_question_id]" value="<?=$question['Question']['id'];?>">
+					<input type="hidden" name="data[Answer][result_question_id]" value="<?=$question['ResultQuestion']['id'];?>">
 					<input type="hidden" name="data[Answer][start_time]" value="<?=$tempo = date('H:i:s');?>">
 					<div class="form-group text-center">
 						<a href="<?=$this->webroot?>" class="pull-left"><button value="sair" name="data[Answer][choice]" class="btn btn-raised btn-default">Sair</button></a>
-						<button id="DP" name="data[Answer][choice]" value="0" class="btn btn-raised btn-default" type="submit">0</button>
-						<button id="D" name="data[Answer][choice]" value="1" class="btn btn-raised btn-default" type="submit">1</button>
-						<button id="NDNC" name="data[Answer][choice]" value="2" class="btn btn-raised btn-default" type="submit">2</button>
-						<button id="C" name="data[Answer][choice]" value="3" class="btn btn-raised btn-default" type="submit">3</button>
-						<button id="CP" name="data[Answer][choice]" value="4" class="btn btn-raised btn-default" type="submit">4</button>
-                        <button id="DP" name="data[Answer][choice]" value="5" class="btn btn-raised btn-default" type="submit">5</button>
-                        <button id="D" name="data[Answer][choice]" value="6" class="btn btn-raised btn-default" type="submit">6</button>
-                        <button id="NDNC" name="data[Answer][choice]" value="7" class="btn btn-raised btn-default" type="submit">7</button>
-                        <button id="C" name="data[Answer][choice]" value="8" class="btn btn-raised btn-default" type="submit">8</button>
-                        <button id="CP" name="data[Answer][choice]" value="9" class="btn btn-raised btn-default" type="submit">9</button>
-                        <button id="CP" name="data[Answer][choice]" value="10" class="btn btn-raised btn-default" type="submit">10</button>
+						<button id="DP" name="data[Answer][choice]" value="0" class="btn btn-raised btn-default" type="submit">1</button>
+						<button id="D" name="data[Answer][choice]" value="1" class="btn btn-raised btn-default" type="submit">2</button>
+						<button id="NDNC" name="data[Answer][choice]" value="2" class="btn btn-raised btn-default" type="submit">3</button>
+						<button id="C" name="data[Answer][choice]" value="3" class="btn btn-raised btn-default" type="submit">4</button>
+						<button id="CP" name="data[Answer][choice]" value="4" class="btn btn-raised btn-default" type="submit">5</button>
+                        <button id="DP" name="data[Answer][choice]" value="5" class="btn btn-raised btn-default" type="submit">6</button>
+                        <button id="D" name="data[Answer][choice]" value="6" class="btn btn-raised btn-default" type="submit">7</button>
+                        <button id="NDNC" name="data[Answer][choice]" value="7" class="btn btn-raised btn-default" type="submit">8</button>
+                        <button id="C" name="data[Answer][choice]" value="8" class="btn btn-raised btn-default" type="submit">9</button>
+                        <button id="CP" name="data[Answer][choice]" value="9" class="btn btn-raised btn-default" type="submit">10</button>
 						<a href="<?=$this->webroot?>questions/responder" class="pull-right"><button value="pular" name="data[Answer][choice]" class="btn btn-raised btn-primary">Pular questão</button></a>
 					</div>
 				</form>

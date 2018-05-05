@@ -28,7 +28,7 @@
                             <code id="codigo2" class="brush: <?=$transformation['Language']['brush'];?>"><?php echo $codigoDepois;?></code>
                         </div>
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-md-12">Qual(is) pergunta(s) você sugeria sobre a refatoração acima?</label>
+                            <label for="inputEmail3" class="col-md-12">Qual pergunta você faria sobre a transformação acima?</label>
                             <div class="col-md-12">
                                 <textarea rows="5" maxlength="200" name="data[Question][description]" class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>
                             </div>

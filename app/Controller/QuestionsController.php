@@ -193,12 +193,27 @@ class QuestionsController extends AppController
             'order' => array('Answer.result_question_id ASC')
         ));
 
-        $question = $this->ResultQuestion->find('first', array(
-            'recursive' => 3,
-            'order' => 'rand()'
+        $array = $question = $this->Answer->find('all', array(
+            'recursive' => 1,
+            'conditions' => array(
+                'Answer.user_id' => $this->Auth->user('id')
+            )
         ));
 
-        //pr($question);exit();
+        $arrayFiltrado = array();
+        $k = 0;
+        foreach ($array as $ar) {
+            $arrayFiltrado[$k]['ResultQuestion.id !='] = $ar['ResultQuestion']['id'];
+            $k++;
+        }
+
+        $question = $this->ResultQuestion->find('first', array(
+            'recursive' => 3,
+            'order' => 'rand()',
+            'conditions' => array(
+                'AND' => $arrayFiltrado
+            )
+        ));
 
         if (empty($question)) {
             $this->Session->setFlash(__('Você não possui questões para responder, volte mais tarde!'), 'Flash/info');
