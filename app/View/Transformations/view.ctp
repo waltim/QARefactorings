@@ -24,6 +24,9 @@
                         <p><b>Data
                                 cadastro:</b> <?= date('d/m/Y', strtotime($transformation['Transformation']['created'])); ?>
                         </p>
+                        <p><b>Link da transformação:</b> <a target="_blank"
+                                                            href="<?= $transformation['Transformation']['site_link'] ?>">Clique
+                                aqui para abrir o local</a></p>
                     </div>
                     <div class="timeline-footer">
                         <!-- <a class="btn btn-primary btn-xs">editar</a>
@@ -49,13 +52,13 @@
                             $codigoAntigo = strip_tags($codigoAntigo, '<br>');
                             ?>
                             <code id="codigo1"
-                                  class="brush: <?= $transformation['Language']['brush']; ?>"><?php echo $codigoAntigo; ?></code>
+                                  class="brush: diff"><?php echo $codigoAntigo; ?></code>
                             <form class="form-horizontal" method="post"
                                   action="<?= $this->webroot ?>transformations/view/<?= $transformation['Transformation']['id']; ?>">
                                 <div class="box-body">
                                     <div class="form-group">
                                         <input name="data[Transformation][deletions]"
-                                               value="<?= $transformation['Transformation']['deletions'] ?>" required
+                                               value="<?= $transformation['Transformation']['deletions'] ?>"
                                                type="text" class="form-control"
                                                placeholder="Destacar uma linha, ex: 1 ou para varias linhas, ex: 1,2,3...n">
                                         <button type="submit" class="btn btn-info">Atualizar</button>
@@ -69,14 +72,13 @@
                             $codigoDepois = str_replace("&nbsp; }", "}", $transformation['Transformation']['code_after']);
                             $codigoDepois = strip_tags($codigoDepois, '<br>');
                             ?>
-                            <code id="codigo2"
-                                  class="brush: <?= $transformation['Language']['brush']; ?>"><?php echo $codigoDepois; ?></code>
+                            <code id="codigo2" class="brush: diff"><?php echo $codigoDepois; ?></code>
                             <form class="form-horizontal" method="post"
                                   action="<?= $this->webroot ?>transformations/view/<?= $transformation['Transformation']['id']; ?>">
                                 <div class="box-body">
                                     <div class="form-group">
                                         <input name="data[Transformation][additions]"
-                                               value="<?= $transformation['Transformation']['additions'] ?>" required
+                                               value="<?= $transformation['Transformation']['additions'] ?>"
                                                type="text" class="form-control"
                                                placeholder="Destacar uma linha, ex: 1 ou para varias linhas, ex: 1,2,3...n">
                                         <button type="submit" class="btn btn-info">Atualizar</button>

@@ -31,7 +31,7 @@ class TransformationsController extends AppController
         }
 
         $this->set(compact('transformations'));
-        $this->set('pesquisa',$pesquisa);
+        $this->set('pesquisa', $pesquisa);
     }
 
     public function add($id = null)
@@ -195,6 +195,7 @@ class TransformationsController extends AppController
             $respostas = array_filter($respostas);
             $this->set('respostas', $respostas);
         }
+
         $this->set('transformation', $show);
         $this->set('quantitativas', $quantitativas);
         $this->set('qualitativas', $qualitativas);

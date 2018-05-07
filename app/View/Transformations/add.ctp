@@ -75,6 +75,12 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Link da transformação</label>
+                        <input type="text" name="data[Transformation][site_link]" class="form-control" id="siteLink"
+                               placeholder="Ex: https://github.com/NomeProjeto/xxx">
+                    </div>
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">

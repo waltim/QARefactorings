@@ -29,10 +29,12 @@
                                    title="Visualizar">
                                     <i class="fa fa-television fa-lg"></i>
                                 </a>
+                                |
                                 <a href="<?= $this->webroot ?>transformations/edit/<?= $transformation['Transformation']['id'] ?>"
                                    title="Editar">
                                     <i class="fa fa-edit fa-lg"></i>
                                 </a>
+                                |
                                 <a href="<?= $this->webroot ?>transformations/delete/<?= $transformation['Transformation']['id'] ?>"
                                    onclick="return confirm('Tem certeza?')" title="Deletar">
                                     <i class="fa fa-eraser fa-lg"></i>
