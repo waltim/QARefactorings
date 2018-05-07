@@ -1,4 +1,14 @@
 <div class="row">
+    <div class="col-md-12 pull-right">
+        <a href="<?= $this->webroot ?>transformations/edit/<?= $transformation['Transformation']['id'] ?>"
+           title="Editar">
+            <button class="btn btn-primary pull-right">Editar</button>
+        </a>
+        <a href="<?= $this->webroot ?>transformations/index/<?= $transformation['Transformation']['search_event_id'] ?>"
+           title="Tabela de transformações">
+            <button class="btn btn-primary pull-right">Banco da pesquisa</button>
+        </a>
+    </div>
     <div class="col-md-12">
         <!-- The time line -->
         <ul class="timeline">

@@ -257,7 +257,7 @@ class TransformationsController extends AppController
                 $this->Result->save($result);
             }
         }
-        $this->Session->setFlash(__('Métricas calculadas com sucesso.'), 'Flash/success');
-        $this->redirect(array('action' => 'add', $metricas['Transformation']['search_event_id']));
+        /*$this->Session->setFlash(__('Métricas calculadas com sucesso.'), 'Flash/success');*/
+        $this->redirect(array('action' => 'view', $metricas['Transformation']['id']));
     }
 }

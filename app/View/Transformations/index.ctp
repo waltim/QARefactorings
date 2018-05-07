@@ -12,6 +12,7 @@
                 <table id="example2" class="table table-bordered table-hover">
                     <thead>
                     <tr>
+                        <th>Número</th>
                         <th>Linguagem</th>
                         <th>Tipo</th>
                         <th>Transformação</th>
@@ -19,8 +20,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($transformations as $transformation) { ?>
+                    <?php $i = 1; foreach ($transformations as $transformation) { ?>
                         <tr>
+                            <td><?=$i?></td>
                             <td><?= $transformation['Language']['description']; ?></td>
                             <td><?= $transformation['TransformationType']['description']; ?></td>
                             <td> <?= $transformation['Transformation']['code_after']; ?></td>
@@ -41,10 +43,11 @@
                                 </a>
                             </td>
                         </tr>
-                    <?php } ?>
+                    <?php $i++;} ?>
                     </tbody>
                     <tfoot>
                     <tr>
+                        <th>Número</th>
                         <th>Linguagem</th>
                         <th>Tipo</th>
                         <th>Transformação</th>

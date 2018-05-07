@@ -136,6 +136,7 @@ class QuestionsController extends AppController
     public function responder()
     {
         if ($this->request->is('post')) {
+            pr($this->request->data);exit();
             if ($this->request->data['Answer']['choice'] == 'pular') {
                 $this->redirect(array('action' => 'responder'));
             }
@@ -214,6 +215,8 @@ class QuestionsController extends AppController
                 'AND' => $arrayFiltrado
             )
         ));
+
+        //pr($question['Result']['ResultQuestion']);exit();
 
         if (empty($question)) {
             $this->Session->setFlash(__('Você não possui questões para responder, volte mais tarde!'), 'Flash/info');

@@ -40,7 +40,7 @@
 <!--        src="--><?//= $this->webroot; ?><!--syntaxhighlighter/scripts/shBrush--><?//= $question['Result']['Transformation']['Language']['description']; ?><!--.js"></script>-->
 <script
         type="text/javascript"
-        src="<?= $this->webroot; ?>syntaxhighlighter/scripts/BrushDiff.js"></script>
+        src="<?= $this->webroot; ?>syntaxhighlighter/scripts/shBrushDiff.js"></script>
 <script>
     SyntaxHighlighter.config.tagName = "code";
     SyntaxHighlighter.defaults['gutter'] = false;
