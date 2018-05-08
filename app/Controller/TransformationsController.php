@@ -66,8 +66,8 @@ class TransformationsController extends AppController
                     $this->redirect(array('action' => 'add', $lastCreated['Transformation']['search_event_id']));
                 }
             } else {
-                pr($this->Transformation->validationErrors);
-                exit();
+/*                pr($this->Transformation->validationErrors);
+                exit();*/
                 $this->Session->setFlash(__('Houve um erro ao salvar, tente novamente.'), 'Flash/error');
             }
         }

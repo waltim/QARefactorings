@@ -37,7 +37,7 @@
 ));
 ?>
 <!--<script type="text/javascript"-->
-<!--        src="--><?//= $this->webroot; ?><!--syntaxhighlighter/scripts/shBrush--><?//= $question['Result']['Transformation']['Language']['description']; ?><!--.js"></script>-->
+<!--        src="--><? //= $this->webroot; ?><!--syntaxhighlighter/scripts/shBrush--><? //= $question['Result']['Transformation']['Language']['description']; ?><!--.js"></script>-->
 <script
         type="text/javascript"
         src="<?= $this->webroot; ?>syntaxhighlighter/scripts/shBrushDiff.js"></script>
@@ -54,4 +54,27 @@
     SyntaxHighlighter.highlight(undefined, element2);
     $("#codigo-antes").addClass('col-md-6')
     $("#codigo-depois").addClass('col-md-6')
+    $("#questao-2").show();
+    $("#questao-3").show();
+    $("#questao-4").show();
+    $("#check").click(function () {
+        if ($(this).val() == "N") {
+            $("#questao-2").hide();
+            $("#questao-3").hide();
+            $("#questao-4").hide();
+            var obgJustificar = document.getElementById('text-justifique');
+            obgJustificar.setAttribute('required', 'required');
+            var selecionado = document.getElementById('check');
+            selecionado.removeAttribute('checked', 'checked');
+        }
+    });
+    $("#check1").click(function () {
+        if ($(this).val() == "S") {
+            $("#questao-2").show();
+            $("#questao-3").show();
+            $("#questao-4").show();
+            var obgJustificar = document.getElementById('text-justifique');
+            obgJustificar.removeAttribute('required', 'required');
+        }
+    });
 </script>
