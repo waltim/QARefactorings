@@ -66,6 +66,12 @@
             obgJustificar.setAttribute('required', 'required');
             var selecionado = document.getElementById('check');
             selecionado.removeAttribute('checked', 'checked');
+            var dp1 = document.getElementById('DP2');
+            dp1.removeAttribute('required', 'required');
+            var dp2 = document.getElementById('DP3');
+            dp2.removeAttribute('required', 'required');
+            var dp3 = document.getElementById('DP4');
+            dp3.removeAttribute('required', 'required');
         }
     });
     $("#check1").click(function () {
@@ -75,6 +81,12 @@
             $("#questao-4").show();
             var obgJustificar = document.getElementById('text-justifique');
             obgJustificar.removeAttribute('required', 'required');
+            var dp1 = document.getElementById('DP2');
+            dp1.setAttribute('required', 'required');
+            var dp2 = document.getElementById('DP3');
+            dp2.setAttribute('required', 'required');
+            var dp3 = document.getElementById('DP4');
+            dp3.setAttribute('required', 'required');
         }
     });
 </script>

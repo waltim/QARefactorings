@@ -119,8 +119,6 @@ class QuestionsController extends AppController
 
         $this->set('transformation', $transformacao);
         $this->set('pesquisa', $pesquisa);
-
-
     }
 
     public function edit()
@@ -136,14 +134,31 @@ class QuestionsController extends AppController
     public function responder()
     {
         if ($this->request->is('post')) {
-            pr($this->request->data);exit();
-            if ($this->request->data['Answer']['choice'] == 'pular') {
+            $this->request->data['Answer']['end_time'] = date('H:i:s');
+            $this->request->data['Answer']['choice'][0] = $this->request->data['check'];
+            unset($this->request->data['check']);
+            ksort($this->request->data['Answer']['choice']);
+            $this->request->data['Answer']['user_id'] = $this->Auth->user('id');
+            if ($this->request->data['Answer']['choice'][0] == "N") {
+                foreach ($this->request->data['Answer']['choice'] as $key => $cho) {
+                    if ($key > 0) {
+                        $this->request->data['Answer']['choice'][$key] = 'N/A';
+                    }
+                }
+            }
+            foreach ($this->request->data['Answer']['justify'] as $key => $just) {
+                if ($just == "") {
+                    $this->request->data['Answer']['justify'][$key] = 'N/A';
+                }
+            }
+//            pr($this->request->data);
+//            exit();
+            if ($this->request->data['Answer']['botao'] == 'pular') {
                 $this->redirect(array('action' => 'responder'));
             }
-            if ($this->request->data['Answer']['choice'] == 'sair') {
+            if ($this->request->data['Answer']['botao'] == 'sair') {
                 $this->redirect(array('controller' => 'pages', 'action' => 'home'));
             }
-            $this->request->data['Answer']['user_id'] = $this->Auth->user('id');
             $contador = $this->Answer->find('count', array(
                 'conditions' => array(
                     'Answer.user_id' => $this->request->data['Answer']['user_id'],
@@ -158,24 +173,41 @@ class QuestionsController extends AppController
                 )
             ));
             if ($contador < 1) {
-                $this->Answer->create();
-                $this->request->data['Answer']['end_time'] = date('H:i:s');
-                if ($this->Answer->save($this->request->data)) {
-                    $this->User->id = $this->Auth->user('id');
-                    $usuario = $this->User->find('first', array(
-                        'conditions' => array(
-                            'User.id' => $this->Auth->user('id'),
-                        )
-                    ));
-                    $update = array(
-                        'User' => array(
-                            'trophy' => $usuario['User']['trophy'] + 1
+                foreach ($this->request->data['Answer']['choice'] as $key => $answer) {
+                    $this->Answer->create();
+                    if ($key > 0) {
+                        $jkey = $key - 1;
+                    } else {
+                        $jkey = $key;
+                    }
+                    $Newresp = array(
+                        'Answer' => array(
+                            'result_question_id' => $this->request->data['Answer']['result_question_id'][$jkey],
+                            'user_id' => $this->request->data['Answer']['user_id'],
+                            'justify' => $this->request->data['Answer']['justify'][$jkey],
+                            'choice' => $this->request->data['Answer']['choice'][$key],
+                            'start_time' => $this->request->data['Answer']['start_time'],
+                            'end_time' => $this->request->data['Answer']['end_time'],
                         )
                     );
-                    $this->User->save($update);
-                    $this->Session->setFlash(__('Respondido com sucesso.'), 'Flash/success');
-                    $this->redirect(array('action' => 'responder'));
+                    if ($this->Answer->save($Newresp)) {
+                        $this->User->id = $this->Auth->user('id');
+                        $usuario = $this->User->find('first', array(
+                            'conditions' => array(
+                                'User.id' => $this->Auth->user('id'),
+                            )
+                        ));
+                        $update = array(
+                            'User' => array(
+                                'trophy' => $usuario['User']['trophy'] + 1
+                            )
+                        );
+                        $this->User->save($update);
+                    }
                 }
+
+                $this->Session->setFlash(__('Respondido com sucesso.'), 'Flash/success');
+                $this->redirect(array('action' => 'responder'));
             } else {
                 $this->Session->setFlash(__('Esta questão já foi respondida!'), 'Flash/info');
                 $this->redirect(array('controller' => 'pages', 'action' => 'home'));
