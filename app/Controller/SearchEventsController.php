@@ -24,20 +24,35 @@ class SearchEventsController extends AppController
     public function loadDataCsv()
     {
         if ($this->request->is('post')) {
-            $meuArray = Array();
-            $file = fopen('numeros.csv', 'r');
-            while (($line = fgetcsv($file)) !== false) {
-                $meuArray[] = $line;
+//            pr($this->request->data);
+//            exit();
+            $pasta = WWW_ROOT . "files/";
+            $partenome = explode(".", $this->request->data["file"]["name"]);
+            $nomearquivo = $partenome[0] . "-" . date('dmYHis', time()).".csv";
+            $oldmask = umask(0);
+            if ($this->request->data["file"]['type'] == 'text/csv') {
+                if (move_uploaded_file($this->request->data["file"]["tmp_name"], $pasta.$nomearquivo)) {
+                    $meuArray = Array();
+                    $file = fopen($pasta.$nomearquivo, 'r');
+                    while (($line = fgetcsv($file)) !== false) {
+                        $meuArray[] = $line;
+                    }
+                    fclose($file);
+                    umask($oldmask);
+                    pr($meuArray);exit();
+//            $this->capturaCodigo($pesquisa, $transformationType, $language, $url, $start, $end);
+                } else {
+                    echo "<P>MOVE UPLOADED FILE FAILED!</P>";
+                    print_r(error_get_last());
+                }
+            } else {
+                echo "<P>não é um arquivo .csv!</P>";
             }
-            fclose($file);
-            print_r($meuArray);
         }
     }
 
     public function capturaCodigo($pesquisa = null, $transformationType = null, $language = null, $url = null, $start = null, $end = null)
     {
-//        $url = "https://github.com/spring-projects/spring-framework/commit/164204ca04b9b369267ef5e36c2f243b3898bae1#diff-82984a3951d9fc77df2cd9d6421dc5d6";
-
         $cortaLink = explode("#", $url);
 
         $conecurl = @fopen("$url", "r") or die ('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
@@ -47,9 +62,9 @@ class SearchEventsController extends AppController
         }
         fclose($conecurl);
 
-        $inicio = strpos($lin, "id='diff-82984a3951d9fc77df2cd9d6421dc5d6" . $start . "' data-line-number='" . substr($start, 1) . "'") + 290;
+        $inicio = strpos($lin, "id='" . $cortaLink[1] . $start . "' data-line-number='" . substr($start, 1) . "'") + 290;
 
-        $fim = strpos($lin, "id='diff-82984a3951d9fc77df2cd9d6421dc5d6" . $end . "' data-line-number='" . substr($end, 1) . "'");
+        $fim = strpos($lin, "id='" . $cortaLink[1] . $end . "' data-line-number='" . substr($end, 1) . "'");
 
         $quantopula = $fim - $inicio;
         $conteudo = substr($lin, $inicio, $quantopula);
