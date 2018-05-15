@@ -36,8 +36,6 @@
     '../syntaxhighlighter/scripts/shBrushXml.js',
 ));
 ?>
-<!--<script type="text/javascript"-->
-<!--        src="--><? //= $this->webroot; ?><!--syntaxhighlighter/scripts/shBrush--><? //= $question['Result']['Transformation']['Language']['description']; ?><!--.js"></script>-->
 <script
         type="text/javascript"
         src="<?= $this->webroot; ?>syntaxhighlighter/scripts/shBrushDiff.js"></script>

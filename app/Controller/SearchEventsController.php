@@ -21,6 +21,95 @@ class SearchEventsController extends AppController
         $this->loadModel('Language');
     }
 
+    public function loadDataCsv()
+    {
+        if ($this->request->is('post')) {
+            $meuArray = Array();
+            $file = fopen('numeros.csv', 'r');
+            while (($line = fgetcsv($file)) !== false) {
+                $meuArray[] = $line;
+            }
+            fclose($file);
+            print_r($meuArray);
+        }
+    }
+
+    public function capturaCodigo($pesquisa = null, $transformationType = null, $language = null, $url = null, $start = null, $end = null)
+    {
+//        $url = "https://github.com/spring-projects/spring-framework/commit/164204ca04b9b369267ef5e36c2f243b3898bae1#diff-82984a3951d9fc77df2cd9d6421dc5d6";
+
+        $cortaLink = explode("#", $url);
+
+        $conecurl = @fopen("$url", "r") or die ('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
+        $lin = '';
+        while (!feof($conecurl)) {
+            $lin .= fgets($conecurl, 4096);
+        }
+        fclose($conecurl);
+
+        $inicio = strpos($lin, "id='diff-82984a3951d9fc77df2cd9d6421dc5d6" . $start . "' data-line-number='" . substr($start, 1) . "'") + 290;
+
+        $fim = strpos($lin, "id='diff-82984a3951d9fc77df2cd9d6421dc5d6" . $end . "' data-line-number='" . substr($end, 1) . "'");
+
+        $quantopula = $fim - $inicio;
+        $conteudo = substr($lin, $inicio, $quantopula);
+        $conteudo = strip_tags($conteudo, '<br>');
+        $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $conteudo);
+
+        $nomecode = $cortaLink[1];
+        $pasta = WWW_ROOT . "files/" . $nomecode . "/";
+        $caminho = $pasta;
+        $oldmask = umask(0);
+        if (file_exists($pasta)) {
+            echo "O arquivo $pasta existe";
+        } else {
+            mkdir($pasta, 0777, true);
+        }
+        $caminho = $caminho . "ab.txt";
+
+        $fp = fopen($caminho, "w+");
+
+        $escreve = fwrite($fp, $conteudo);
+
+        fclose($fp);
+        umask($oldmask);
+
+        $this->separaAnteriorETransformado($pesquisa, $transformationType, $language, $pasta, $caminho);
+    }
+
+
+    function separaAnteriorETransformado($pesquisa = null, $transformationType = null, $language = null, $pasta = null, $arquivo = null)
+    {
+        //Variável $fp armazena a conexão com o arquivo e o tipo de ação.
+        $fp = fopen($arquivo, "r");
+
+        //Lê o conteúdo do arquivo aberto.
+        $oldmask = umask(0);
+        $a = fopen($pasta . "a.txt", "w+");
+        $b = fopen($pasta . "b.txt", "w+");
+        $Aconteudo = '';
+        $Bconteudo = '';
+        while (!feof($fp)) {
+            $valor = fgets($fp, 4096);
+            if (strstr($valor, "    +")) {
+                $valor = str_replace("    +", "      ", $valor);
+                $Bconteudo .= fwrite($b, $valor);
+            } elseif (strstr($valor, "    -")) {
+                $valor = str_replace("    -", "      ", $valor);
+                $Aconteudo .= fwrite($a, $valor);
+            } else {
+                $Aconteudo .= fwrite($a, $valor);
+                $Bconteudo .= fwrite($b, $valor);
+            }
+        }
+        fclose($a);
+        fclose($b);
+        umask($oldmask);
+        //Fecha o arquivo.
+        fclose($fp);
+        //retorna o conteúdo.
+    }
+
 
     public function index()
     {

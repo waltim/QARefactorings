@@ -152,8 +152,8 @@
         '../syntaxhighlighter/scripts/shBrushXml.js',
     ));
     ?>
-<!--    <script type="text/javascript"-->
-<!--            src="--><?//= $this->webroot; ?><!--syntaxhighlighter/scripts/shBrush--><?//= $transformation['Language']['description']; ?><!--.js"></script>-->
+    <!--    <script type="text/javascript"-->
+    <!--            src="--><? //= $this->webroot; ?><!--syntaxhighlighter/scripts/shBrush--><? //= $transformation['Language']['description']; ?><!--.js"></script>-->
     <script type="text/javascript"
             src="<?= $this->webroot; ?>syntaxhighlighter/scripts/shBrushDiff.js"></script>
     <script>
@@ -161,7 +161,7 @@
         SyntaxHighlighter.defaults['gutter'] = true;
         SyntaxHighlighter.defaults['toolbar'] = false;
         SyntaxHighlighter.config.bloggerMode = true;
-        SyntaxHighlighter.defaults['diff'] = [1,2.3];
+        SyntaxHighlighter.defaults['diff'] = [1, 2.3];
         var element1 = document.getElementById('codigo1');
         var element2 = document.getElementById('codigo2');
         SyntaxHighlighter.defaults['highlight'] = [<?=$transformation['Transformation']['deletions']?>];
@@ -184,5 +184,15 @@
     <?php
 
 } ?>
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'pt',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+    }
+</script>
+<script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
