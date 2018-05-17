@@ -7,7 +7,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Carregar refatorações</h3>
                 </div>
-                <form role="form" method="post" enctype="multipart/form-data">
+                <form role="form" action="/searchEvents/loadDataCsv/<?=$pesquisa?>" method="post" enctype="multipart/form-data">
                     <div class="box-body">
                         <div class="form-group">
                             <label for="exampleInputFile">Selecione um arquivo</label>

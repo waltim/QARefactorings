@@ -32,16 +32,16 @@ class Transformation extends AppModel
 				'message' => 'Números apenas.'
 			)
 		),
-		'code_before' => array(
-			'code_before' => array(
-				'rule' => 'notBlank'
-			)
-		),
-		'code_after' => array(
-			'code_after' => array(
-				'rule' => 'notBlank'
-			)
-		)
+//		'code_before' => array(
+//			'code_before' => array(
+//				'rule' => 'notBlank'
+//			)
+//		),
+//		'code_after' => array(
+//			'code_after' => array(
+//				'rule' => 'notBlank'
+//			)
+//		)
 	);
 
 	public $belongsTo = array(

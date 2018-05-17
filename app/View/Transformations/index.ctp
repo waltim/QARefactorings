@@ -6,6 +6,9 @@
                 <a href="/transformations/add/<?= $pesquisa ?>">
                     <button type="button" class="btn btn-primary pull-right">Cadastrar Transformações</button>
                 </a>
+                <a href="/searchEvents/loadDataCsv/<?= $pesquisa ?>">
+                    <button type="button" class="btn btn-primary pull-right">Carregar CSV</button>
+                </a>
             </div>
             <!-- /.box-header -->
             <div class="box-body">

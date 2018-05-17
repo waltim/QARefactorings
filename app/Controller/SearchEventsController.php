@@ -21,38 +21,45 @@ class SearchEventsController extends AppController
         $this->loadModel('Language');
     }
 
-    public function loadDataCsv()
+    public function loadDataCsv($pesquisa = null)
     {
         if ($this->request->is('post')) {
 //            pr($this->request->data);
 //            exit();
             $pasta = WWW_ROOT . "files/";
             $partenome = explode(".", $this->request->data["file"]["name"]);
-            $nomearquivo = $partenome[0] . "-" . date('dmYHis', time()).".csv";
+            $nomearquivo = $partenome[0] . "-" . date('dmYHis', time()) . ".csv";
             $oldmask = umask(0);
             if ($this->request->data["file"]['type'] == 'text/csv') {
-                if (move_uploaded_file($this->request->data["file"]["tmp_name"], $pasta.$nomearquivo)) {
-                    $meuArray = Array();
-                    $file = fopen($pasta.$nomearquivo, 'r');
+                if (move_uploaded_file($this->request->data["file"]["tmp_name"], $pasta . $nomearquivo)) {
+                    $array = Array();
+                    $file = fopen($pasta . $nomearquivo, 'r');
                     while (($line = fgetcsv($file)) !== false) {
-                        $meuArray[] = $line;
+                        $array[] = $line;
                     }
                     fclose($file);
                     umask($oldmask);
-                    pr($meuArray);exit();
-//            $this->capturaCodigo($pesquisa, $transformationType, $language, $url, $start, $end);
+                    @unlink($pasta . $nomearquivo);
+                    foreach ($array as $line) {
+                        $this->capturaCodigo($pesquisa, $line[3], $line[4], $line[0], $line[1], $line[2]);
+
+                    }
+                    $this->Session->setFlash(__('Importação finalizada com sucesso!'), 'Flash/success');
                 } else {
-                    echo "<P>MOVE UPLOADED FILE FAILED!</P>";
-                    print_r(error_get_last());
+                    $this->Session->setFlash(__('O arquivo não pode ser salvo, tente novamente.'), 'Flash/error');
                 }
             } else {
-                echo "<P>não é um arquivo .csv!</P>";
+                $this->Session->setFlash(__('Este não é um arquivo .CSV!!'), 'Flash/error');
             }
         }
+        $this->set('pesquisa', $pesquisa);
     }
 
     public function capturaCodigo($pesquisa = null, $transformationType = null, $language = null, $url = null, $start = null, $end = null)
     {
+        $start = strtoupper($start);
+        $end = strtoupper($end);
+
         $cortaLink = explode("#", $url);
 
         $conecurl = @fopen("$url", "r") or die ('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
@@ -61,39 +68,69 @@ class SearchEventsController extends AppController
             $lin .= fgets($conecurl, 4096);
         }
         fclose($conecurl);
-
-        $inicio = strpos($lin, "id='" . $cortaLink[1] . $start . "' data-line-number='" . substr($start, 1) . "'") + 290;
-
-        $fim = strpos($lin, "id='" . $cortaLink[1] . $end . "' data-line-number='" . substr($end, 1) . "'");
-
-        $quantopula = $fim - $inicio;
-        $conteudo = substr($lin, $inicio, $quantopula);
-        $conteudo = strip_tags($conteudo, '<br>');
-        $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $conteudo);
-
-        $nomecode = $cortaLink[1];
-        $pasta = WWW_ROOT . "files/" . $nomecode . "/";
-        $caminho = $pasta;
-        $oldmask = umask(0);
-        if (file_exists($pasta)) {
-            echo "O arquivo $pasta existe";
+        if (stristr($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') == false) {
+            $this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
+        } elseif (stristr($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"') == false) {
+            $this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
         } else {
-            mkdir($pasta, 0777, true);
+            $inicio = strpos($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') + 290;
+
+            $fim = strpos($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"');
+
+            $quantopula = $fim - $inicio;
+            $conteudo = substr($lin, $inicio, $quantopula);
+            $conteudo = strip_tags($conteudo, '<br>');
+            $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $conteudo);
+            $conditions = array(
+                'search_event_id' => $pesquisa,
+                'diff_id' => $cortaLink[1],
+            );
+            if ($this->Transformation->hasAny($conditions)) {
+                $this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> já foi cadastrada nesta pesquisa!"), 'Flash/info');
+            } else {
+                $this->Transformation->create();
+                $refactor = array(
+                    'Transformation' => array(
+                        'transformation_type_id' => $transformationType,
+                        'language_id' => $language,
+                        'search_event_id' => $pesquisa,
+                        'diff_id' => $cortaLink[1],
+                        'site_link' => $url
+                    )
+                );
+                $this->Transformation->save($refactor);
+
+                $nomecode = $cortaLink[1];
+                $pasta = WWW_ROOT . "files/" . $nomecode . "/";
+                $caminho = $pasta;
+                $oldmask = umask(0);
+                if (file_exists($pasta)) {
+                    echo "O arquivo $pasta existe";
+                } else {
+                    mkdir($pasta, 0777, true);
+                }
+                $caminho = $caminho . "ab.txt";
+
+                $fp = fopen($caminho, "w+");
+
+                $escreve = fwrite($fp, $conteudo);
+
+                fclose($fp);
+                umask($oldmask);
+
+                $lastTransformationCreated = $this->Transformation->find('first', array(
+                    'conditions' => array('Transformation.diff_id' => $cortaLink[1]),
+                    'order' => array('Transformation.created DESC')
+                ));
+
+                $this->separaAnteriorETransformado($lastTransformationCreated['Transformation']['id'], $pasta, $caminho);
+            }
         }
-        $caminho = $caminho . "ab.txt";
 
-        $fp = fopen($caminho, "w+");
-
-        $escreve = fwrite($fp, $conteudo);
-
-        fclose($fp);
-        umask($oldmask);
-
-        $this->separaAnteriorETransformado($pesquisa, $transformationType, $language, $pasta, $caminho);
     }
 
 
-    function separaAnteriorETransformado($pesquisa = null, $transformationType = null, $language = null, $pasta = null, $arquivo = null)
+    function separaAnteriorETransformado($transformation = null, $pasta = null, $arquivo = null)
     {
         //Variável $fp armazena a conexão com o arquivo e o tipo de ação.
         $fp = fopen($arquivo, "r");
@@ -122,7 +159,31 @@ class SearchEventsController extends AppController
         umask($oldmask);
         //Fecha o arquivo.
         fclose($fp);
+        $oldCode = fopen($pasta . "a.txt", "r");
+        $oldCodeContent = '';
+        while (!feof($oldCode)) {
+            $oldCodeContent .= fgets($oldCode, 4096);
+        }
+        fclose($oldCode);
+
+        $newCode = fopen($pasta . "b.txt", "r");
+        $newCodeContent = '';
+        while (!feof($newCode)) {
+            $newCodeContent .= fgets($newCode, 4096);
+        }
+        fclose($newCode);
+
         //retorna o conteúdo.
+        $this->Transformation->id = $transformation;
+        $refactor = array(
+            'Transformation' => array(
+                'code_before' => "<p>" . $oldCodeContent . "</p>",
+                'old_code' => $pasta . "a.txt",
+                'code_after' => "<p>" . $newCodeContent . "</p>",
+                'new_code' => $pasta . "b.txt",
+            )
+        );
+        $this->Transformation->save($refactor);
     }
 
 
