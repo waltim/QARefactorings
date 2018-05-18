@@ -320,7 +320,7 @@ class SearchEventsController extends AppController
         $this->set('pesquisa', $id);
     }
 
-    public function delete($id = null)
+    public function view()
     {
 
     }
