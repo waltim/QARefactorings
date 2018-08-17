@@ -39,38 +39,43 @@
                 echo $diff->Render($renderer);
 
                 ?>
-                <h2>Inline Diff</h2>
+                <!-- <h2>Inline Diff</h2> -->
                 <?php
-
                 // Generate an inline diff
-                require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/Inline.php';
-                $renderer = new Diff_Renderer_Html_Inline;
-                echo $diff->render($renderer);
-
+                // require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/Inline.php';
+                // $renderer = new Diff_Renderer_Html_Inline;
+                // echo $diff->render($renderer);
                 ?>
-<!--                <h2>Unified Diff</h2>-->
-<!--                <pre>--><?php
-//
-//                    // Generate a unified diff
-//                    require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Unified.php';
-//                    $renderer = new Diff_Renderer_Text_Unified;
-//                    echo htmlspecialchars($diff->render($renderer));
-//
-//                    ?>
-<!--		</pre>-->
-<!--                <h2>Context Diff</h2>-->
-<!--                <pre>--><?php
-//
-//                    // Generate a context diff
-//                    require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Context.php';
-//                    $renderer = new Diff_Renderer_Text_Context;
-//                    echo htmlspecialchars($diff->render($renderer));
-//                    ?>
-<!--		</pre>-->
+                <!-- <h2>Unified Diff</h2>
+                <pre><?php
+
+                    // Generate a unified diff
+                    // require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Unified.php';
+                    // $renderer = new Diff_Renderer_Text_Unified;
+                    // echo htmlspecialchars($diff->render($renderer));
+
+                    ?>
+                </pre> -->
+                <!-- <h2>Context Diff</h2> -->
+                <!-- <pre><?php
+
+                    // Generate a context diff
+                //     require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Context.php';
+                //     $renderer = new Diff_Renderer_Text_Context;
+                //    echo htmlspecialchars($diff->render($renderer));
+                //    ?>
+		</pre> -->
             </div>
             <!-- /.box-body -->
         </div>
         <!-- /.box -->
     </div>
     <!-- /.col -->
+    <div class="col-xs-12">
+        <div class="questionario-estilizado">
+            <div class=" sombra-div">
+
+            </div>
+        </div>
+    </div>
 </div>

@@ -5742,3 +5742,23 @@ table.text-center th {
         white-space: normal !important
     }
 }
+.questionario-estilizado{
+	background: url(../../app/webroot/images/writers-block-2.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+    background-size: cover;
+    width: 100%;
+    min-height: 300px;
+}
+
+.sombra-div{
+    background: rgba(0,0,0,.5);
+        position: absolute;
+        bottom: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        overflow: hidden;
+}
