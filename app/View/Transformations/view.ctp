@@ -1,3 +1,4 @@
+<?php //pr(substr_count($transformation['Transformation']['code_before'], '<br>'));exit();?>
 <div class="row">
     <div class="col-md-12 pull-right">
         <a href="<?= $this->webroot ?>transformations/edit/<?= $transformation['Transformation']['id'] ?>"
@@ -59,7 +60,7 @@
                             <h3>Código anterior</h3>
                             <?php
                             $codigoAntigo = str_replace("&nbsp; }", "}", $transformation['Transformation']['code_before']);
-                            $codigoAntigo = strip_tags($codigoAntigo, '<br>');
+                            $codigoAntigo = strip_tags($codigoAntigo, '<br/>');
                             ?>
                             <code id="codigo1"
                                   class="brush: diff"><?php echo $codigoAntigo; ?></code>
@@ -80,7 +81,7 @@
                             <h3>Código transformado</h3>
                             <?php
                             $codigoDepois = str_replace("&nbsp; }", "}", $transformation['Transformation']['code_after']);
-                            $codigoDepois = strip_tags($codigoDepois, '<br>');
+                            $codigoDepois = strip_tags($codigoDepois, '<br/>');
                             ?>
                             <code id="codigo2" class="brush: diff"><?php echo $codigoDepois; ?></code>
                             <form class="form-horizontal" method="post"

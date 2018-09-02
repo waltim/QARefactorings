@@ -40,7 +40,7 @@
                                     <i class="fa fa-edit fa-lg"></i>
                                 </a>
                                 |
-                                <a href="<?= $this->webroot ?>transformations/delete/<?= $transformation['Transformation']['id'] ?>"
+                                <a href="<?= $this->webroot ?>transformations/delete/<?= $transformation['Transformation']['id'] ?>/<?= $pesquisa ?>"
                                    onclick="return confirm('Tem certeza?')" title="Deletar">
                                     <i class="fa fa-eraser fa-lg"></i>
                                 </a>

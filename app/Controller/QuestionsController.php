@@ -72,7 +72,6 @@ class QuestionsController extends AppController
     public function cadastrar($pesquisa = null)
     {
         if ($this->request->is('post')) {
-
             $uid = $this->Auth->user('id');
 
             $this->Participant->create();
@@ -95,14 +94,12 @@ class QuestionsController extends AppController
                     'order' => 'Participant.id DESC'
                 )
             );
-
-
             $this->Question->create();
 
             $question = array(
                 'Question' => array(
                     'description' => $this->request->data['Question']['description'],
-                    'question_type_id' => $pesquisa,
+                    'question_type_id' => 1,
                     'participant_id' => $participation['Participant']['id']
                 )
             );

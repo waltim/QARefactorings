@@ -20,7 +20,7 @@
     ));
     ?>
 
-    <?php if ($this->request->params['action'] == 'edit' || $this->request->params['action'] == 'add') { ?>
+    <?php if ($this->request->params['action'] == 'edit' || $this->request->params['action'] == 'add' || $this->request->params['action'] == 'loadDataCsv') { ?>
         <?php echo $this->Html->css(array(
             '../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css',
             '../bower_components/select2/dist/css/select2.min.css',
@@ -100,7 +100,7 @@
     //'../dist/js/pages/dashboard.js'
 ));
 ?>
-<?php if ($this->request->params['action'] == 'edit' || $this->request->params['action'] == 'add') { ?>
+<?php if ($this->request->params['action'] == 'edit' || $this->request->params['action'] == 'add' || $this->request->params['action'] == 'loadDataCsv') { ?>
     <?php echo $this->Html->script(array(
         '../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js',
         '../bower_components/select2/dist/js/select2.full.min.js'

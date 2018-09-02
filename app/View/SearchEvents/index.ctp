@@ -35,6 +35,14 @@
                                     <i class="fa fa-edit fa-lg"></i>
                                 </a>
                                 |
+                                <a href="<?= $this->webroot ?>Questions/cadastrar/<?= $pesquisas['SearchEvent']['id'] ?>" title="Cadastrar Questões">
+                                    <i class="fa fa-text-width fa-lg"></i>
+                                </a>
+                                |
+                                <a href="<?= $this->webroot ?>Questions/survey/<?= $pesquisas['SearchEvent']['id'] ?>" title="Gerar Survey">
+                                    <i class="fa fa-list-alt fa-lg"></i>
+                                </a>
+                                |
                                 <!-- <a href="<?= $this->webroot ?>SearchEvents/delete/<?= $pesquisas['SearchEvent']['id'] ?>" onclick="return confirm('Tem certeza?')"
                                     title="Deletar">
                                     <i class="fa fa-eraser fa-lg"></i>

@@ -115,7 +115,7 @@ class TransformationsController extends AppController
         $this->set('metrics', $metricas);
     }
 
-    public function delete($id = null)
+    public function delete($id = null,$pesquisa = null)
     {
         $Selected = $this->Transformation->find('first', array(
             'conditions' => array('Transformation.id' => $id)
@@ -125,7 +125,7 @@ class TransformationsController extends AppController
         } else {
             $this->Transformation->delete($id);
             $this->Session->setFlash(__('Deletada com sucesso!'), 'Flash/success');
-            $this->redirect(array('action' => 'index'));
+            $this->redirect(array('action' => 'index',$pesquisa));
         }
     }
 
@@ -204,7 +204,7 @@ class TransformationsController extends AppController
     public
     function locAndAmloc($string = null)
     {
-        $numLoc = substr_count($string, '<br>');
+        $numLoc = substr_count($string, '<br/>')-2;
         return $numLoc;
     }
 
@@ -229,13 +229,16 @@ class TransformationsController extends AppController
     public
     function manipulaMetricas($id = null)
     {
+        $this->loadModel('Result');
+
         $this->autoRender = false;
+        
         $metrics = $this->Result->find('all', array(
             'conditions' => array(
                 'Transformation.id' => $id
             )
         ));
-        //pr($metrics);exit();
+
         foreach ($metrics as $metricas) {
             if ($metricas['Metric']['acronym'] == 'LOC') {
                 $this->Result->id = $metricas['Result']['id'];
@@ -257,7 +260,5 @@ class TransformationsController extends AppController
                 $this->Result->save($result);
             }
         }
-        /*$this->Session->setFlash(__('Métricas calculadas com sucesso.'), 'Flash/success');*/
-        $this->redirect(array('action' => 'view', $metricas['Transformation']['id']));
     }
 }

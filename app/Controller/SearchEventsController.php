@@ -5,7 +5,7 @@
  * Date: 17/04/18
  * Time: 14:22
  */
-
+App::uses('TransformationsController', 'Controller');
 class SearchEventsController extends AppController
 {
 
@@ -19,13 +19,13 @@ class SearchEventsController extends AppController
         $this->loadModel('User');
         $this->loadModel('LanguageSearchEvent');
         $this->loadModel('Language');
+        $this->loadModel('Metric');
+        $this->loadModel('Result');
     }
 
     public function loadDataCsv($pesquisa = null)
     {
         if ($this->request->is('post')) {
-//            pr($this->request->data);
-//            exit();
             $pasta = WWW_ROOT . "files/";
             $partenome = explode(".", $this->request->data["file"]["name"]);
             $nomearquivo = $partenome[0] . "-" . date('dmYHis', time()) . ".csv";
@@ -41,7 +41,7 @@ class SearchEventsController extends AppController
                     umask($oldmask);
                     @unlink($pasta . $nomearquivo);
                     foreach ($array as $line) {
-                        $this->capturaCodigo($pesquisa, $line[3], $line[4], $line[0], $line[1], $line[2]);
+                        $this->capturaCodigo($pesquisa, $line[3], $line[4], $line[0], $line[1], $line[2], $this->request->data['metricas']);
 
                     }
                     $this->Session->setFlash(__('Importação finalizada com sucesso!'), 'Flash/success');
@@ -53,9 +53,10 @@ class SearchEventsController extends AppController
             }
         }
         $this->set('pesquisa', $pesquisa);
+        $this->set('metrics', $this->Metric->find('list', array('fields' => 'Metric.acronym')));
     }
 
-    public function capturaCodigo($pesquisa = null, $transformationType = null, $language = null, $url = null, $start = null, $end = null)
+    public function capturaCodigo($pesquisa = null, $transformationType = null, $language = null, $url = null, $start = null, $end = null, $metricas = null)
     {
         $start = strtoupper($start);
         $end = strtoupper($end);
@@ -83,7 +84,7 @@ class SearchEventsController extends AppController
             $conteudo = str_replace("<span class='blob-code-inner blob-code-marker-deletion'>", "-", $conteudo);
             $conteudo = strip_tags($conteudo, '<br>');
             $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $conteudo);
-            pr($conteudo);exit();
+            // pr($conteudo);exit();
             $conditions = array(
                 'search_event_id' => $pesquisa,
                 'site_link' => $url,
@@ -103,6 +104,22 @@ class SearchEventsController extends AppController
                 );
                 $this->Transformation->save($refactor);
 
+                $lastTransformationCreated = $this->Transformation->find('first', array(
+                    'conditions' => array('Transformation.search_event_id' => $pesquisa),
+                    'order' => array('Transformation.created DESC')
+                ));
+
+                foreach ($metricas as $metrica) {
+                    $this->Result->create();
+                    $result = array(
+                        'Result' => array(
+                            'transformation_id' => $lastTransformationCreated['Transformation']['id'],
+                            'metric_id' => $metrica,
+                        )
+                    );
+                    $this->Result->save($result);
+                }
+
                 $nomecode = $cortaLink[1];
                 $pasta = WWW_ROOT . "files/" . $nomecode . "/";
                 $caminho = $pasta;
@@ -120,12 +137,6 @@ class SearchEventsController extends AppController
 
                 fclose($fp);
                 umask($oldmask);
-
-                $lastTransformationCreated = $this->Transformation->find('first', array(
-                    'conditions' => array('Transformation.search_event_id' => $pesquisa),
-                    'order' => array('Transformation.created DESC')
-                ));
-                // pr($lastTransformationCreated);exit();
 
                 $this->separaAnteriorETransformado($lastTransformationCreated['Transformation']['id'], $pasta, $caminho);
             }
@@ -145,17 +156,23 @@ class SearchEventsController extends AppController
         $b = fopen($pasta . "b.txt", "w+");
         $Aconteudo = '';
         $Bconteudo = '';
+        $Cconteudo = '';
+        $Dconteudo = '';
         while (!feof($fp)) {
             $valor = fgets($fp, 4096);
             if (strstr($valor, "    +")) {
+                $Cconteudo .= $valor.'<br/>';
                 $valor = str_replace("    +", "      ", $valor);
                 $Bconteudo .= fwrite($b, $valor);
             } elseif (strstr($valor, "    -")) {
+                $Dconteudo .= $valor.'<br/>';
                 $valor = str_replace("    -", "      ", $valor);
                 $Aconteudo .= fwrite($a, $valor);
             } else {
                 $Aconteudo .= fwrite($a, $valor);
                 $Bconteudo .= fwrite($b, $valor);
+                $Cconteudo .= $valor.'<br/>';
+                $Dconteudo .= $valor.'<br/>';
             }
         }
         fclose($a);
@@ -163,31 +180,34 @@ class SearchEventsController extends AppController
         umask($oldmask);
         //Fecha o arquivo.
         fclose($fp);
-        $oldCode = fopen($pasta . "a.txt", "r");
-        $oldCodeContent = '';
-        while (!feof($oldCode)) {
-            $oldCodeContent .= fgets($oldCode, 4096);
-        }
-        fclose($oldCode);
+        // $oldCode = fopen($pasta . "a.txt", "r");
+        // $oldCodeContent = '';
+        // while (!feof($oldCode)) {
+        //     $oldCodeContent .= fgets($oldCode, 4096);
+        // }
+        // fclose($oldCode);
 
-        $newCode = fopen($pasta . "b.txt", "r");
-        $newCodeContent = '';
-        while (!feof($newCode)) {
-            $newCodeContent .= fgets($newCode, 4096);
-        }
-        fclose($newCode);
+        // $newCode = fopen($pasta . "b.txt", "r");
+        // $newCodeContent = '';
+        // while (!feof($newCode)) {
+        //     $newCodeContent .= fgets($newCode, 4096);
+        // }
+        // fclose($newCode);
 
         //retorna o conteúdo.
         $this->Transformation->id = $transformation;
         $refactor = array(
             'Transformation' => array(
-                'code_before' => "<p>" . $oldCodeContent . "</p>",
+                'code_before' => "<p>" . $Dconteudo . "</p>",
                 'old_code' => $pasta . "a.txt",
-                'code_after' => "<p>" . $newCodeContent . "</p>",
+                'code_after' => "<p>" . $Cconteudo . "</p>",
                 'new_code' => $pasta . "b.txt",
             )
         );
         $this->Transformation->save($refactor);
+        
+        $transf = new TransformationsController();
+        $transf->manipulaMetricas($transformation);
     }
 
 
