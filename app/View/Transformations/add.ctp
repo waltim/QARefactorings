@@ -54,10 +54,7 @@
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body pad">
-																	<textarea class="textarea"
-                                                                              name="data[Transformation][code_before]"
-                                                                              placeholder="Cole o código aqui"
-                                                                              style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                                <textarea class="textarea" name="data[Transformation][code_before]" placeholder="Cole o código aqui" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
                             </div>
                         </div>
                     </div>
@@ -69,17 +66,14 @@
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body pad">
-												<textarea class="textarea" name="data[Transformation][code_after]"
-                                                          placeholder="Cole o código aqui"
-                                                          style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                                <textarea class="textarea" name="data[Transformation][code_after]" placeholder="Cole o código aqui" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInputEmail1">Link da transformação</label>
-                        <input type="text" name="data[Transformation][site_link]" class="form-control" id="siteLink"
-                               placeholder="Ex: https://github.com/NomeProjeto/xxx">
+                        <input type="text" name="data[Transformation][site_link]" class="form-control" id="siteLink" placeholder="Ex: https://github.com/NomeProjeto/xxx">
                     </div>
                 </div>
                 <!-- /.box-body -->

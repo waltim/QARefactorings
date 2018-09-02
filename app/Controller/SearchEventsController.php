@@ -79,14 +79,17 @@ class SearchEventsController extends AppController
 
             $quantopula = $fim - $inicio;
             $conteudo = substr($lin, $inicio, $quantopula);
+            $conteudo = str_replace("<span class='blob-code-inner blob-code-marker-addition'>", "+", $conteudo);
+            $conteudo = str_replace("<span class='blob-code-inner blob-code-marker-deletion'>", "-", $conteudo);
             $conteudo = strip_tags($conteudo, '<br>');
             $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $conteudo);
+            pr($conteudo);exit();
             $conditions = array(
                 'search_event_id' => $pesquisa,
-                'diff_id' => $cortaLink[1],
+                'site_link' => $url,
             );
             if ($this->Transformation->hasAny($conditions)) {
-                $this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> já foi cadastrada nesta pesquisa!"), 'Flash/info');
+                $this->Session->setFlash(__("A refatoração: <b>" . $url . "</b> já foi cadastrada nesta pesquisa!"), 'Flash/info');
             } else {
                 $this->Transformation->create();
                 $refactor = array(
@@ -119,19 +122,20 @@ class SearchEventsController extends AppController
                 umask($oldmask);
 
                 $lastTransformationCreated = $this->Transformation->find('first', array(
-                    'conditions' => array('Transformation.diff_id' => $cortaLink[1]),
+                    'conditions' => array('Transformation.search_event_id' => $pesquisa),
                     'order' => array('Transformation.created DESC')
                 ));
+                // pr($lastTransformationCreated);exit();
 
                 $this->separaAnteriorETransformado($lastTransformationCreated['Transformation']['id'], $pasta, $caminho);
             }
         }
-
     }
 
 
     function separaAnteriorETransformado($transformation = null, $pasta = null, $arquivo = null)
     {
+        // pr($arquivo);exit();
         //Variável $fp armazena a conexão com o arquivo e o tipo de ação.
         $fp = fopen($arquivo, "r");
 
@@ -235,6 +239,7 @@ class SearchEventsController extends AppController
                 'SearchEvent.title' => $search['SearchEvent']['title']
             );
 
+            // pr($this->request->data);exit();
             if ($this->SearchEvent->hasAny($conditions)) {
                 $this->Session->setFlash(__('Uma pesquisa com este nome já existe!'), 'Flash/error');
             } else {
