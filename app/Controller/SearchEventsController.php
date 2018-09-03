@@ -70,9 +70,9 @@ class SearchEventsController extends AppController
         }
         fclose($conecurl);
         if (stristr($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') == false) {
-            $this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
+            //$this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
         } elseif (stristr($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"') == false) {
-            $this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
+            //$this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
         } else {
             $inicio = strpos($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') + 290;
 
@@ -119,7 +119,7 @@ class SearchEventsController extends AppController
                     );
                     $this->Result->save($result);
                 }
-
+                //pr($conteudo);exit();
                 $nomecode = $cortaLink[1];
                 $pasta = WWW_ROOT . "files/" . $nomecode . "/";
                 $caminho = $pasta;
@@ -133,11 +133,11 @@ class SearchEventsController extends AppController
 
                 $fp = fopen($caminho, "w+");
 
-                $escreve = fwrite($fp, $conteudo);
+                $escreve = fwrite($fp, utf8_encode($conteudo));
 
                 fclose($fp);
                 umask($oldmask);
-
+                // pr(explode("\n", file_get_contents($caminho)));exit();
                 $this->separaAnteriorETransformado($lastTransformationCreated['Transformation']['id'], $pasta, $caminho);
             }
         }
@@ -145,7 +145,7 @@ class SearchEventsController extends AppController
 
     public function separaAnteriorETransformado($transformation = null, $pasta = null, $arquivo = null)
     {
-        // pr($arquivo);exit();
+        //pr($arquivo);exit();
         //Variável $fp armazena a conexão com o arquivo e o tipo de ação.
         $fp = fopen($arquivo, "r");
 
@@ -162,14 +162,14 @@ class SearchEventsController extends AppController
             if (strstr($valor, "    +")) {
                 $Cconteudo .= $valor . '<br/>';
                 $valor = str_replace("    +", "      ", $valor);
-                $Bconteudo .= fwrite($b, $valor);
+                $Bconteudo .= fwrite($b, utf8_encode($valor));
             } elseif (strstr($valor, "    -")) {
                 $Dconteudo .= $valor . '<br/>';
                 $valor = str_replace("    -", "      ", $valor);
-                $Aconteudo .= fwrite($a, $valor);
+                $Aconteudo .= fwrite($a, utf8_encode($valor));
             } else {
-                $Aconteudo .= fwrite($a, $valor);
-                $Bconteudo .= fwrite($b, $valor);
+                $Aconteudo .= fwrite($a, utf8_encode($valor));
+                $Bconteudo .= fwrite($b, utf8_encode($valor));
                 $Cconteudo .= $valor . '<br/>';
                 $Dconteudo .= $valor . '<br/>';
             }

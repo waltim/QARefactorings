@@ -24,7 +24,16 @@
                 // Include two sample files for comparison
                 $a = explode("\n", file_get_contents(ROOT . DS . 'app' . DS . 'webroot' . DS . 'files/'.$question['Result']['Transformation']['diff_id'].'/a.txt'));
                 $b = explode("\n", file_get_contents(ROOT . DS . 'app' . DS . 'webroot' . DS . 'files/'.$question['Result']['Transformation']['diff_id'].'/b.txt'));
-
+                foreach($a as $key => $value){
+                $a[$key] = html_entity_decode($value);
+                }
+                foreach($b as $key => $value){
+                $b[$key] = html_entity_decode($value);
+                }
+                // pr($a);
+                // pr($b);
+                // exit();
+                // html_entity_decode($str);
                 // Options for generating the diff
                 $options = array(
                     //'ignoreWhitespace' => true,
@@ -46,7 +55,6 @@
                     echo $diff->render($renderer);
                     ?>
                     </div>
-
                     <!-- <div id="codigo-antes" class="form-group">
                         <h4>Código anterior</h4>
                         <?php
