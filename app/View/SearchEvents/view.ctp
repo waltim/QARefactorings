@@ -5,11 +5,6 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
-            <div class="box-header">
-                <h3 class="box-title">PHP LibDiff - Examples</h3>
-            </div>
-            <div class="clearfix"></div>
-            <!-- /.box-header -->
             <div class="box-body">
                 <?php
 
@@ -19,7 +14,9 @@
                 // Include two sample files for comparison
                 $a = explode("\n", file_get_contents(ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/example/a.txt'));
                 $b = explode("\n", file_get_contents(ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/example/b.txt'));
-
+                pr($a);
+                pr($b);
+                exit();
                 // Options for generating the diff
                 $options = array(
                     //'ignoreWhitespace' => true,
@@ -39,23 +36,23 @@
                 echo $diff->Render($renderer);
 
                 ?>
-                <!-- <h2>Inline Diff</h2> -->
+                <h2>Inline Diff</h2>
                 <?php
                 // Generate an inline diff
-                // require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/Inline.php';
-                // $renderer = new Diff_Renderer_Html_Inline;
-                // echo $diff->render($renderer);
+                require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/Inline.php';
+                $renderer = new Diff_Renderer_Html_Inline;
+                echo $diff->render($renderer);
                 ?>
-                <!-- <h2>Unified Diff</h2>
+                <h2>Unified Diff</h2>
                 <pre><?php
 
                     // Generate a unified diff
-                    // require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Unified.php';
-                    // $renderer = new Diff_Renderer_Text_Unified;
-                    // echo htmlspecialchars($diff->render($renderer));
+                    require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Unified.php';
+                    $renderer = new Diff_Renderer_Text_Unified;
+                    echo htmlspecialchars($diff->render($renderer));
 
                     ?>
-                </pre> -->
+                </pre>
                 <!-- <h2>Context Diff</h2> -->
                 <!-- <pre><?php
 
@@ -74,8 +71,6 @@
     <div class="col-xs-12">
         <div class="questionario-estilizado">
             <div class=" sombra-div">
-
             </div>
-        </div>
     </div>
 </div>

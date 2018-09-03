@@ -9,7 +9,7 @@ App::uses('TransformationsController', 'Controller');
 class SearchEventsController extends AppController
 {
 
-    function beforeFilter()
+    public function beforeFilter()
     {
         parent::beforeFilter();
         $this->layout = 'admin';
@@ -32,7 +32,7 @@ class SearchEventsController extends AppController
             $oldmask = umask(0);
             if ($this->request->data["file"]['type'] == 'text/csv') {
                 if (move_uploaded_file($this->request->data["file"]["tmp_name"], $pasta . $nomearquivo)) {
-                    $array = Array();
+                    $array = array();
                     $file = fopen($pasta . $nomearquivo, 'r');
                     while (($line = fgetcsv($file)) !== false) {
                         $array[] = $line;
@@ -63,7 +63,7 @@ class SearchEventsController extends AppController
 
         $cortaLink = explode("#", $url);
 
-        $conecurl = @fopen("$url", "r") or die ('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
+        $conecurl = @fopen("$url", "r") or die('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
         $lin = '';
         while (!feof($conecurl)) {
             $lin .= fgets($conecurl, 4096);
@@ -99,14 +99,14 @@ class SearchEventsController extends AppController
                         'language_id' => $language,
                         'search_event_id' => $pesquisa,
                         'diff_id' => $cortaLink[1],
-                        'site_link' => $url
-                    )
+                        'site_link' => $url,
+                    ),
                 );
                 $this->Transformation->save($refactor);
 
                 $lastTransformationCreated = $this->Transformation->find('first', array(
                     'conditions' => array('Transformation.search_event_id' => $pesquisa),
-                    'order' => array('Transformation.created DESC')
+                    'order' => array('Transformation.created DESC'),
                 ));
 
                 foreach ($metricas as $metrica) {
@@ -115,7 +115,7 @@ class SearchEventsController extends AppController
                         'Result' => array(
                             'transformation_id' => $lastTransformationCreated['Transformation']['id'],
                             'metric_id' => $metrica,
-                        )
+                        ),
                     );
                     $this->Result->save($result);
                 }
@@ -143,8 +143,7 @@ class SearchEventsController extends AppController
         }
     }
 
-
-    function separaAnteriorETransformado($transformation = null, $pasta = null, $arquivo = null)
+    public function separaAnteriorETransformado($transformation = null, $pasta = null, $arquivo = null)
     {
         // pr($arquivo);exit();
         //Variável $fp armazena a conexão com o arquivo e o tipo de ação.
@@ -161,18 +160,18 @@ class SearchEventsController extends AppController
         while (!feof($fp)) {
             $valor = fgets($fp, 4096);
             if (strstr($valor, "    +")) {
-                $Cconteudo .= $valor.'<br/>';
+                $Cconteudo .= $valor . '<br/>';
                 $valor = str_replace("    +", "      ", $valor);
                 $Bconteudo .= fwrite($b, $valor);
             } elseif (strstr($valor, "    -")) {
-                $Dconteudo .= $valor.'<br/>';
+                $Dconteudo .= $valor . '<br/>';
                 $valor = str_replace("    -", "      ", $valor);
                 $Aconteudo .= fwrite($a, $valor);
             } else {
                 $Aconteudo .= fwrite($a, $valor);
                 $Bconteudo .= fwrite($b, $valor);
-                $Cconteudo .= $valor.'<br/>';
-                $Dconteudo .= $valor.'<br/>';
+                $Cconteudo .= $valor . '<br/>';
+                $Dconteudo .= $valor . '<br/>';
             }
         }
         fclose($a);
@@ -202,23 +201,22 @@ class SearchEventsController extends AppController
                 'old_code' => $pasta . "a.txt",
                 'code_after' => "<p>" . $Cconteudo . "</p>",
                 'new_code' => $pasta . "b.txt",
-            )
+            ),
         );
         $this->Transformation->save($refactor);
-        
+
         $transf = new TransformationsController();
         $transf->manipulaMetricas($transformation);
     }
-
 
     public function index()
     {
         if ($this->Auth->user('UserType.description') == 'administrador') {
             $participations = $this->Participant->find('all', array(
                 'conditions' => array(
-                    'Participant.participant_type_id' => 1
+                    'Participant.participant_type_id' => 1,
                 ),
-                'order' => array('Participant.search_event_id DESC')
+                'order' => array('Participant.search_event_id DESC'),
             ));
             $pesquisas = array();
             foreach ($participations as $key => $participation) {
@@ -229,9 +227,9 @@ class SearchEventsController extends AppController
         } else {
             $participations = $this->Participant->find('all', array(
                 'conditions' => array(
-                    'Participant.user_id' => $this->Auth->user('id')
+                    'Participant.user_id' => $this->Auth->user('id'),
                 ),
-                'order' => array('Participant.search_event_id DESC')
+                'order' => array('Participant.search_event_id DESC'),
             ));
             $pesquisas = array();
             foreach ($participations as $key => $participation) {
@@ -256,7 +254,7 @@ class SearchEventsController extends AppController
             $langs = $this->request->data['SearchEvent']['linguages'];
 
             $conditions = array(
-                'SearchEvent.title' => $search['SearchEvent']['title']
+                'SearchEvent.title' => $search['SearchEvent']['title'],
             );
 
             // pr($this->request->data);exit();
@@ -267,7 +265,7 @@ class SearchEventsController extends AppController
                 $this->SearchEvent->save($search);
 
                 $lastCreated = $this->SearchEvent->find('first', array(
-                    'conditions' => array('SearchEvent.title' => $search['SearchEvent']['title'])
+                    'conditions' => array('SearchEvent.title' => $search['SearchEvent']['title']),
                 ));
 
                 //pr($lastCreated);exit();
@@ -278,8 +276,8 @@ class SearchEventsController extends AppController
                         $search_lang = array(
                             'LanguageSearchEvent' => array(
                                 'language_id' => $lang,
-                                'search_event_id' => $lastCreated['SearchEvent']['id']
-                            )
+                                'search_event_id' => $lastCreated['SearchEvent']['id'],
+                            ),
                         );
                         $this->LanguageSearchEvent->save($search_lang);
                     }
@@ -290,8 +288,8 @@ class SearchEventsController extends AppController
                         'Participant' => array(
                             'user_id' => $uid,
                             'search_event_id' => $lastCreated['SearchEvent']['id'],
-                            'participant_type_id' => 1
-                        )
+                            'participant_type_id' => 1,
+                        ),
                     );
 
                     $this->Participant->save($participant);
@@ -317,7 +315,7 @@ class SearchEventsController extends AppController
             foreach ($this->request->data['SearchEvent']['linguages'] as $lang) {
                 $conditions = array(
                     'LanguageSearchEvent.language_id' => $lang,
-                    'LanguageSearchEvent.search_event_id' => $id
+                    'LanguageSearchEvent.search_event_id' => $id,
                 );
                 if ($this->LanguageSearchEvent->hasAny($conditions)) {
 
@@ -326,8 +324,8 @@ class SearchEventsController extends AppController
                     $search_lang = array(
                         'LanguageSearchEvent' => array(
                             'language_id' => $lang,
-                            'search_event_id' => $id
-                        )
+                            'search_event_id' => $id,
+                        ),
                     );
                     $this->LanguageSearchEvent->save($search_lang);
                 }
@@ -347,6 +345,5 @@ class SearchEventsController extends AppController
 
     public function view()
     {
-
     }
 }
