@@ -88,18 +88,23 @@ class SearchEventsController extends AppController
             $conditions = array(
                 'search_event_id' => $pesquisa,
                 'site_link' => $url,
+                'line_start' => $start,
+                'line_end' => $end,
             );
             if ($this->Transformation->hasAny($conditions)) {
                 $this->Session->setFlash(__("A refatoração: <b>" . $url . "</b> já foi cadastrada nesta pesquisa!"), 'Flash/info');
             } else {
+                $anomesdiahora = date('YmdHis');
                 $this->Transformation->create();
                 $refactor = array(
                     'Transformation' => array(
                         'transformation_type_id' => $transformationType,
                         'language_id' => $language,
                         'search_event_id' => $pesquisa,
-                        'diff_id' => $cortaLink[1],
+                        'diff_id' => $cortaLink[1] . "-" . $anomesdiahora,
                         'site_link' => $url,
+                        'line_start' => $start,
+                        'line_end' => $end,
                     ),
                 );
                 $this->Transformation->save($refactor);
@@ -120,7 +125,7 @@ class SearchEventsController extends AppController
                     $this->Result->save($result);
                 }
                 //pr($conteudo);exit();
-                $nomecode = $cortaLink[1];
+                $nomecode = $cortaLink[1]."-".$anomesdiahora;
                 $pasta = WWW_ROOT . "files/" . $nomecode . "/";
                 $caminho = $pasta;
                 $oldmask = umask(0);
