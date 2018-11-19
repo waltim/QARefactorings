@@ -5743,7 +5743,7 @@ table.text-center th {
     }
 }
 .questionario-estilizado{
-	background: url(../../app/webroot/dist/img/aperture-science-wallpaper-HD4.jpg) no-repeat center center fixed;
+	background: url(../../app/webroot/dist/img/background.jpg) no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -5773,7 +5773,7 @@ table.text-center th {
 }
 
 .borda-radio{
-    border:solid 2px whitesmoke;
+    /* border:solid 2px whitesmoke; */
     display: inline-block;
     margin: 10px!important;
     padding: 12px!important;
