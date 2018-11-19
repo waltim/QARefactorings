@@ -1,7 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 
-class UsersLanguage extends AppModel
+class UserLanguage extends AppModel
 {
 	public $validate = array(
 		'user_id' => array(
@@ -27,7 +27,7 @@ class UsersLanguage extends AppModel
 	public $belongsTo = array(
 		'User' => array(
 			'className' => 'User',
-			'foreignKey' => 'users_id',
+			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
@@ -38,7 +38,7 @@ class UsersLanguage extends AppModel
 		),
 		'Language' => array(
 			'className' => 'Language',
-			'foreignKey' => 'languages_id',
+			'foreignKey' => 'language_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',

@@ -6,13 +6,20 @@
 	function Brush()
 	{
 		this.regexList = [
-			{ regex: /^\+\+\+.*$/gm,		css: 'color2' },
-			{ regex: /^\-\-\-.*$/gm,		css: 'color2' },
-			{ regex: /^\s.*$/gm,			css: 'color1' },
-			{ regex: /^@@.*@@$/gm,			css: 'variable' },
-			{ regex: /^\+[^\+]{1}.*$/gm,	css: 'string' },
-			{ regex: /^\-[^\-]{1}.*$/gm,	css: 'comments' }
-			];
+			// { regex: /^\+\+\+.*$/gm,		css: 'color2' },
+			// { regex: /^\-\-\-.*$/gm,		css: 'color2' },
+			// { regex: /^\s.*$/gm,			css: 'color1' },
+			// { regex: /^@@.*@@$/gm,			css: 'variable' },
+			// { regex: /^\+[^\+]{1}.*$/gm,	css: 'string' },
+			// { regex: /^\-[^\-]{1}.*$/gm,	css: 'comments' }
+			// ];
+            { regex: /^\+\+\+.*$/gm,		css: 'variable' },
+            { regex: /^\-\-\-.*$/gm,		css: 'color2' },
+            { regex: /^\s.*$/gm,			css: 'color1' },
+            { regex: /^@@.*@@$/gm,			css: 'variable' },
+            { regex: /^\+[^\+]{1}.*$/gm,	css: 'comments' },
+            { regex: /^\-[^\-]{1}.*$/gm,	css: 'color2' }
+        ];
 	};
 
 	Brush.prototype	= new SyntaxHighlighter.Highlighter();

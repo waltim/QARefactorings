@@ -27,7 +27,7 @@ class UserType extends AppModel {
         'User' => array(
             'className' => 'User',
             'joinTable' => '',
-            'foreignKey' => 'user_id',
+            'foreignKey' => 'user_type_id',
             'associationForeignKey' => '',
             'dependent' => true,
             'unique' => '',

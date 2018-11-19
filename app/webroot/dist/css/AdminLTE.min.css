@@ -5742,3 +5742,47 @@ table.text-center th {
         white-space: normal !important
     }
 }
+.questionario-estilizado{
+	background: url(../../app/webroot/dist/img/background.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+    background-size: cover;
+    width: 100%;
+    min-height: 300px;
+    padding: 0px;
+    color: white;
+}
+
+.sombra-div{
+    background: rgba(0,0,0,.4);
+}
+
+.questionario-estilizado textarea{
+  width: 80%;
+  margin: 0 auto;
+  background: rgba(0,0,0,.4);
+  color: whitesmoke;
+}
+
+.questionario-estilizado label{
+    margin: 0 150px;
+  }
+.iradio_flat-green { 
+    margin: 10px!important; 
+}
+
+.borda-radio{
+    /* border:solid 2px whitesmoke; */
+    display: inline-block;
+    margin: 10px!important;
+    padding: 12px!important;
+}
+.assaltante{
+    color: white;
+    font-size: 16px;
+}
+.assaltante:hover{
+    color: white;
+    font-size: 18px;
+}

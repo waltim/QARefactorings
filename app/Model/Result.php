@@ -51,8 +51,8 @@ class Result extends AppModel{
     );
 
     public $hasMany = array(
-        'Question' => array(
-            'className' => 'Question',
+        'ResultQuestion' => array(
+            'className' => 'ResultQuestion',
             'joinTable' => '',
             'foreignKey' => 'result_id',
             'associationForeignKey' => '',
