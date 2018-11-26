@@ -224,6 +224,18 @@ class TransformationsController extends AppController
         }
     }
 
+    public function deleteAll($pesquisa = null)
+    {
+        $Selected = $this->Transformation->find('all', array(
+            'conditions' => array('Transformation.search_event_id' => $pesquisa)
+        ));
+        foreach ($Selected as $todel){
+            $this->Transformation->delete($todel['Transformation']['id']);
+        }
+        $this->Session->setFlash(__('Deletadad com sucesso!'), 'Flash/success');
+        $this->redirect(array('action' => 'index',$pesquisa));
+    }
+
     public function view($id = null)
     {
         if ($id == null) {
