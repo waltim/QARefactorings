@@ -172,7 +172,7 @@ class UsersController extends AppController
 			} else {
 				$this->request->data['User']['username'] = $name[0];
 			}
-			$this->request->data['User']['status'] = 0;
+			$this->request->data['User']['status'] = 1;
 			$this->request->data['User']['trophy'] = 0;
 			$this->request->data['User']['username'] = $this->sanitizeString($this->request->data['User']['username']);
 			$this->User->create();

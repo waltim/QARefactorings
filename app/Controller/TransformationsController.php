@@ -42,39 +42,134 @@ class TransformationsController extends AppController
             $refactoring['Transformation']['search_event_id'] = $uid;
             unset($refactoring['Transformation']['metricas']);
             $metricas = $this->request->data['Transformation']['metricas'];
-            $this->Transformation->create();
-            if ($this->Transformation->validates() != false && $this->Transformation->save($refactoring)) {
-                $lastCreated = $this->Transformation->find('first', array(
-                    'conditions' => array('Transformation.search_event_id' => $uid),
-                    'order' => array('Transformation.id DESC')
-                ));
-                if (count($metricas) > 0) {
-                    foreach ($metricas as $metrica) {
-                        $this->Result->create();
-                        $result = array(
-                            'Result' => array(
-                                'transformation_id' => $lastCreated['Transformation']['id'],
-                                'metric_id' => $metrica,
-                            )
-                        );
-                        $this->Result->save($result);
-                    }
-                    $this->Session->setFlash(__('Transformação cadastrada com sucesso.'), 'Flash/success');
-                    $this->redirect(array('action' => 'manipulaMetricas', $lastCreated['Transformation']['id']));
-                } else {
-                    $this->Session->setFlash(__('Transformação cadastrada com sucesso.'), 'Flash/success');
-                    $this->redirect(array('action' => 'add', $lastCreated['Transformation']['search_event_id']));
-                }
+            $conteudo = $refactoring['Transformation']['conteudo'];
+            $conteudo = strip_tags($conteudo, '<br>');
+            $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $conteudo);
+            $cortaLink = explode("#", $refactoring['Transformation']['site_link']);
+                     
+            // pr($conteudo);
+            // exit();
+            $conditions = array(
+                'search_event_id' => $refactoring['Transformation']['search_event_id'],
+                'site_link' => $refactoring['Transformation']['site_link'],
+                'line_start' => strtoupper($refactoring['Transformation']['line_start']),
+                'line_end' => strtoupper($refactoring['Transformation']['line_end'])
+            );
+            if ($this->Transformation->hasAny($conditions)) {
+                $this->Session->setFlash(__("A refatoração: <b>" . $refactoring['Transformation']['site_link'] . "</b> já foi cadastrada nesta pesquisa!"), 'Flash/info');
             } else {
-/*                pr($this->Transformation->validationErrors);
-                exit();*/
-                $this->Session->setFlash(__('Houve um erro ao salvar, tente novamente.'), 'Flash/error');
+                $anomesdiahora = date('YmdHis');
+                $this->Transformation->create();
+                $refactor = array(
+                    'Transformation' => array(
+                        'transformation_type_id' => $refactoring['Transformation']['transformation_type_id'],
+                        'language_id' => $refactoring['Transformation']['language_id'],
+                        'search_event_id' => $refactoring['Transformation']['search_event_id'],
+                        'diff_id' => $cortaLink[1] . "-" . $anomesdiahora,
+                        'site_link' => $refactoring['Transformation']['site_link'],
+                        'line_start' => strtoupper($refactoring['Transformation']['line_start']),
+                        'line_end' => strtoupper($refactoring['Transformation']['line_end']),
+                    ),
+                );
+                $this->Transformation->save($refactor);
+
+                $lastTransformationCreated = $this->Transformation->find('first', array(
+                    'conditions' => array('Transformation.search_event_id' => $refactoring['Transformation']['search_event_id']),
+                    'order' => array('Transformation.created DESC'),
+                ));
+
+                foreach ($metricas as $metrica) {
+                    $this->Result->create();
+                    $result = array(
+                        'Result' => array(
+                            'transformation_id' => $lastTransformationCreated['Transformation']['id'],
+                            'metric_id' => $metrica,
+                        ),
+                    );
+                    $this->Result->save($result);
+                }
+                //pr($conteudo);exit();
+                $nomecode = $cortaLink[1]."-".$anomesdiahora;
+                $pasta = WWW_ROOT . "files/" . $nomecode . "/";
+                $caminho = $pasta;
+                $oldmask = umask(0);
+                if (file_exists($pasta)) {
+                    echo "O arquivo $pasta existe";
+                } else {
+                    mkdir($pasta, 0777, true);
+                }
+                $caminho = $caminho . "ab.txt";
+                $fp = fopen($caminho, "w+");
+                $breaks = array("<br />","<br>","<br/>");
+                $conteudo = str_ireplace($breaks, "\r\n", $conteudo);
+                $conteudo = str_replace("&nbsp;","",$conteudo);
+                $escreve = fwrite($fp, utf8_encode($conteudo));
+                fclose($fp);
+                umask($oldmask);
+            
+                $this->separaAnteriorETransformado($lastTransformationCreated['Transformation']['id'], $pasta, $caminho);
+
+                $this->Session->setFlash(__('Transformação cadastrada com sucesso.'), 'Flash/success');
+                $this->redirect(array('action' => 'add', $lastTransformationCreated['Transformation']['search_event_id']));
             }
+
         }
         $this->set('languages', $this->Language->find('list', array('fields' => 'Language.description')));
         $this->set('types', $this->TransformationType->find('list', array('fields' => 'TransformationType.description')));
         $this->set('metrics', $this->Metric->find('list', array('fields' => 'Metric.acronym')));
         $this->set('pesquisa', $id);
+    }
+
+    public function separaAnteriorETransformado($transformation = null, $pasta = null, $arquivo = null)
+    {
+        //pr($arquivo);exit();
+        //Variável $fp armazena a conexão com o arquivo e o tipo de ação.
+        $fp = fopen($arquivo, "r");
+
+        //Lê o conteúdo do arquivo aberto.
+        $oldmask = umask(0);
+        $a = fopen($pasta . "a.txt", "w+");
+        $b = fopen($pasta . "b.txt", "w+");
+        $Aconteudo = '';
+        $Bconteudo = '';
+        $Cconteudo = '';
+        $Dconteudo = '';
+        while (!feof($fp)) {
+            $valor = fgets($fp, 4096);
+            if (strstr($valor, "+   ")) {
+                $Cconteudo .= $valor . '<br/>';
+                $valor = str_replace("+   ", "    ", $valor);
+                $Bconteudo .= fwrite($b, utf8_encode($valor));
+            } elseif (strstr($valor, "-   ")) {
+                $Dconteudo .= $valor . '<br/>';
+                $valor = str_replace("-   ", "    ", $valor);
+                $Aconteudo .= fwrite($a, utf8_encode($valor));
+            } else {
+                $Aconteudo .= fwrite($a, utf8_encode($valor));
+                $Bconteudo .= fwrite($b, utf8_encode($valor));
+                $Cconteudo .= $valor . '<br/>';
+                $Dconteudo .= $valor . '<br/>';
+            }
+        }
+        fclose($a);
+        fclose($b);
+        umask($oldmask);
+        //Fecha o arquivo.
+        fclose($fp);
+    
+        //retorna o conteúdo.
+        $this->Transformation->id = $transformation;
+        $refactor = array(
+            'Transformation' => array(
+                'code_before' => "<p>" . $Dconteudo . "</p>",
+                'old_code' => $pasta . "a.txt",
+                'code_after' => "<p>" . $Cconteudo . "</p>",
+                'new_code' => $pasta . "b.txt",
+            ),
+        );
+        $this->Transformation->save($refactor);
+
+        $this->manipulaMetricas($transformation);
     }
 
     public function edit($id = null)
@@ -127,6 +222,18 @@ class TransformationsController extends AppController
             $this->Session->setFlash(__('Deletada com sucesso!'), 'Flash/success');
             $this->redirect(array('action' => 'index',$pesquisa));
         }
+    }
+
+    public function deleteAll($pesquisa = null)
+    {
+        $Selected = $this->Transformation->find('all', array(
+            'conditions' => array('Transformation.search_event_id' => $pesquisa)
+        ));
+        foreach ($Selected as $todel){
+            $this->Transformation->delete($todel['Transformation']['id']);
+        }
+        $this->Session->setFlash(__('Deletadad com sucesso!'), 'Flash/success');
+        $this->redirect(array('action' => 'index',$pesquisa));
     }
 
     public function view($id = null)

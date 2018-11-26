@@ -5743,7 +5743,7 @@ table.text-center th {
     }
 }
 .questionario-estilizado{
-	background: url(../../app/webroot/dist/img/background.jpg) no-repeat center center fixed;
+	background: url(../../app/webroot/dist/img/background1.jpg) no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -5755,7 +5755,7 @@ table.text-center th {
 }
 
 .sombra-div{
-    background: rgba(0,0,0,.4);
+    background: rgba(0,0,0,.3);
 }
 
 .questionario-estilizado textarea{

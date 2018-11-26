@@ -30,7 +30,8 @@ class SearchEventsController extends AppController
             $partenome = explode(".", $this->request->data["file"]["name"]);
             $nomearquivo = $partenome[0] . "-" . date('dmYHis', time()) . ".csv";
             $oldmask = umask(0);
-            if ($this->request->data["file"]['type'] == 'text/csv') {
+//            pr($this->request->data["file"]);exit();
+            if ($this->request->data["file"]['type'] == 'text/csv' || $this->request->data["file"]['type'] == 'application/vnd.ms-excel') {
                 if (move_uploaded_file($this->request->data["file"]["tmp_name"], $pasta . $nomearquivo)) {
                     $array = array();
                     $file = fopen($pasta . $nomearquivo, 'r');
@@ -83,8 +84,8 @@ class SearchEventsController extends AppController
             $conteudo = str_replace("<span class='blob-code-inner blob-code-marker-addition'>", "+", $conteudo);
             $conteudo = str_replace("<span class='blob-code-inner blob-code-marker-deletion'>", "-", $conteudo);
             $conteudo = strip_tags($conteudo, '<br>');
-            $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $conteudo);
-            // pr($conteudo);exit();
+            $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\r\n", $conteudo);
+//            pr($conteudo);exit();
             $conditions = array(
                 'search_event_id' => $pesquisa,
                 'site_link' => $url,
@@ -135,9 +136,8 @@ class SearchEventsController extends AppController
                     mkdir($pasta, 0777, true);
                 }
                 $caminho = $caminho . "ab.txt";
-
                 $fp = fopen($caminho, "w+");
-
+//                pr($conteudo);
                 $escreve = fwrite($fp, utf8_encode($conteudo));
 
                 fclose($fp);
@@ -184,6 +184,9 @@ class SearchEventsController extends AppController
         umask($oldmask);
         //Fecha o arquivo.
         fclose($fp);
+
+//        pr($Aconteudo);
+//        pr($Bconteudo);
         // $oldCode = fopen($pasta . "a.txt", "r");
         // $oldCodeContent = '';
         // while (!feof($oldCode)) {
@@ -209,7 +212,6 @@ class SearchEventsController extends AppController
             ),
         );
         $this->Transformation->save($refactor);
-
         $transf = new TransformationsController();
         $transf->manipulaMetricas($transformation);
     }
