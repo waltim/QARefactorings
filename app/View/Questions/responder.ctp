@@ -98,10 +98,6 @@
                                 <?= $questoes['Question']['description']; ?>
                             </h3>
                         </div>
-                        <div class="form-group">
-                            <label>(Opcional) Justificativa</label>
-                            <textarea rows="5" maxlength="200" name="data[Answer][justify][]" class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>
-                        </div>
                         <div class="form-group text-center" style="font-size: 18px;">
                             <div class="borda-radio">
                                 <input type="radio" id="DP<?= $z ?>" required="required" name="data[Answer][choice][<?= $z ?>]" value="1" class="btn btn-raised btn-default flat-red"
@@ -110,7 +106,7 @@
                                 <input type="radio" id="D<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="2" class="btn btn-raised btn-default flat-red"
                                     type="submit">Discordo</div>
                             <div class="borda-radio">
-                                <input type="radio" id="NDNC<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" checked="checked" value="3" class="btn btn-raised btn-default flat-red"
+                                <input type="radio" id="NDNC<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="3" class="btn btn-raised btn-default flat-red"
                                     type="submit">Não discordo nem concordo</div>
                             <div class="borda-radio">
                                 <input type="radio" id="C<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="4" class="btn btn-raised btn-default flat-red"
@@ -118,6 +114,10 @@
                             <div class="borda-radio">
                                 <input type="radio" id="CP<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="5" class="btn btn-raised btn-default flat-red"
                                     type="submit">Concordo plenamente</div>
+                        </div>
+                        <div class="form-group">
+                            <label>(Opcional) Justificativa</label>
+                            <textarea rows="5" maxlength="200" name="data[Answer][justify][]" class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>
                         </div>
                     </div>
                     <?php } ?>
