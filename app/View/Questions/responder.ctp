@@ -4,8 +4,8 @@
 ?>
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="panel panel-danger">
-            <div class="panel-body questionario-estilizado">
+        <div class="">
+            <div class="panel-body">
                 <form id="reused_form" method="post" action="<?= $this->webroot ?>questions/responder" class="sombra-div">
                     <div class="form-group text-center">
                         <h3>
@@ -119,25 +119,21 @@
                             <label>(Opcional) Justificativa</label>
                             <textarea rows="5" maxlength="1200" name="data[Answer][justify][]" class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>
                         </div>
-                        <div class="form-group">
-                            <label>(Opcional) Justificativa</label>
-                            <textarea rows="5" maxlength="200" name="data[Answer][justify][]" class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>
-                        </div>
                     </div>
                     <?php } ?>
                     <?php $z++;
                     } ?>
                     <a href="<?= $this->webroot ?>" class="pull-left">
-                        <button value="sair" name="data[Answer][botao]" class="btn btn-raised btn-default">Sair
+                        <button value="sair" formnovalidate name="data[Answer][botao]" class="btn btn-raised btn-default">Sair
                         </button>
                     </a>
                     <a href="<?= $this->webroot ?>questions/responder" style="margin-left: 40%;">
-                        <button class="btn btn-raised btn-success" value="responder" name="data[Answer][botao]">
+                        <button class="btn btn-raised btn-primary" value="responder" name="data[Answer][botao]">
                             Responder
                         </button>
                     </a>
                     <a href="<?= $this->webroot ?>questions/responder" class="pull-right">
-                        <button value="pular" name="data[Answer][botao]" class="btn btn-raised btn-primary">Pular questão
+                        <button value="pular" formnovalidate name="data[Answer][botao]" class="btn btn-raised btn-default">Pular questão
                         </button>
                     </a>
                 </form>

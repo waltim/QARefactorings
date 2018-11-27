@@ -18,12 +18,10 @@
 </head>
 <body>
 <?php echo $this->Session->flash(); ?>
-<div class="container-fluid">
-    <div class="container-fluid form-top">
+    <div class="container-fluid questionario-estilizado">
         <?php echo $this->Flash->render(); ?>
         <?php echo $this->fetch('content'); ?>
     </div>
-</div>
 </body>
 </html>
 <?php echo $this->Html->script(array(
