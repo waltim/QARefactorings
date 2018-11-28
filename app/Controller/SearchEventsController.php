@@ -57,19 +57,43 @@ class SearchEventsController extends AppController
         $this->set('metrics', $this->Metric->find('list', array('fields' => 'Metric.acronym')));
     }
 
+    public function get_title($url){
+        $str = file_get_contents($url);
+        if(strlen($str)>0){
+          $str = trim(preg_replace('/\s+/', ' ', $str)); // supports line breaks inside <title>
+          preg_match("/\<title\>(.*)\<\/title\>/i",$str,$title); // ignore case
+          return $title[1];
+        }
+    }
+
     public function capturaCodigo($pesquisa = null, $transformationType = null, $language = null, $url = null, $start = null, $end = null, $metricas = null)
     {
         $start = strtoupper($start);
         $end = strtoupper($end);
 
         $cortaLink = explode("#", $url);
+        $stringz = $this->get_title($url);
+        $stringz = str_replace("/", "_", $stringz);
+        $stringz = str_replace(":", "_", $stringz);
+        $stringz = str_replace(" · GitHub", ".html", $stringz);
+        // $conecurl = @fopen("$url", "r") or die('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
+        // $lin = '';
+        // while (!feof($conecurl)) {
+        //     $lin .= fgets($conecurl, 4096);
+        // }
+        // fclose($conecurl);
 
-        $conecurl = @fopen("$url", "r") or die('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
+        // $conecurl = file_get_contents("/home/machine/Downloads/Remove useless final and this modifiers · FluentLenium_FluentLenium@73bac61.html");
+        // pr($conecurl);exit();
+        $pages = WWW_ROOT . "files/pages-html/";
+        $file = fopen($pages.html_entity_decode($stringz, ENT_QUOTES), "r");
         $lin = '';
-        while (!feof($conecurl)) {
-            $lin .= fgets($conecurl, 4096);
-        }
-        fclose($conecurl);
+        while (!feof($file)) {
+            $lin .= fgets($file, 4096);
+         }
+        fclose($file);
+
+        // pr($pages.$stringz);
         if (stristr($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') == false) {
             //$this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
         } elseif (stristr($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"') == false) {
@@ -92,6 +116,7 @@ class SearchEventsController extends AppController
                 'line_start' => $start,
                 'line_end' => $end,
             );
+            // pr($conditions);
             if ($this->Transformation->hasAny($conditions)) {
                 $this->Session->setFlash(__("A refatoração: <b>" . $url . "</b> já foi cadastrada nesta pesquisa!"), 'Flash/info');
             } else {
