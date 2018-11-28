@@ -27,6 +27,15 @@ class QuestionsController extends AppController
 
     }
 
+    public function deleteSurvey()
+    {
+        $questoesSurvey = $this->ResultQuestion->find('all');
+        foreach($questoesSurvey as $resquestion){
+            $this->ResultQuestion->delete($resquestion['ResultQuestion']['id']);
+        }
+        $this->redirect(array('controller' => 'searchEvents', 'action' => 'index'));
+    }
+
     public function survey($id = null)
     {
 
@@ -46,7 +55,7 @@ class QuestionsController extends AppController
                 $questoes = $this->Participant->find('all', array(
                     'conditions' => array(
                         'Participant.search_event_id' => $id,
-                        'Participant.participant_type_id' => 4
+                        // 'Participant.participant_type_id' => 4
                     )
                 ));
 
