@@ -99,17 +99,17 @@ class SearchEventsController extends AppController
         } elseif (stristr($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"') == false) {
             //$this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
         } else {
-            $inicio = strpos($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') + 290;
+            $inicio = strpos($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') + 323;
 
             $fim = strpos($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"');
 
             $quantopula = $fim - $inicio;
             $conteudo = substr($lin, $inicio, $quantopula);
-            $conteudo = str_replace("<span class='blob-code-inner blob-code-marker-addition'>", "+", $conteudo);
-            $conteudo = str_replace("<span class='blob-code-inner blob-code-marker-deletion'>", "-", $conteudo);
+            $conteudo = str_replace('<span class="blob-code-inner blob-code-marker-deletion">', "-", $conteudo);
+            $conteudo = str_replace('<span class="blob-code-inner blob-code-marker-addition">', "+", $conteudo);
             $conteudo = strip_tags($conteudo, '<br>');
             $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\r\n", $conteudo);
-//            pr($conteudo);exit();
+            // pr($conteudo);exit();
             $conditions = array(
                 'search_event_id' => $pesquisa,
                 'site_link' => $url,
