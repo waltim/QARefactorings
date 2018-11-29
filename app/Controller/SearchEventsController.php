@@ -99,9 +99,9 @@ class SearchEventsController extends AppController
         }
         // pr($lin);exit();
         if (stristr($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') == false) {
-            //$this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
+            $this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
         } elseif (stristr($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"') == false) {
-            //$this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
+            $this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
         } else {
             $inicio = strpos($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') + 323;
 
@@ -114,11 +114,7 @@ class SearchEventsController extends AppController
             $conteudo = strip_tags($conteudo, '<br>');
             $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\r\n", $conteudo);
 
-            // $isLambda = strpos($conteudo, '-&gt;');
-
-            // if($isLambda != null){
-            //     pr('é um lambda msm!');
-            // }
+            $isLambda = strpos($conteudo, '-&gt;');
 
             $tokenFilter = strpos($conteudo, '.filter');
             $tokenCount = strpos($conteudo, '.count');
@@ -126,7 +122,7 @@ class SearchEventsController extends AppController
             $tokenMap = strpos($conteudo, '.map');
             $tokenReduce = strpos($conteudo, '.reduce');
             $tokenForeach = strpos($conteudo, '.forEach');
-            $tokenExists = strpos($conteudo, '.anyMatch');
+            $tokenAnyMatch = strpos($conteudo, '.anyMatch');
 
             if ($tokenFilter != null && $tokenCount != null) {
                 $transformationType = 8;
@@ -142,7 +138,7 @@ class SearchEventsController extends AppController
                 $transformationType = 2;
             } elseif ($tokenMap != null) {
                 $transformationType = 5;
-            } elseif ($tokenExists != null) {
+            } elseif ($tokenAnyMatch != null) {
                 $transformationType = 4;
             } else {
                 $transformationType = 1;
@@ -157,8 +153,11 @@ class SearchEventsController extends AppController
             );
             // pr($conditions);
             if ($this->Transformation->hasAny($conditions)) {
-                $this->Session->setFlash(__("A refatoração: <b>" . $url . "</b> já foi cadastrada nesta pesquisa!"), 'Flash/info');
-            } else {
+                // $this->Session->setFlash(__("A refatoração: <b>" . $url . "</b> já foi cadastrada nesta pesquisa!"), 'Flash/info');
+            }elseif($isLambda == null){
+                // pr($cortaLink[1].' caiu aqui.');
+                $this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> não possui lambda."), 'Flash/error');
+            }else {
                 $anomesdiahora = date('YmdHis');
                 $this->Transformation->create();
                 $refactor = array(
