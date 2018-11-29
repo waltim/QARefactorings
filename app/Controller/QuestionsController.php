@@ -41,7 +41,8 @@ class QuestionsController extends AppController
 
         $transformacoes = $this->Transformation->find('all', array(
             'conditions' => array(
-                'Transformation.search_event_id' => $id
+                'Transformation.search_event_id' => $id,
+                'Transformation.apt' => "S"
             )
         ));
         if ($transformacoes) {
@@ -232,7 +233,7 @@ class QuestionsController extends AppController
             'order' => array('Answer.result_question_id ASC')
         ));
 
-        $array = $question = $this->Answer->find('all', array(
+        $array = $this->Answer->find('all', array(
             'recursive' => 1,
             'conditions' => array(
                 'Answer.user_id' => $this->Auth->user('id')

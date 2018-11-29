@@ -42,7 +42,8 @@ class SearchEventsController extends AppController
                     umask($oldmask);
                     @unlink($pasta . $nomearquivo);
                     foreach ($array as $line) {
-                        $this->capturaCodigo($pesquisa, $line[3], $line[4], $line[0], $line[1], $line[2], $this->request->data['metricas']);
+                        // $this->capturaCodigo($pesquisa, $line[3], $line[4], $line[0], $line[1], $line[2], $this->request->data['metricas']);
+                        $this->capturaCodigo($pesquisa, $line[4], $line[0], $line[1], $line[2], $this->request->data['metricas']);
 
                     }
                     $this->Session->setFlash(__('Importação finalizada com sucesso!'), 'Flash/success');
@@ -57,19 +58,22 @@ class SearchEventsController extends AppController
         $this->set('metrics', $this->Metric->find('list', array('fields' => 'Metric.acronym')));
     }
 
-    public function get_title($url){
+    public function get_title($url)
+    {
         $str = file_get_contents($url);
-        if(strlen($str)>0){
-          $str = trim(preg_replace('/\s+/', ' ', $str)); // supports line breaks inside <title>
-          preg_match("/\<title\>(.*)\<\/title\>/i",$str,$title); // ignore case
-          return $title[1];
+        if (strlen($str) > 0) {
+            $str = trim(preg_replace('/\s+/', ' ', $str)); // supports line breaks inside <title>
+            preg_match("/\<title\>(.*)\<\/title\>/i", $str, $title); // ignore case
+            return $title[1];
         }
     }
 
-    public function capturaCodigo($pesquisa = null, $transformationType = null, $language = null, $url = null, $start = null, $end = null, $metricas = null)
+    // public function capturaCodigo($pesquisa = null, $transformationType = null, $language = null, $url = null, $start = null, $end = null, $metricas = null)
+    public function capturaCodigo($pesquisa = null, $language = null, $url = null, $start = null, $end = null, $metricas = null)
     {
         $start = strtoupper($start);
         $end = strtoupper($end);
+        $transformationType = null;
 
         $cortaLink = explode("#", $url);
         $stringz = $this->get_title($url);
@@ -77,16 +81,15 @@ class SearchEventsController extends AppController
         $stringz = str_replace(":", "_", $stringz);
         $stringz = str_replace(" · GitHub", ".html", $stringz);
         $pages = WWW_ROOT . "files/pages-html/";
-        
-        if (file_exists($pages.html_entity_decode($stringz, ENT_QUOTES))) {
-            $file = fopen($pages.html_entity_decode($stringz, ENT_QUOTES), "r");
+
+        if (file_exists($pages . html_entity_decode($stringz, ENT_QUOTES))) {
+            $file = fopen($pages . html_entity_decode($stringz, ENT_QUOTES), "r");
             $lin = '';
             while (!feof($file)) {
                 $lin .= fgets($file, 4096);
             }
             fclose($file);
         } else {
-            // pr('não achou arquivo');exit();
             $conecurl = @fopen("$url", "r") or die('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
             $lin = '';
             while (!feof($conecurl)) {
@@ -94,7 +97,7 @@ class SearchEventsController extends AppController
             }
             fclose($conecurl);
         }
-        pr($lin);exit();
+        // pr($lin);exit();
         if (stristr($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') == false) {
             //$this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
         } elseif (stristr($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"') == false) {
@@ -110,7 +113,42 @@ class SearchEventsController extends AppController
             $conteudo = str_replace('<span class="blob-code-inner blob-code-marker-addition">', "+", $conteudo);
             $conteudo = strip_tags($conteudo, '<br>');
             $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\r\n", $conteudo);
-            // pr($conteudo);exit();
+
+            // $isLambda = strpos($conteudo, '-&gt;');
+
+            // if($isLambda != null){
+            //     pr('é um lambda msm!');
+            // }
+
+            $tokenFilter = strpos($conteudo, '.filter');
+            $tokenCount = strpos($conteudo, '.count');
+            $tokenCollect = strpos($conteudo, '.collect');
+            $tokenMap = strpos($conteudo, '.map');
+            $tokenReduce = strpos($conteudo, '.reduce');
+            $tokenForeach = strpos($conteudo, '.forEach');
+            $tokenExists = strpos($conteudo, '.anyMatch');
+
+            if ($tokenFilter != null && $tokenCount != null) {
+                $transformationType = 8;
+            } elseif ($tokenFilter != null && $tokenCollect != null) {
+                $transformationType = 9;
+            } elseif ($tokenMap != null && $tokenCollect != null) {
+                $transformationType = 7;
+            } elseif ($tokenMap != null && $tokenReduce != null) {
+                $transformationType = 6;
+            } elseif ($tokenFilter != null) {
+                $transformationType = 3;
+            } elseif ($tokenForeach != null) {
+                $transformationType = 2;
+            } elseif ($tokenMap != null) {
+                $transformationType = 5;
+            } elseif ($tokenExists != null) {
+                $transformationType = 4;
+            } else {
+                $transformationType = 1;
+            }
+            // pr($transformationType);exit();
+
             $conditions = array(
                 'search_event_id' => $pesquisa,
                 'site_link' => $url,
@@ -152,7 +190,7 @@ class SearchEventsController extends AppController
                     $this->Result->save($result);
                 }
                 //pr($conteudo);exit();
-                $nomecode = $cortaLink[1]."-".$anomesdiahora;
+                $nomecode = $cortaLink[1] . "-" . $anomesdiahora;
                 $pasta = WWW_ROOT . "files/" . $nomecode . "/";
                 $caminho = $pasta;
                 $oldmask = umask(0);
@@ -212,7 +250,7 @@ class SearchEventsController extends AppController
         fclose($fp);
 
 //        pr($Aconteudo);
-//        pr($Bconteudo);
+        //        pr($Bconteudo);
         // $oldCode = fopen($pasta . "a.txt", "r");
         // $oldCodeContent = '';
         // while (!feof($oldCode)) {
@@ -227,6 +265,19 @@ class SearchEventsController extends AppController
         // }
         // fclose($newCode);
 
+        $hasLambdaBefore = strpos($Dconteudo, '-&gt;');
+        $hasLambdaAfter = strpos($Cconteudo, '-&gt;');
+        $apt = null;
+        if ($hasLambdaBefore != null && $hasLambdaAfter == null) {
+            $apt = 'N';
+        } elseif ($hasLambdaBefore != null && $hasLambdaAfter != null) {
+            $apt = 'N';
+        }elseif ($hasLambdaBefore == null && $hasLambdaAfter == null) {
+            $apt = 'N';
+        } else {
+            $apt = 'S';
+        }
+
         //retorna o conteúdo.
         $this->Transformation->id = $transformation;
         $refactor = array(
@@ -235,6 +286,7 @@ class SearchEventsController extends AppController
                 'old_code' => $pasta . "a.txt",
                 'code_after' => "<p>" . $Cconteudo . "</p>",
                 'new_code' => $pasta . "b.txt",
+                'apt' => $apt,
             ),
         );
         $this->Transformation->save($refactor);
