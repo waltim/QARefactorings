@@ -30,7 +30,7 @@ class SearchEventsController extends AppController
             $partenome = explode(".", $this->request->data["file"]["name"]);
             $nomearquivo = $partenome[0] . "-" . date('dmYHis', time()) . ".csv";
             $oldmask = umask(0);
-//            pr($this->request->data["file"]);exit();
+            // pr($this->request->data["file"]);exit();
             if ($this->request->data["file"]['type'] == 'text/csv' || $this->request->data["file"]['type'] == 'application/vnd.ms-excel') {
                 if (move_uploaded_file($this->request->data["file"]["tmp_name"], $pasta . $nomearquivo)) {
                     $array = array();
@@ -76,24 +76,25 @@ class SearchEventsController extends AppController
         $stringz = str_replace("/", "_", $stringz);
         $stringz = str_replace(":", "_", $stringz);
         $stringz = str_replace(" · GitHub", ".html", $stringz);
-        // $conecurl = @fopen("$url", "r") or die('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
-        // $lin = '';
-        // while (!feof($conecurl)) {
-        //     $lin .= fgets($conecurl, 4096);
-        // }
-        // fclose($conecurl);
-
-        // $conecurl = file_get_contents("/home/machine/Downloads/Remove useless final and this modifiers · FluentLenium_FluentLenium@73bac61.html");
-        // pr($conecurl);exit();
         $pages = WWW_ROOT . "files/pages-html/";
-        $file = fopen($pages.html_entity_decode($stringz, ENT_QUOTES), "r");
-        $lin = '';
-        while (!feof($file)) {
-            $lin .= fgets($file, 4096);
-         }
-        fclose($file);
-
-        // pr($pages.$stringz);
+        
+        if (file_exists($pages.html_entity_decode($stringz, ENT_QUOTES))) {
+            $file = fopen($pages.html_entity_decode($stringz, ENT_QUOTES), "r");
+            $lin = '';
+            while (!feof($file)) {
+                $lin .= fgets($file, 4096);
+            }
+            fclose($file);
+        } else {
+            // pr('não achou arquivo');exit();
+            $conecurl = @fopen("$url", "r") or die('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
+            $lin = '';
+            while (!feof($conecurl)) {
+                $lin .= fgets($conecurl, 4096);
+            }
+            fclose($conecurl);
+        }
+        pr($lin);exit();
         if (stristr($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') == false) {
             //$this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
         } elseif (stristr($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"') == false) {
