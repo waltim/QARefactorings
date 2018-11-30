@@ -31,7 +31,8 @@ echo $this->Html->link(
 				//'ext' => 'html'
 	),
 	array(
-		'class' => 'btn btn-block btn-social btn-facebook btn-flat'
+    'class' => 'btn btn-block btn-social btn-facebook btn-flat',
+    'style' => 'text-align: center; padding-left: 15px;'
 	)
 );
 ?>

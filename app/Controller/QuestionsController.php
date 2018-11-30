@@ -27,12 +27,22 @@ class QuestionsController extends AppController
 
     }
 
+    public function deleteSurvey()
+    {
+        $questoesSurvey = $this->ResultQuestion->find('all');
+        foreach($questoesSurvey as $resquestion){
+            $this->ResultQuestion->delete($resquestion['ResultQuestion']['id']);
+        }
+        $this->redirect(array('controller' => 'searchEvents', 'action' => 'index'));
+    }
+
     public function survey($id = null)
     {
 
         $transformacoes = $this->Transformation->find('all', array(
             'conditions' => array(
-                'Transformation.search_event_id' => $id
+                'Transformation.search_event_id' => $id,
+                'Transformation.apt' => "S"
             )
         ));
         if ($transformacoes) {
@@ -46,7 +56,7 @@ class QuestionsController extends AppController
                 $questoes = $this->Participant->find('all', array(
                     'conditions' => array(
                         'Participant.search_event_id' => $id,
-                        'Participant.participant_type_id' => 4
+                        // 'Participant.participant_type_id' => 4
                     )
                 ));
 
@@ -223,7 +233,7 @@ class QuestionsController extends AppController
             'order' => array('Answer.result_question_id ASC')
         ));
 
-        $array = $question = $this->Answer->find('all', array(
+        $array = $this->Answer->find('all', array(
             'recursive' => 1,
             'conditions' => array(
                 'Answer.user_id' => $this->Auth->user('id')

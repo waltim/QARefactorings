@@ -86,3 +86,34 @@ pre {
 	width: 100%;
 	overflow: auto;
 }
+
+.exemplo1 input[type=radio], .exemplo1 input[type=checkbox]{
+    display:none; /* Esconde os inputs */
+}
+ 
+.exemplo1 input[type=radio] + label, .exemplo1 input[type=checkbox] + label{
+    display:inline-block;
+    height:20px;
+    padding:0 0 0 25px;
+    margin:0 10px 0 0;
+    background-image:url(http://www.webcis.com.br/images/imagens-noticias/checkbox/ico-master.png);
+    background-repeat:no-repeat;
+    background-position:0 0;
+}
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+input[type="radio"] {
+    -ms-transform: scale(1.5); /* IE 9 */
+    -webkit-transform: scale(1.5); /* Chrome, Safari, Opera */
+    transform: scale(1.5);
+}

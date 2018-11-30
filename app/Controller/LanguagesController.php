@@ -35,13 +35,12 @@ class LanguagesController extends AppController
                     'User' => array(
                         'id' => $this->Session->read('Auth.User.id'),
                         'formation' => $this->request->data['User']['formation'],
-//                        'profession' => $this->request->data['User']['profession']
+                        'profession' => $this->request->data['User']['profession']
                     )
                 );
 
                 $this->User->save($update);
-
-                $this->Session->setFlash(__('Experiência vinculada com sucesso.'), 'Flash/success');
+                // $this->Session->setFlash(__('Experiência vinculada com sucesso.'), 'Flash/success');
                 $this->redirect(array('controller' => 'questions', 'action' => 'responder'));
             }
         }
