@@ -79,9 +79,16 @@ class SearchEventsController extends AppController
         $stringz = $this->get_title($url);
         $stringz = str_replace("/", "_", $stringz);
         $stringz = str_replace(":", "_", $stringz);
-        $stringz = str_replace(" · GitHub", ".html", $stringz);
         $pages = WWW_ROOT . "files/pages-html/";
-
+        if (file_exists($pages . html_entity_decode($stringz, ENT_QUOTES))) {
+            $file = fopen($pages . html_entity_decode($stringz, ENT_QUOTES), "r");
+            $lin = '';
+            while (!feof($file)) {
+                $lin .= fgets($file, 4096);
+            }
+            fclose($file);
+        }
+        $stringz = str_replace(" · GitHub", ".html", $stringz);
         if (file_exists($pages . html_entity_decode($stringz, ENT_QUOTES))) {
             $file = fopen($pages . html_entity_decode($stringz, ENT_QUOTES), "r");
             $lin = '';
@@ -140,6 +147,8 @@ class SearchEventsController extends AppController
                 $transformationType = 5;
             } elseif ($tokenAnyMatch != null) {
                 $transformationType = 4;
+            }elseif ($tokenFilter != null && $tokenForeach != null) {
+                $transformationType = 10;
             } else {
                 $transformationType = 1;
             }
@@ -154,10 +163,10 @@ class SearchEventsController extends AppController
             // pr($conditions);
             if ($this->Transformation->hasAny($conditions)) {
                 // $this->Session->setFlash(__("A refatoração: <b>" . $url . "</b> já foi cadastrada nesta pesquisa!"), 'Flash/info');
-            }elseif($isLambda == null){
-                // pr($cortaLink[1].' caiu aqui.');
+            } elseif ($isLambda == null) {
+                pr($cortaLink[1].' caiu aqui.');
                 $this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> não possui lambda."), 'Flash/error');
-            }else {
+            } else {
                 $anomesdiahora = date('YmdHis');
                 $this->Transformation->create();
                 $refactor = array(
@@ -271,7 +280,7 @@ class SearchEventsController extends AppController
             $apt = 'N';
         } elseif ($hasLambdaBefore != null && $hasLambdaAfter != null) {
             $apt = 'N';
-        }elseif ($hasLambdaBefore == null && $hasLambdaAfter == null) {
+        } elseif ($hasLambdaBefore == null && $hasLambdaAfter == null) {
             $apt = 'N';
         } else {
             $apt = 'S';
