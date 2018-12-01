@@ -13,6 +13,7 @@ class TransformationsController extends AppController
         $this->loadModel('Result');
         $this->loadModel('Question');
         $this->loadModel('Answer');
+        $this->loadModel('Transformation');
     }
 
     public function index($pesquisa = null)

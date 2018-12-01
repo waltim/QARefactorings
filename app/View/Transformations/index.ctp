@@ -3,7 +3,7 @@
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">Tabela de transformações</h3>
-                <a href="/transformations/deleteAll/<?= $pesquisa ?>">
+                <a href="/transformations/deleteAll/<?= $pesquisa ?>" onclick="return confirm('Tem certeza?')" title="Deletar">
                     <button type="button" class="btn btn-primary pull-right">Apagar Todas</button>
                 </a>
                 <a href="/transformations/add/<?= $pesquisa ?>">

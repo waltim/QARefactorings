@@ -83,7 +83,7 @@ class QuestionsController extends AppController
             } 
         }
 
-        pr($arrayFiltrado);exit();
+        // pr($arrayFiltrado);exit();
 
         $transformacoes = $this->Transformation->find('all', array(
             'conditions' => array(

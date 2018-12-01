@@ -17,15 +17,15 @@
                 </tr>
                 </thead>
                 <tbody>
+                <?php foreach($transformations as $transformation){ ?>
                 <tr>
-                  <td>Trident</td>
-                  <td>Internet
-                    Explorer 4.0
-                  </td>
-                  <td>Win 95+</td>
-                  <td> 4</td>
-                  <td>X</td>
+                  <td><?=$transformation['Transformation']['site_link']?></td>
+                  <td><?=$transformation['Transformation']['line_start']?></td>
+                  <td><?=$transformation['Transformation']['line_end']?></td>
+                  <td><?=$transformation['Transformation']['language_id']?></td>
+                  <td><?=$transformation['Transformation']['transformation_type_id']?></td>
                 </tr>
+                <?php } ?>
                 </tbody>
                 <tfoot>
                 <tr>
