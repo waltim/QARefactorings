@@ -176,26 +176,52 @@ class TransformationsController extends AppController
     {
         if ($this->request->is('post')) {
             $refactoring['Transformation'] = $this->request->data['Transformation'];
+            $refactoring['Transformation']['id'] = $id;
+            // pr($refactoring);exit();
             if ($this->Transformation->save($refactoring)) {
-                if (isset($this->request->data['Transformation']['metricas'])) {
-                    $metricas = $this->request->data['Transformation']['metricas'];
-                    if (count($metricas) > 0) {
-                        foreach ($metricas as $metrica) {
-                            $this->Result->create();
-                            $result = array(
-                                'Result' => array(
-                                    'transformation_id' => $id,
-                                    'metric_id' => $metrica,
-                                ),
-                            );
-                            $this->Result->save($result);
-                        }
-                    }
+
+                $transformationModificada = $this->Transformation->find('first', array(
+                    'conditions' => array(
+                        'Transformation.id' => $refactoring['Transformation']['id'],
+                    ),
+                ));
+
+                $nomecode = $transformationModificada['Transformation']['diff_id'];
+                $pasta = WWW_ROOT . "files/" . $nomecode . "/";
+                $caminho = $pasta;
+                $oldmask = umask(0);
+                
+                $path = str_replace('a.txt', "", $transformationModificada['Transformation']['old_code']);
+                $this->delTree($path);
+
+                if (file_exists($pasta)) {
+                    echo 'já existe';
+                } else {
+                    mkdir($pasta, 0777, true);
                 }
+
+                $a = fopen($pasta . "a.txt", "w+");
+                $b = fopen($pasta . "b.txt", "w+");
+
+                $valorA = str_replace("+   ", "", $refactoring['Transformation']['code_after']);
+                $valorA = str_replace("    +", "", $refactoring['Transformation']['code_after']);
+                $valorA = strip_tags($valorA);
+                fwrite($b, utf8_encode($valorA));
+                $valorB = str_replace("-   ", "", $refactoring['Transformation']['code_before']);
+                $valorB = str_replace("   -", "", $refactoring['Transformation']['code_before']);
+                $valorB = strip_tags($valorB);
+                fwrite($a, utf8_encode($valorB));
+                
+                fclose($a);
+                fclose($b);
+
+                umask($oldmask);
+
                 $this->Session->setFlash(__('Transformação atualizada com sucesso.'), 'Flash/success');
-                $this->redirect(array('action' => 'manipulaMetricas', $refactoring['Transformation']['id']));
+                $this->redirect(array('action' => 'edit', $refactoring['Transformation']['id']));
             }
         }
+
         $transformation = $this->Transformation->findById($id);
         $metricas = $this->Metric->find('list', array('fields' => 'Metric.acronym'));
         foreach ($transformation['Metric'] as $filter) {
@@ -228,7 +254,7 @@ class TransformationsController extends AppController
             $this->Session->setFlash(__('Transformação não encontrada.'), 'Flash/error');
         } else {
             $this->Transformation->delete($id);
-            $path = str_replace('a.txt',"",$Selected['Transformation']['old_code']);
+            $path = str_replace('a.txt', "", $Selected['Transformation']['old_code']);
             $this->delTree($path);
             $this->Session->setFlash(__('Deletada com sucesso!'), 'Flash/success');
             $this->redirect(array('action' => 'index', $pesquisa));
@@ -242,7 +268,7 @@ class TransformationsController extends AppController
         ));
         foreach ($Selected as $todel) {
             $this->Transformation->delete($todel['Transformation']['id']);
-            $path = str_replace('a.txt',"",$todel['Transformation']['old_code']);
+            $path = str_replace('a.txt', "", $todel['Transformation']['old_code']);
             $this->delTree($path);
         }
         $this->Session->setFlash(__('Deletadados com sucesso!'), 'Flash/success');

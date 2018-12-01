@@ -121,7 +121,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
-                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    <button type="submit" class="btn btn-primary">Atualizar</button>
                     <a href="/transformations/index/<?= $transformation['Transformation']['search_event_id'] ?>">
                         <button type="button" class="btn btn-default">Cancelar</button>
                     </a>

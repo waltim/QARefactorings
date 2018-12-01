@@ -48,7 +48,8 @@ class QuestionsController extends AppController
 
         $numberOfTypes = $this->TransformationType->find('count');
 
-        $getAmostration = ($numberOfTransformations / $numberOfTypes);
+        // $getAmostration = ($numberOfTransformations / $numberOfTypes);
+        $getAmostration = 2;
         // pr($getAmostration);
         // pr(ceil($getAmostration));
         // exit();
@@ -82,7 +83,7 @@ class QuestionsController extends AppController
             } 
         }
 
-        // pr($arrayFiltrado);exit();
+        pr($arrayFiltrado);exit();
 
         $transformacoes = $this->Transformation->find('all', array(
             'conditions' => array(
