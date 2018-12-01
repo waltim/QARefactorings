@@ -11,7 +11,7 @@
                 <!-- form start -->
                 <form class="form-horizontal" method="post" action="<?= $this->webroot ?>questions/cadastrar/<?=$pesquisa?>">
                     <div class="box-body">
-                        <div id="codigo-antes" class="form-group">
+                        <!-- <div id="codigo-antes" class="form-group">
                             <h4>Código anterior</h4>
                             <?php
                             $codigoAntigo = str_replace("&nbsp; }","}",$transformation['Transformation']['code_before']);
@@ -26,11 +26,11 @@
                             $codigoDepois = strip_tags($codigoDepois, '<br>');
                             ?>
                             <code id="codigo2" class="brush: <?=$transformation['Language']['brush'];?>"><?php echo $codigoDepois;?></code>
-                        </div>
+                        </div> -->
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-md-12">Qual pergunta você faria sobre a transformação acima?</label>
+                            <label for="inputEmail3" class="col-md-12">Escreve sua questão de forma suncinta.</label>
                             <div class="col-md-12">
-                                <textarea rows="5" maxlength="200" name="data[Question][description]" class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>
+                                <textarea rows="5" maxlength="200" name="data[Question][description]" class="form-control" placeholder="Detalhe sua questão aqui."></textarea>
                             </div>
                         </div>
                     </div>

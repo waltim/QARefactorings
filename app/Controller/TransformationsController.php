@@ -3,7 +3,7 @@ App::uses('AppController', 'Controller');
 
 class TransformationsController extends AppController
 {
-    function beforeFilter()
+    public function beforeFilter()
     {
         parent::beforeFilter();
         $this->layout = 'admin';
@@ -13,20 +13,21 @@ class TransformationsController extends AppController
         $this->loadModel('Result');
         $this->loadModel('Question');
         $this->loadModel('Answer');
+        $this->loadModel('Transformation');
     }
 
     public function index($pesquisa = null)
     {
         if ($pesquisa == null) {
             $transformations = $this->Transformation->find('all', array(
-                'order' => array('Transformation.id DESC')
+                'order' => array('Transformation.id DESC'),
             ));
         } else {
             $transformations = $this->Transformation->find('all', array(
                 'conditions' => array(
-                    'Transformation.search_event_id' => $pesquisa
+                    'Transformation.search_event_id' => $pesquisa,
                 ),
-                'order' => array('Transformation.id DESC')
+                'order' => array('Transformation.id DESC'),
             ));
         }
 
@@ -46,14 +47,14 @@ class TransformationsController extends AppController
             $conteudo = strip_tags($conteudo, '<br>');
             $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $conteudo);
             $cortaLink = explode("#", $refactoring['Transformation']['site_link']);
-                     
+
             // pr($conteudo);
             // exit();
             $conditions = array(
                 'search_event_id' => $refactoring['Transformation']['search_event_id'],
                 'site_link' => $refactoring['Transformation']['site_link'],
                 'line_start' => strtoupper($refactoring['Transformation']['line_start']),
-                'line_end' => strtoupper($refactoring['Transformation']['line_end'])
+                'line_end' => strtoupper($refactoring['Transformation']['line_end']),
             );
             if ($this->Transformation->hasAny($conditions)) {
                 $this->Session->setFlash(__("A refatoração: <b>" . $refactoring['Transformation']['site_link'] . "</b> já foi cadastrada nesta pesquisa!"), 'Flash/info');
@@ -89,7 +90,7 @@ class TransformationsController extends AppController
                     $this->Result->save($result);
                 }
                 //pr($conteudo);exit();
-                $nomecode = $cortaLink[1]."-".$anomesdiahora;
+                $nomecode = $cortaLink[1] . "-" . $anomesdiahora;
                 $pasta = WWW_ROOT . "files/" . $nomecode . "/";
                 $caminho = $pasta;
                 $oldmask = umask(0);
@@ -100,13 +101,13 @@ class TransformationsController extends AppController
                 }
                 $caminho = $caminho . "ab.txt";
                 $fp = fopen($caminho, "w+");
-                $breaks = array("<br />","<br>","<br/>");
+                $breaks = array("<br />", "<br>", "<br/>");
                 $conteudo = str_ireplace($breaks, "\r\n", $conteudo);
-                $conteudo = str_replace("&nbsp;","",$conteudo);
+                $conteudo = str_replace("&nbsp;", "", $conteudo);
                 $escreve = fwrite($fp, utf8_encode($conteudo));
                 fclose($fp);
                 umask($oldmask);
-            
+
                 $this->separaAnteriorETransformado($lastTransformationCreated['Transformation']['id'], $pasta, $caminho);
 
                 $this->Session->setFlash(__('Transformação cadastrada com sucesso.'), 'Flash/success');
@@ -156,7 +157,7 @@ class TransformationsController extends AppController
         umask($oldmask);
         //Fecha o arquivo.
         fclose($fp);
-    
+
         //retorna o conteúdo.
         $this->Transformation->id = $transformation;
         $refactor = array(
@@ -176,26 +177,52 @@ class TransformationsController extends AppController
     {
         if ($this->request->is('post')) {
             $refactoring['Transformation'] = $this->request->data['Transformation'];
+            $refactoring['Transformation']['id'] = $id;
+            // pr($refactoring);exit();
             if ($this->Transformation->save($refactoring)) {
-                if (isset($this->request->data['Transformation']['metricas'])) {
-                    $metricas = $this->request->data['Transformation']['metricas'];
-                    if (count($metricas) > 0) {
-                        foreach ($metricas as $metrica) {
-                            $this->Result->create();
-                            $result = array(
-                                'Result' => array(
-                                    'transformation_id' => $id,
-                                    'metric_id' => $metrica
-                                )
-                            );
-                            $this->Result->save($result);
-                        }
-                    }
+
+                $transformationModificada = $this->Transformation->find('first', array(
+                    'conditions' => array(
+                        'Transformation.id' => $refactoring['Transformation']['id'],
+                    ),
+                ));
+
+                $nomecode = $transformationModificada['Transformation']['diff_id'];
+                $pasta = WWW_ROOT . "files/" . $nomecode . "/";
+                $caminho = $pasta;
+                $oldmask = umask(0);
+                
+                $path = str_replace('a.txt', "", $transformationModificada['Transformation']['old_code']);
+                $this->delTree($path);
+
+                if (file_exists($pasta)) {
+                    echo 'já existe';
+                } else {
+                    mkdir($pasta, 0777, true);
                 }
+
+                $a = fopen($pasta . "a.txt", "w+");
+                $b = fopen($pasta . "b.txt", "w+");
+
+                $valorA = str_replace("+   ", "", $refactoring['Transformation']['code_after']);
+                $valorA = str_replace("    +", "", $refactoring['Transformation']['code_after']);
+                $valorA = strip_tags($valorA);
+                fwrite($b, utf8_encode($valorA));
+                $valorB = str_replace("-   ", "", $refactoring['Transformation']['code_before']);
+                $valorB = str_replace("   -", "", $refactoring['Transformation']['code_before']);
+                $valorB = strip_tags($valorB);
+                fwrite($a, utf8_encode($valorB));
+                
+                fclose($a);
+                fclose($b);
+
+                umask($oldmask);
+
                 $this->Session->setFlash(__('Transformação atualizada com sucesso.'), 'Flash/success');
-                $this->redirect(array('action' => 'manipulaMetricas', $refactoring['Transformation']['id']));
+                $this->redirect(array('action' => 'edit', $refactoring['Transformation']['id']));
             }
         }
+
         $transformation = $this->Transformation->findById($id);
         $metricas = $this->Metric->find('list', array('fields' => 'Metric.acronym'));
         foreach ($transformation['Metric'] as $filter) {
@@ -210,30 +237,43 @@ class TransformationsController extends AppController
         $this->set('metrics', $metricas);
     }
 
-    public function delete($id = null,$pesquisa = null)
+    public static function delTree($dir)
+    {
+        $files = array_diff(scandir($dir), array('.', '..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? delTree("$dir/$file") : unlink("$dir/$file");
+        }
+        return rmdir($dir);
+    }
+
+    public function delete($id = null, $pesquisa = null)
     {
         $Selected = $this->Transformation->find('first', array(
-            'conditions' => array('Transformation.id' => $id)
+            'conditions' => array('Transformation.id' => $id),
         ));
         if (empty($Selected)) {
             $this->Session->setFlash(__('Transformação não encontrada.'), 'Flash/error');
         } else {
             $this->Transformation->delete($id);
+            $path = str_replace('a.txt', "", $Selected['Transformation']['old_code']);
+            $this->delTree($path);
             $this->Session->setFlash(__('Deletada com sucesso!'), 'Flash/success');
-            $this->redirect(array('action' => 'index',$pesquisa));
+            $this->redirect(array('action' => 'index', $pesquisa));
         }
     }
 
     public function deleteAll($pesquisa = null)
     {
         $Selected = $this->Transformation->find('all', array(
-            'conditions' => array('Transformation.search_event_id' => $pesquisa)
+            'conditions' => array('Transformation.search_event_id' => $pesquisa),
         ));
-        foreach ($Selected as $todel){
+        foreach ($Selected as $todel) {
             $this->Transformation->delete($todel['Transformation']['id']);
+            $path = str_replace('a.txt', "", $todel['Transformation']['old_code']);
+            $this->delTree($path);
         }
-        $this->Session->setFlash(__('Deletadad com sucesso!'), 'Flash/success');
-        $this->redirect(array('action' => 'index',$pesquisa));
+        $this->Session->setFlash(__('Deletadados com sucesso!'), 'Flash/success');
+        $this->redirect(array('action' => 'index', $pesquisa));
     }
 
     public function view($id = null)
@@ -249,15 +289,15 @@ class TransformationsController extends AppController
                 $result = array(
                     'Transformation' => array(
                         'transformation_id' => $id,
-                        'deletions' => $this->request->data['Transformation']['deletions']
-                    )
+                        'deletions' => $this->request->data['Transformation']['deletions'],
+                    ),
                 );
             } else {
                 $result = array(
                     'Transformation' => array(
                         'transformation_id' => $id,
-                        'additions' => $this->request->data['Transformation']['additions']
-                    )
+                        'additions' => $this->request->data['Transformation']['additions'],
+                    ),
                 );
             }
             if ($this->Transformation->save($result)) {
@@ -267,26 +307,26 @@ class TransformationsController extends AppController
         }
 
         $show = $this->Transformation->find('first', array(
-            'conditions' => array('Transformation.id' => $id)
+            'conditions' => array('Transformation.id' => $id),
         ));
         $qualitativas = $this->Transformation->Result->find('all', array(
             'conditions' => array(
                 'Metric.metric_type_id' => 2,
-                'Transformation.id' => $id
-            )
+                'Transformation.id' => $id,
+            ),
         ));
         $quantitativas = $this->Transformation->Result->find('all', array(
             'conditions' => array(
                 'Metric.metric_type_id' => 3,
-                'Transformation.id' => $id
-            )
+                'Transformation.id' => $id,
+            ),
         ));
 
         $questao = $this->Result->find('first', array(
             'conditions' => array(
                 'Metric.metric_type_id' => 2,
-                'Transformation.id' => $id
-            )
+                'Transformation.id' => $id,
+            ),
         ));
         //pr($questao);exit();
         if (!empty($questao['ResultQuestion'])) {
@@ -294,8 +334,8 @@ class TransformationsController extends AppController
             foreach ($questao['ResultQuestion'] as $rq) {
                 $respostas[$k] = $this->Answer->find('first', array(
                     'conditions' => array(
-                        'Answer.result_question_id' => $rq['id']
-                    )
+                        'Answer.result_question_id' => $rq['id'],
+                    ),
                 ));
                 $k++;
             }
@@ -308,15 +348,13 @@ class TransformationsController extends AppController
         $this->set('qualitativas', $qualitativas);
     }
 
-    public
-    function locAndAmloc($string = null)
+    public function locAndAmloc($string = null)
     {
-        $numLoc = substr_count($string, '<br/>')-2;
+        $numLoc = substr_count($string, '<br/>') - 2;
         return $numLoc;
     }
 
-    public
-    function accm($string = null)
+    public function accm($string = null)
     {
         $complex = 1;
         $complex = $complex + substr_count($string, 'if (');
@@ -333,17 +371,16 @@ class TransformationsController extends AppController
         return $complex;
     }
 
-    public
-    function manipulaMetricas($id = null)
+    public function manipulaMetricas($id = null)
     {
         $this->loadModel('Result');
 
         $this->autoRender = false;
-        
+
         $metrics = $this->Result->find('all', array(
             'conditions' => array(
-                'Transformation.id' => $id
-            )
+                'Transformation.id' => $id,
+            ),
         ));
 
         foreach ($metrics as $metricas) {
@@ -351,9 +388,9 @@ class TransformationsController extends AppController
                 $this->Result->id = $metricas['Result']['id'];
                 $result = array(
                     'Result' => array(
-                        'before' => (int)$this->locAndAmloc($metricas['Transformation']['code_before']),
-                        'after' => (int)$this->locAndAmloc($metricas['Transformation']['code_after'])
-                    )
+                        'before' => (int) $this->locAndAmloc($metricas['Transformation']['code_before']),
+                        'after' => (int) $this->locAndAmloc($metricas['Transformation']['code_after']),
+                    ),
                 );
                 $this->Result->save($result);
             } elseif ($metricas['Metric']['acronym'] == 'ACCM') {
@@ -361,8 +398,8 @@ class TransformationsController extends AppController
                 $result = array(
                     'Result' => array(
                         'before' => $this->accm($metricas['Transformation']['code_before']),
-                        'after' => $this->accm($metricas['Transformation']['code_after'])
-                    )
+                        'after' => $this->accm($metricas['Transformation']['code_after']),
+                    ),
                 );
                 $this->Result->save($result);
             }

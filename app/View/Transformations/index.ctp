@@ -3,8 +3,11 @@
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">Tabela de transformações</h3>
+                <a href="/transformations/deleteAll/<?= $pesquisa ?>" onclick="return confirm('Tem certeza?')" title="Deletar">
+                    <button type="button" class="btn btn-primary pull-right">Apagar Todas</button>
+                </a>
                 <a href="/transformations/add/<?= $pesquisa ?>">
-                    <button type="button" class="btn btn-primary pull-right">Cadastrar Transformações</button>
+                    <button type="button" class="btn btn-primary pull-right">Cadastrar Transformação</button>
                 </a>
                 <a href="/searchEvents/loadDataCsv/<?= $pesquisa ?>">
                     <button type="button" class="btn btn-primary pull-right">Carregar CSV</button>
