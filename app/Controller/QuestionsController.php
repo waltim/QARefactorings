@@ -195,6 +195,7 @@ class QuestionsController extends AppController
             $this->request->data['Answer']['choice'][0] = $this->request->data['check'];
             unset($this->request->data['check']);
             ksort($this->request->data['Answer']['choice']);
+            // pr($this->request->data['Answer']);exit();
             $this->request->data['Answer']['user_id'] = $this->Auth->user('id');
             if ($this->request->data['Answer']['choice'][0] == "N") {
                 foreach ($this->request->data['Answer']['choice'] as $key => $cho) {
@@ -208,8 +209,7 @@ class QuestionsController extends AppController
                     $this->request->data['Answer']['justify'][$key] = 'N/A';
                 }
             }
-//            pr($this->request->data);
-            //            exit();
+        //    pr($this->request->data);exit();
             if ($this->request->data['Answer']['botao'] == 'pular') {
                 $this->redirect(array('action' => 'responder'));
             }
