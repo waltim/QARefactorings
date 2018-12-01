@@ -4,7 +4,7 @@ App::uses('AppController', 'Controller');
 // App::import('Controller', 'Transformations');
 class QuestionsController extends AppController
 {
-    function beforeFilter()
+    public function beforeFilter()
     {
         parent::beforeFilter();
         if ($this->action == 'responder') {
@@ -20,6 +20,7 @@ class QuestionsController extends AppController
         $this->loadModel('User');
         $this->loadModel('UserLanguage');
         $this->loadModel('Participant');
+        $this->loadModel('TransformationType');
     }
 
     public function index()
@@ -30,7 +31,7 @@ class QuestionsController extends AppController
     public function deleteSurvey()
     {
         $questoesSurvey = $this->ResultQuestion->find('all');
-        foreach($questoesSurvey as $resquestion){
+        foreach ($questoesSurvey as $resquestion) {
             $this->ResultQuestion->delete($resquestion['ResultQuestion']['id']);
         }
         $this->redirect(array('controller' => 'searchEvents', 'action' => 'index'));
@@ -38,26 +39,74 @@ class QuestionsController extends AppController
 
     public function survey($id = null)
     {
+        $numberOfTransformations = $this->Transformation->find('count', array(
+            'conditions' => array(
+                'Transformation.search_event_id' => $id,
+                'Transformation.apt' => "S",
+            ),
+        ));
+
+        $numberOfTypes = $this->TransformationType->find('count');
+
+        $getAmostration = ($numberOfTransformations / $numberOfTypes);
+        // pr($getAmostration);
+        // pr(ceil($getAmostration));
+        // exit();
+        $allTransformationType = $this->TransformationType->find('all', array(
+            'recursive' => -1
+        ));
+
+        // pr($allTransformationType);exit();
+        $arrayFiltrado = array();
+
+        $k = 0;
+
+        foreach ($allTransformationType as $type) {
+
+            $transfPorTipo = $this->Transformation->find('all', array(
+                'recursive' => -1,
+                'order' => 'rand()',
+                'conditions' => array(
+                    'Transformation.search_event_id' => $id,
+                    'Transformation.apt' => "S",
+                    'Transformation.transformation_type_id' => $type['TransformationType']['id'],
+                ),
+                'limit' => ceil($getAmostration)
+            ));
+            
+            // pr($transfPorTipo);
+            
+            foreach ($transfPorTipo as $ar) {
+                $arrayFiltrado[$k]['Transformation.id'] = $ar['Transformation']['id'];
+                $k++;
+            } 
+        }
+
+        // pr($arrayFiltrado);exit();
 
         $transformacoes = $this->Transformation->find('all', array(
             'conditions' => array(
                 'Transformation.search_event_id' => $id,
-                'Transformation.apt' => "S"
-            )
+                'Transformation.apt' => "S",
+                'OR' => $arrayFiltrado,
+            ),
         ));
+
+        // pr($transformacoes);exit();
+
         if ($transformacoes) {
             foreach ($transformacoes as $transformation) {
                 $resultado = $this->Result->find('first', array(
                     'conditions' => array(
                         'Result.transformation_id' => $transformation['Transformation']['id'],
-                        'Result.metric_id' => 4
-                    )
+                        'Result.metric_id' => 4,
+                    ),
                 ));
                 $questoes = $this->Participant->find('all', array(
                     'conditions' => array(
                         'Participant.search_event_id' => $id,
                         // 'Participant.participant_type_id' => 4
-                    )
+                    ),
                 ));
 
                 foreach ($questoes as $participations) {
@@ -66,8 +115,8 @@ class QuestionsController extends AppController
                         $survey = array(
                             'ResultQuestion' => array(
                                 'result_id' => $resultado['Result']['id'],
-                                'question_id' => $question['id']
-                            )
+                                'question_id' => $question['id'],
+                            ),
                         );
                         $this->ResultQuestion->save($survey);
                     }
@@ -90,8 +139,8 @@ class QuestionsController extends AppController
                 'Participant' => array(
                     'user_id' => $uid,
                     'search_event_id' => $pesquisa,
-                    'participant_type_id' => 4
-                )
+                    'participant_type_id' => 4,
+                ),
             );
 
             $this->Participant->save($participant);
@@ -99,9 +148,9 @@ class QuestionsController extends AppController
             $participation = $this->Participant->find('first',
                 array(
                     'conditions' => array(
-                        'Participant.user_id' => $uid
+                        'Participant.user_id' => $uid,
                     ),
-                    'order' => 'Participant.id DESC'
+                    'order' => 'Participant.id DESC',
                 )
             );
             $this->Question->create();
@@ -110,8 +159,8 @@ class QuestionsController extends AppController
                 'Question' => array(
                     'description' => $this->request->data['Question']['description'],
                     'question_type_id' => 1,
-                    'participant_id' => $participation['Participant']['id']
-                )
+                    'participant_id' => $participation['Participant']['id'],
+                ),
             );
 
             if ($this->Question->save($question)) {
@@ -121,7 +170,7 @@ class QuestionsController extends AppController
         }
 
         $transformacao = $this->Transformation->find('first', array(
-            'order' => 'rand()'
+            'order' => 'rand()',
         ));
 
         $this->set('transformation', $transformacao);
@@ -159,7 +208,7 @@ class QuestionsController extends AppController
                 }
             }
 //            pr($this->request->data);
-//            exit();
+            //            exit();
             if ($this->request->data['Answer']['botao'] == 'pular') {
                 $this->redirect(array('action' => 'responder'));
             }
@@ -169,15 +218,15 @@ class QuestionsController extends AppController
             $contador = $this->Answer->find('count', array(
                 'conditions' => array(
                     'Answer.user_id' => $this->request->data['Answer']['user_id'],
-                    'Answer.result_question_id' => $this->request->data['Answer']['result_question_id']
+                    'Answer.result_question_id' => $this->request->data['Answer']['result_question_id'],
                 ),
                 'recursive' => -1,
                 'contain' => array(
                     'User',
                     'ResultQuestion' => array(
-                        'Question'
-                    )
-                )
+                        'Question',
+                    ),
+                ),
             ));
             if ($contador < 1) {
                 foreach ($this->request->data['Answer']['choice'] as $key => $answer) {
@@ -195,19 +244,19 @@ class QuestionsController extends AppController
                             'choice' => $this->request->data['Answer']['choice'][$key],
                             'start_time' => $this->request->data['Answer']['start_time'],
                             'end_time' => $this->request->data['Answer']['end_time'],
-                        )
+                        ),
                     );
                     if ($this->Answer->save($Newresp)) {
                         $this->User->id = $this->Auth->user('id');
                         $usuario = $this->User->find('first', array(
                             'conditions' => array(
                                 'User.id' => $this->Auth->user('id'),
-                            )
+                            ),
                         ));
                         $update = array(
                             'User' => array(
-                                'trophy' => $usuario['User']['trophy'] + 1
-                            )
+                                'trophy' => $usuario['User']['trophy'] + 1,
+                            ),
                         );
                         $this->User->save($update);
                     }
@@ -228,16 +277,16 @@ class QuestionsController extends AppController
             'recursive' => -1,
             'contain' => array(
                 'User',
-                'ResultQuestion'
+                'ResultQuestion',
             ),
-            'order' => array('Answer.result_question_id ASC')
+            'order' => array('Answer.result_question_id ASC'),
         ));
 
         $array = $this->Answer->find('all', array(
             'recursive' => 1,
             'conditions' => array(
-                'Answer.user_id' => $this->Auth->user('id')
-            )
+                'Answer.user_id' => $this->Auth->user('id'),
+            ),
         ));
 
         $arrayFiltrado = array();
@@ -251,8 +300,8 @@ class QuestionsController extends AppController
             'recursive' => 3,
             'order' => 'rand()',
             'conditions' => array(
-                'AND' => $arrayFiltrado
-            )
+                'AND' => $arrayFiltrado,
+            ),
         ));
 
         //pr($question['Result']['ResultQuestion']);exit();
@@ -265,8 +314,8 @@ class QuestionsController extends AppController
         $userLanguage = $this->UserLanguage->find('count', array(
             'conditions' => array(
                 'UserLanguage.language_id' => $question['Result']['Transformation']['language_id'],
-                'UserLanguage.user_id' => $this->Auth->user('id')
-            )
+                'UserLanguage.user_id' => $this->Auth->user('id'),
+            ),
         ));
 
         if ($userLanguage < 1) {

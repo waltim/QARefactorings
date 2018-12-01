@@ -31,10 +31,10 @@
                                     <i class="fa fa-television fa-lg"></i>
                                 </a>
                                 |
-                                <a href="<?= $this->webroot ?>SearchEvents/edit/<?= $pesquisas['SearchEvent']['id'] ?>" title="Editar">
+                                <!-- <a href="<?= $this->webroot ?>SearchEvents/edit/<?= $pesquisas['SearchEvent']['id'] ?>" title="Editar">
                                     <i class="fa fa-edit fa-lg"></i>
                                 </a>
-                                |
+                                | -->
                                 <a href="<?= $this->webroot ?>Questions/cadastrar/<?= $pesquisas['SearchEvent']['id'] ?>" title="Cadastrar Questões">
                                     <i class="fa fa-text-width fa-lg"></i>
                                 </a>
