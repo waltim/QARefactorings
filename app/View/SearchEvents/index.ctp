@@ -27,14 +27,10 @@
                                 <?= $pesquisas['SearchEvent']['school']; ?>
                             </td>
                             <td>
-                                <a href="<?= $this->webroot ?>Transformations/index/<?= $pesquisas['SearchEvent']['id'] ?>" title="Visualizar">
+                                <a href="<?= $this->webroot ?>Transformations/index/<?= $pesquisas['SearchEvent']['id'] ?>" title="Transformações">
                                     <i class="fa fa-television fa-lg"></i>
                                 </a>
                                 |
-                                <!-- <a href="<?= $this->webroot ?>SearchEvents/edit/<?= $pesquisas['SearchEvent']['id'] ?>" title="Editar">
-                                    <i class="fa fa-edit fa-lg"></i>
-                                </a>
-                                | -->
                                 <a href="<?= $this->webroot ?>Questions/cadastrar/<?= $pesquisas['SearchEvent']['id'] ?>" title="Cadastrar Questões">
                                     <i class="fa fa-text-width fa-lg"></i>
                                 </a>
@@ -43,10 +39,9 @@
                                     <i class="fa fa-list-alt fa-lg"></i>
                                 </a>
                                 |
-                                <!-- <a href="<?= $this->webroot ?>SearchEvents/delete/<?= $pesquisas['SearchEvent']['id'] ?>" onclick="return confirm('Tem certeza?')"
-                                    title="Deletar">
-                                    <i class="fa fa-eraser fa-lg"></i>
-                                </a> -->
+                                <a href="<?= $this->webroot ?>answers/relatorios/<?= $pesquisas['SearchEvent']['id'] ?>" title="Relatórios da pesquisa">
+                                    <i class="fa fa-television fa-lg"></i>
+                                </a>
                             </td>
                         </tr>
                         <?php } ?>

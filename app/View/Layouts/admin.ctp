@@ -56,7 +56,22 @@
 
     } ?>
 
-    <?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'relatorio') { ?>
+    <?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'relatorios') { ?>
+        <?php echo $this->Html->css(array(
+            'jquery.dataTables.min.css',
+            'buttons.dataTables.min.css'
+        ));
+        ?>
+        <?php echo $this->Html->css(array(
+            '../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
+            '../dist/css/AdminLTE.min.css'
+        ));
+        ?>
+        <?php
+
+    } ?>
+
+    <?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'respostas') { ?>
         <?php echo $this->Html->css(array(
             'jquery.dataTables.min.css',
             'buttons.dataTables.min.css'
@@ -200,12 +215,12 @@
 <?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'relatorios') { ?>
     
     <?php echo $this->Html->script(array(
-      '../bower_components/datatables.net/js/jquery.dataTables.min.js',
-     '../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js'
+    //   '../bower_components/datatables.net/js/jquery.dataTables.min.js',
+    //  '../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js'
 ));
 ?>
 <?php echo $this->Html->script(array(
-        // 'jquery.dataTables.min.js',
+        'jquery.dataTables.min.js',
         'dataTables.buttons.min.js',
         'jszip.min.js',
         'pdfmake.min.js',
@@ -228,6 +243,39 @@
         });
     </script>
 <?php } ?>
+
+<?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'respostas') { ?>
+    
+    <?php echo $this->Html->script(array(
+    //   '../bower_components/datatables.net/js/jquery.dataTables.min.js',
+    //  '../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js'
+));
+?>
+<?php echo $this->Html->script(array(
+        'jquery.dataTables.min.js',
+        'dataTables.buttons.min.js',
+        'jszip.min.js',
+        'pdfmake.min.js',
+        'vfs_fonts.js',
+        'buttons.html5.min.js',
+    ));
+    ?>
+    
+    <script>
+    $(document).ready(function () {
+            $('#example2').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copyHtml5',
+                    'excelHtml5',
+                    'csvHtml5',
+                    'pdfHtml5'
+                ]
+            });
+        });
+    </script>
+<?php } ?>
+
 <script type="text/javascript">
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({

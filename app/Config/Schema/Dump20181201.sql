@@ -26,7 +26,7 @@ CREATE TABLE `answers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `result_question_id` int(11) NOT NULL,
-  `choice` char(1) NOT NULL,
+  `choice` char(3) NOT NULL,
   `justify` text,
   `start_time` time DEFAULT NULL,
   `end_time` time DEFAULT NULL,
