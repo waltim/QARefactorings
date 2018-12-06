@@ -58,22 +58,24 @@
           <div class="small-box bg-gray">
             <div class="inner">
 							<h3><?= $questions ?></h3>
-							<?php if ($this->Session->read('Auth.User.UserType.description') != 'pesquisador') { ?>
-							<p>Questões</p>
-							<?php }else{ ?>
+							<?php if ($this->Session->read('Auth.User.UserType.description') == 'candidato') { ?>
+							<p>Questões por transformação</p>
+							<?php }elseif($this->Session->read('Auth.User.UserType.description') == 'pesquisador'){ ?>
 								<p>Minhas questões</p>
-								<?php } ?>
+                <?php }else{ ?>
+                  <p>Questões</p>
+                  <?php }?>
             </div>
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
             </div>
           </div>
 				</div>
-				<?php if($totalQuestions > 0){ ?>
+				<?php if($totalQuestions > 0 && $this->Session->read('Auth.User.UserType.description') == 'administrador'){ ?>
 				<div class="col-md-6 pull-right">
 				<div class="box">
             <div class="box-header">
-              <h3 class="box-title">Ranking de usuários por questões respondidas</h3>
+              <h3 class="box-title">Progresso de usuários por questões respondidas</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body no-padding">
@@ -105,6 +107,43 @@
 								</tr>
 								<?php $position++;
 						} ?>
+              </table>
+            </div>
+            <!-- /.box-body -->
+					</div>
+					</div>
+          <?php } ?>
+          
+          <?php if($totalQuestions > 0 && $this->Session->read('Auth.User.UserType.description') == 'candidato'){ ?>
+				<div class="col-md-6 pull-right">
+				<div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Progresso por questões respondidas</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <table class="table table-condensed">
+                <tr>
+                  <th>Usuário</th>
+                  <th>Progresso</th>
+                  <th style="width: 40px">Total</th>
+								</tr>
+                <tr>
+                  <td><?= $ranking2['User']['email']; ?></td>
+                  <td>
+										<?php
+										$calculo = ceil(($ranking2['User']['trophy'] * 100) / $totalQuestions);
+										if($calculo > 100){
+											$calculo = 100;
+										}
+										?>
+										<?= $calculo ?>%
+										<div class="progress progress-xs progress-striped active">
+                      <div class="progress-bar progress-bar-primary" style="width: <?= $calculo ?>%"></div>
+										</div>
+                  </td>
+                  <td><span class="badge bg-light-blue"><?= $ranking2['User']['trophy']; ?></span></td>
+								</tr>
               </table>
             </div>
             <!-- /.box-body -->

@@ -89,7 +89,7 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="sidebar-mini skin-red-light">
+<body class="sidebar-mini wysihtml5-supported skin-blue">
 <div class="wrapper">
     <?php echo $this->element('admin/main-header'); ?>
     <?php

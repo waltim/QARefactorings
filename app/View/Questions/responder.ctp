@@ -3,19 +3,21 @@
 ));
 ?>
 <div class="row">
-    <div class="panel-body">
-        <form id="reused_form" method="post" action="<?= $this->webroot ?>questions/responder" class="sombra-div">
-            <div class="form-group text-center">
-                <h3>
-                    <strong>Pesquisa:</strong>
-                    <?= $question['Result']['Transformation']['SearchEvent']['title']; ?>
-                </h3>
-            </div>
-            <div class="clearfix"></div>
-            <a class="assaltante" target="_blank" href="<?= $question['Result']['Transformation']['site_link'] ?>">Abrir
-                código no GitHub</a>
-            <div class="clearfix"></div>
-            <?php
+    <div class="panel-body sombra-leve">
+        <form id="reused_form" method="post" action="<?= $this->webroot ?>questions/responder">
+            <div class="col-md-12">
+                <div id="calcula-height" class="sombra-div" style="position: fixed;display: block;overflow: hidden;z-index: +9999; width: 98%;">
+                    <div class="form-group text-center">
+                        <h3>
+                            <strong>Pesquisa:</strong>
+                            <?= $question['Result']['Transformation']['SearchEvent']['title']; ?>
+                        </h3>
+                    </div>
+                    <div class="clearfix"></div>
+                    <a class="button-piscando" target="_blank" href="<?= $question['Result']['Transformation']['site_link'].$question['Result']['Transformation']['line_start'] ?>">Abrir
+                        código no GitHub</a>
+                    <div class="clearfix"></div>
+                    <?php
 
                 // Include the diff class
                 require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff.php';
@@ -42,8 +44,8 @@
                 // Initialize the diff class
                 $diff = new Diff($a, $b, $options);
                 ?>
-            <div style="background-color: white; color: black;">
-                <?php
+                    <div style="background-color: white; color: black;">
+                        <?php
                     // Generate a side by side diff
                     require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/SideBySide.php';
                     $renderer = new Diff_Renderer_Html_SideBySide;
@@ -53,8 +55,8 @@
                     // $renderer = new Diff_Renderer_Html_Inline;
                     // echo $diff->render($renderer);
                     ?>
-            </div>
-            <!-- <div id="codigo-antes" class="form-group">
+                    </div>
+                    <!-- <div id="codigo-antes" class="form-group">
                         <h4>Código anterior</h4>
                         <?php
                         $codigoAntigo = str_replace("&nbsp; }", "}", $question['Result']['Transformation']['code_before']);
@@ -70,87 +72,94 @@
                         ?>
                         <code id="codigo2" class="brush: diff"><?php echo $codigoDepois; ?></code>
                     </div> -->
-            <div class="clearfix"></div>
-            <input type="hidden" name="data[Answer][start_time]" value="<?= $tempo = date('H:i:s'); ?>">
-            <?php $z = 1;
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div id="distancia-medida" style="margin-top: 30px;">
+                    <input type="hidden" name="data[Answer][start_time]" value="<?= $tempo = date('H:i:s'); ?>">
+                    <?php $z = 1;
                     foreach ($question['Result']['ResultQuestion'] as $key => $questoes) { ?>
-            <?php if ($questoes['Question']['id'] == 1) { ?>
-            <input type="hidden" id="result-<?= $z ?>" name="data[Answer][result_question_id][]" value="<?= $question['Result']['ResultQuestion'][$key]['id']; ?>">
-            <div id="questao-<?= $z ?>">
-                <div class="form-group text-center">
-                    <h3>
-                        <?= $questoes['Question']['description']; ?>
-                    </h3>
-                </div>
-                <div class="form-group text-center" style="font-size: 18px;">
-                    <input type="radio" required="required" value="N" name="check" id="check">
-                    <label for="check">NÃO</label>
-                    <input type="radio" name="check" id="check1" value="S">
-                    <label for="check1">SIM</label>
-                </div>
-                <div class="form-group">
-                    <label style="margin-left: 150px;">Justificativa (Opcional)</label>
-                    <textarea rows="5" id="text-justifique" maxlength="1200" name="data[Answer][justify][]" class="form-control"
-                        placeholder="Detalhe sua escolha aqui."></textarea>
-                </div>
-            </div>
-            <?php } else { ?>
-            <input type="hidden" id="result-<?= $z ?>" name="data[Answer][result_question_id][]" value="<?= $question['Result']['ResultQuestion'][$key]['id']; ?>">
-            <div id="questao-<?= $z ?>">
-                <div class="form-group text-center">
-                    <h3>
-                        <?= $questoes['Question']['description']; ?>
-                    </h3>
-                </div>
-                <div class="form-group text-center" style="font-size: 18px;">
-                    <div class="borda-radio">
-                        <input type="radio" id="DP<?= $z ?>" required="required" name="data[Answer][choice][<?= $z ?>]"
-                            value="1" class="btn btn-raised btn-default flat-red" type="submit">
-                            <label for="DP<?= $z ?>">Discordo plenamente</label>
+                    <?php if ($questoes['Question']['id'] == 1) { ?>
+                    <input type="hidden" id="result-<?= $z ?>" name="data[Answer][result_question_id][]" value="<?= $question['Result']['ResultQuestion'][$key]['id']; ?>">
+                    <div id="questao-<?= $z ?>">
+                        <div class="form-group text-center">
+                            <h3>
+                                <?= $questoes['Question']['description']; ?>
+                            </h3>
+                        </div>
+                        <div class="form-group text-center" style="font-size: 18px;">
+                            <input type="radio" required="required" value="N" name="check" id="check">
+                            <label for="check">NÃO</label>
+                            <input type="radio" name="check" id="check1" value="S">
+                            <label for="check1">SIM</label>
+                        </div>
+                        <div class="form-group">
+                            <label style="margin-left: 150px;">Justificativa (Opcional)</label>
+                            <textarea rows="5" id="text-justifique" maxlength="1200" name="data[Answer][justify][]"
+                                class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>
+                        </div>
                     </div>
-                    <div class="borda-radio">
-                        <input type="radio" id="D<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="2" class="btn btn-raised btn-default flat-red"
-                            type="submit">
-                            <label for="D<?= $z ?>">Discordo</label>
+                    <?php } else { ?>
+                    <input type="hidden" id="result-<?= $z ?>" name="data[Answer][result_question_id][]" value="<?= $question['Result']['ResultQuestion'][$key]['id']; ?>">
+                    <div id="questao-<?= $z ?>">
+                        <div class="form-group text-center">
+                            <h3>
+                                <?= $questoes['Question']['description']; ?>
+                            </h3>
+                        </div>
+                        <div class="form-group text-center" style="font-size: 18px;">
+                            <div class="borda-radio">
+                                <input type="radio" id="DP<?= $z ?>" required="required" name="data[Answer][choice][<?= $z ?>]"
+                                    value="1" class="btn btn-raised btn-default flat-red" type="submit">
+                                <label for="DP<?= $z ?>">Discordo plenamente</label>
+                            </div>
+                            <div class="borda-radio">
+                                <input type="radio" id="D<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="2"
+                                    class="btn btn-raised btn-default flat-red" type="submit">
+                                <label for="D<?= $z ?>">Discordo</label>
+                            </div>
+                            <div class="borda-radio">
+                                <input type="radio" id="NDNC<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="3"
+                                    class="btn btn-raised btn-default flat-red" type="submit">
+                                <label for="NDNC<?= $z ?>">Não discordo nem concordo</label>
+                            </div>
+                            <div class="borda-radio">
+                                <input type="radio" id="C<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="4"
+                                    class="btn btn-raised btn-default flat-red" type="submit">
+                                <label for="C<?= $z ?>">Concordo</label>
+                            </div>
+                            <div class="borda-radio">
+                                <input type="radio" id="CP<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="5"
+                                    class="btn btn-raised btn-default flat-red" type="submit">
+                                <label for="CP<?= $z ?>">Concordo plenamente</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label style="margin-left: 150px;">Justificativa (Opcional)</label>
+                            <textarea rows="5" maxlength="1200" name="data[Answer][justify][]" class="form-control"
+                                placeholder="Detalhe sua escolha aqui."></textarea>
+                        </div>
                     </div>
-                    <div class="borda-radio">
-                        <input type="radio" id="NDNC<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="3" class="btn btn-raised btn-default flat-red"
-                            type="submit">
-                            <label for="NDNC<?= $z ?>">Não discordo nem concordo</label>
-                    </div>
-                    <div class="borda-radio">
-                        <input type="radio" id="C<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="4" class="btn btn-raised btn-default flat-red"
-                            type="submit">
-                            <label for="C<?= $z ?>">Concordo</label>
-                    </div>
-                    <div class="borda-radio">
-                        <input type="radio" id="CP<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="5" class="btn btn-raised btn-default flat-red"
-                            type="submit">
-                            <label for="CP<?= $z ?>">Concordo plenamente</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label style="margin-left: 150px;">Justificativa (Opcional)</label>
-                    <textarea rows="5" maxlength="1200" name="data[Answer][justify][]" class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>
-                </div>
-            </div>
-            <?php } ?>
-            <?php $z++;
+                    <?php } ?>
+                    <?php $z++;
                     } ?>
-            <a href="<?= $this->webroot ?>" class="pull-left">
-                <button value="sair" formnovalidate name="data[Answer][botao]" class="btn btn-raised btn-default">Sair
-                </button>
-            </a>
-            <a href="<?= $this->webroot ?>questions/responder" style="margin-left: 40%;">
-                <button class="btn btn-raised btn-primary" value="responder" name="data[Answer][botao]">
-                    Responder
-                </button>
-            </a>
-            <a href="<?= $this->webroot ?>questions/responder" class="pull-right">
-                <button value="pular" formnovalidate name="data[Answer][botao]" class="btn btn-raised btn-default">Pular
-                    questão
-                </button>
-            </a>
+                    <a href="<?= $this->webroot ?>" class="pull-left">
+                        <button value="sair" formnovalidate name="data[Answer][botao]" class="btn btn-raised btn-default">Sair
+                        </button>
+                    </a>
+                    <a href="<?= $this->webroot ?>questions/responder" style="margin-left: 40%;">
+                        <button class="btn btn-raised btn-primary" value="responder" name="data[Answer][botao]">
+                            Responder
+                        </button>
+                    </a>
+                    <a href="<?= $this->webroot ?>questions/responder" class="pull-right">
+                        <button value="pular" formnovalidate name="data[Answer][botao]" class="btn btn-raised btn-default">Pular
+                            questão
+                        </button>
+                    </a>
+                </div>
+            </div>
         </form>
     </div>
 </div>

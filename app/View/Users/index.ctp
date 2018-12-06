@@ -13,6 +13,7 @@
                   <th>email</th>
                   <th>Tipo de usuário</th>
 									<th>Data cadastro</th>
+									<th>Respostas</th>
 									<th>Status</th>
                   <th>Ações</th>
                 </tr>
@@ -24,6 +25,7 @@
                   <td><?=$usuario['User']['email'];?></td>
                   <td><?=$usuario['UserType']['description'];?></td>
 									<td><?= date('d/m/Y', strtotime($usuario['User']['created']));?></td>
+									<td><?=$usuario['User']['trophy'];?></td>
 									<td>
 										<?php
 										if($usuario['User']['status'] == 0){
@@ -67,6 +69,7 @@
                   <th>email</th>
                   <th>Tipo de usuário</th>
 									<th>Data cadastro</th>
+									<th>Respostas</th>
 									<th>Status</th>
                   <th>Ações</th>
                 </tr>

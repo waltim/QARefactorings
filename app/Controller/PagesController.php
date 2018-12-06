@@ -37,7 +37,7 @@ class PagesController extends AppController
 	 *
 	 * @var array
 	 */
-	public $uses = array('Transformation', 'Metric', 'Language', 'Result', 'Question', 'Answer', 'User');
+	public $uses = array('Transformation', 'Metric', 'Language', 'Result', 'Question', 'Answer', 'User','ResultQuestion');
 
 	public function beforeFilter()
 	{
@@ -125,19 +125,33 @@ class PagesController extends AppController
 				'conditions' => array('Answer.user_id' => $this->Auth->user('id'))
 			));
 			$questions = $this->Question->find('count');
-			$this->set(compact('answers', 'questions'));
+
+			$totalQuestions = $this->ResultQuestion->find('count');
+
+			$transformations = ($totalQuestions/$questions);
+
+			$this->set(compact('transformations', 'answers', 'questions'));
 		}
 
-		$totalQuestions = $this->Result->find('count', array(
-			'conditions' => array(
-				'Result.metric_id' => 4
-			)
-		));
+		$totalQuestions = $this->ResultQuestion->find('count');
 
 		$ranking = $this->User->find('all', array(
 			'order' => array('User.trophy DESC'),
-			'limit' => 10
+			'limit' => 10,
+			'conditions' => array(
+				'UserType.description !=' => 'administrador',
+				'User.trophy <' => $totalQuestions
+			)
 		));
-		$this->set(compact('ranking', 'totalQuestions'));
+
+		$ranking2 = $this->User->find('first', array(
+			'conditions' => array(
+				'User.id' => $this->Session->read('Auth.User.id')
+			)
+		));
+		// pr($ranking2);
+		// exit();
+
+		$this->set(compact('ranking', 'totalQuestions','ranking2'));
 	}
 }

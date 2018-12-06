@@ -7,11 +7,11 @@
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
-            <input name="data[User][age]" required type="text" class="form-control" placeholder="Idade: 40">
+            <input name="data[User][age]" required type="text" class="form-control" placeholder="Sua idade">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
-            <input name="data[User][work]" type="text" class="form-control" placeholder="Trabalho: Professor universitário, Programador, etc...">
+            <input name="data[User][work]" type="text" class="form-control" placeholder="Seu trabalho - Ex: Programador, etc...">
             <span class="glyphicon glyphicon-search form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
