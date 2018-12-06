@@ -36,7 +36,7 @@
     <!-- /.social-auth-links -->
 
 		<!-- <a href="#">I forgot my password</a><br> -->
-		<?php
+		<!-- <?php
 	echo $this->Html->link(
 		'Esqueci minha senha',
 		array(
@@ -49,7 +49,7 @@
       'style' => 'text-align: center; padding-left: 15px;'
 		)
 	);
-	?>
+	?> -->
 
 	<?php
 echo $this->Html->link(

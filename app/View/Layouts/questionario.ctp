@@ -37,6 +37,18 @@
 ));
 ?>
 <script>
+
+    var offsetHeight = document.getElementById('calcula-height').offsetHeight;
+    if(offsetHeight >= 500){
+        var element = document.getElementById('calcula-height');
+        element.style.position = null;
+        element.style.block = null;
+        element.style.hidden = null;
+    }else{
+        offsetHeight = offsetHeight + 30;
+        var dm = document.getElementById("distancia-medida").style.marginTop = offsetHeight+"px";
+    }
+
     $("#questao-2").show();
     $("#questao-3").show();
     $("#questao-4").show();
