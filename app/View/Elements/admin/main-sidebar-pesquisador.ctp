@@ -123,7 +123,7 @@
                 </a>
             </li>
             <li>
-                <a href="<?= $this->webroot ?>questions/responder">
+                <a href="<?= $this->webroot ?>questions/likert">
                     <i class="fa fa-question-circle-o"></i>
                     <span>Responder questões</span>
                 </a>

@@ -9,8 +9,10 @@ class QuestionsController extends AppController
         parent::beforeFilter();
         if ($this->action == 'responder') {
             $this->layout = 'questionario';
-        } else {
-            $this->layout = 'admin';
+        } elseif($this->action == 'likert') {
+            $this->layout = 'survey';
+        }else{
+
         }
         $this->loadModel('Transformation');
         $this->loadModel('Result');
@@ -186,6 +188,143 @@ class QuestionsController extends AppController
     public function view()
     {
 
+    }
+
+    public function likert(){
+        if ($this->request->is('post')) {
+            $this->request->data['Answer']['end_time'] = date('H:i:s');
+            $this->request->data['Answer']['choice'][0] = $this->request->data['check'];
+            unset($this->request->data['check']);
+            ksort($this->request->data['Answer']['choice']);
+            // pr($this->request->data['Answer']);exit();
+            $this->request->data['Answer']['user_id'] = $this->Auth->user('id');
+            if ($this->request->data['Answer']['choice'][0] == "N") {
+                foreach ($this->request->data['Answer']['choice'] as $key => $cho) {
+                    if ($key > 0) {
+                        $this->request->data['Answer']['choice'][$key] = 'N/A';
+                    }
+                }
+            }
+            foreach ($this->request->data['Answer']['justify'] as $key => $just) {
+                if ($just == "") {
+                    $this->request->data['Answer']['justify'][$key] = 'N/A';
+                }
+            }
+        //    pr($this->request->data);exit();
+            if ($this->request->data['Answer']['botao'] == 'pular') {
+                $this->redirect(array('action' => 'likert'));
+            }
+            if ($this->request->data['Answer']['botao'] == 'sair') {
+                $this->redirect(array('controller' => 'pages', 'action' => 'home'));
+            }
+            $contador = $this->Answer->find('count', array(
+                'conditions' => array(
+                    'Answer.user_id' => $this->request->data['Answer']['user_id'],
+                    'Answer.result_question_id' => $this->request->data['Answer']['result_question_id'],
+                ),
+                'recursive' => -1,
+                'contain' => array(
+                    'User',
+                    'ResultQuestion' => array(
+                        'Question',
+                    ),
+                ),
+            ));
+            if ($contador < 1) {
+                foreach ($this->request->data['Answer']['choice'] as $key => $answer) {
+                    $this->Answer->create();
+                    if ($key > 0) {
+                        $jkey = $key - 1;
+                    } else {
+                        $jkey = $key;
+                    }
+                    $Newresp = array(
+                        'Answer' => array(
+                            'result_question_id' => $this->request->data['Answer']['result_question_id'][$jkey],
+                            'user_id' => $this->request->data['Answer']['user_id'],
+                            'justify' => $this->request->data['Answer']['justify'][$jkey],
+                            'choice' => $this->request->data['Answer']['choice'][$key],
+                            'start_time' => $this->request->data['Answer']['start_time'],
+                            'end_time' => $this->request->data['Answer']['end_time'],
+                        ),
+                    );
+                    if ($this->Answer->save($Newresp)) {
+                        $this->User->id = $this->Auth->user('id');
+                        $usuario = $this->User->find('first', array(
+                            'conditions' => array(
+                                'User.id' => $this->Auth->user('id'),
+                            ),
+                        ));
+                        $update = array(
+                            'User' => array(
+                                'trophy' => $usuario['User']['trophy'] + 1,
+                            ),
+                        );
+                        $this->User->save($update);
+                    }
+                }
+
+                $this->Session->setFlash(__('Respondido com sucesso.'), 'Flash/success');
+                $this->redirect(array('action' => 'likert'));
+            } else {
+                $this->Session->setFlash(__('Esta questão já foi respondida!'), 'Flash/info');
+                $this->redirect(array('controller' => 'pages', 'action' => 'home'));
+            }
+        }
+
+        $respondidas = $this->Answer->find('all', array(
+            'conditions' => array(
+                'Answer.user_id' => $this->Auth->user('id'),
+            ),
+            'recursive' => -1,
+            'contain' => array(
+                'User',
+                'ResultQuestion',
+            ),
+            'order' => array('Answer.result_question_id ASC'),
+        ));
+
+        $array = $this->Answer->find('all', array(
+            'recursive' => 1,
+            'conditions' => array(
+                'Answer.user_id' => $this->Auth->user('id'),
+            ),
+        ));
+
+        $arrayFiltrado = array();
+        $k = 0;
+        foreach ($array as $ar) {
+            $arrayFiltrado[$k]['ResultQuestion.id !='] = $ar['ResultQuestion']['id'];
+            $k++;
+        }
+
+        $question = $this->ResultQuestion->find('first', array(
+            'recursive' => 3,
+            'order' => 'rand()',
+            'conditions' => array(
+                'AND' => $arrayFiltrado,
+            ),
+        ));
+
+        //pr($question['Result']['ResultQuestion']);exit();
+
+        if (empty($question)) {
+            $this->Session->setFlash(__('Você não possui questões para responder, volte mais tarde!'), 'Flash/info');
+            $this->redirect(array('controller' => 'pages', 'action' => 'home'));
+        }
+
+        $userLanguage = $this->UserLanguage->find('count', array(
+            'conditions' => array(
+                'UserLanguage.language_id' => $question['Result']['Transformation']['language_id'],
+                'UserLanguage.user_id' => $this->Auth->user('id'),
+            ),
+        ));
+
+        if ($userLanguage < 1) {
+            $this->Session->setFlash(__('Qual sua experiência com a linguagem abaixo?'), 'Flash/info');
+            $this->redirect(array('controller' => 'languages', 'action' => 'languages', $question['Result']['Transformation']['language_id']));
+        }
+        $this->set('question', $question);
     }
 
     public function responder()

@@ -53,7 +53,7 @@
 
 	<?php
 echo $this->Html->link(
-	'Sou um usário novo',
+	'Sou um usuário novo',
 	array(
 		'controller' => 'Users',
 		'action' => 'register',
