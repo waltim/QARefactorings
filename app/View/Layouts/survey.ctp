@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
-
+<style>
+.skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side {
+    background-color: #ecf0f5 !important;
+}
+</style>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
