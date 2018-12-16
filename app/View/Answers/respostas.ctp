@@ -16,11 +16,12 @@
                   <th>Sexo</th>
                   <th>Formação</th>
                   <th>Profissão</th>
-                  <th>Questão</th>
-                  <th>Escolha</th>
-                  <th>Justificativa</th>
-                  <th>Linguagem</th>
+                  <th>Experiência em anos</th>
+                  <th>Código da Transformação</th>
                   <th>Tipo da transformação</th>
+                  <th>Questão</th>
+                  <th>Opção escolhida</th>
+                  <th>Justificativa</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,6 +31,9 @@
                   <td><?=$answer['User']['sex']?></td>
                   <td><?=$answer['User']['formation']?></td>
                   <td><?=$answer['User']['profession']?></td>
+                  <td><?=$answer['User']['UserLanguage']['experience']?></td>
+                  <td><?=$answer['ResultQuestion']['Result']['Transformation']['id']?></td>
+                  <td><?='T'.$answer['ResultQuestion']['Result']['Transformation']['TransformationType']['id']?></td>
                   <td>
                   <?='Q'.$answer['ResultQuestion']['Question']['id']?>
                   </td>
@@ -47,12 +51,10 @@
                       if($answer['Answer']['justify'] == 'N/A'){
                         echo "no reply";
                       }else{
-                        echo "R = ".$answer['Answer']['justify'];
+                        echo $answer['Answer']['justify'];
                       }
                     ?>
                   </td>
-                  <td><?=$answer['ResultQuestion']['Result']['Transformation']['Language']['description']?></td>
-                  <td><?='T'.$answer['ResultQuestion']['Result']['Transformation']['TransformationType']['id']?></td>
                 </tr>
                 <?php } ?>
                 </tbody>
@@ -62,11 +64,12 @@
                   <th>Sexo</th>
                   <th>Formação</th>
                   <th>Profissão</th>
-                  <th>Questão</th>
-                  <th>Escolha</th>
-                  <th>Justificativa</th>
-                  <th>Linguagem</th>
+                  <th>Experiência em anos</th>
+                  <th>Código da Transformação</th>
                   <th>Tipo da transformação</th>
+                  <th>Questão</th>
+                  <th>Opção escolhida</th>
+                  <th>Justificativa</th>
                 </tr>
                 </tfoot>
               </table>

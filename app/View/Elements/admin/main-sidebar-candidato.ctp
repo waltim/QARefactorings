@@ -106,7 +106,7 @@
               </ul>
             </li> -->
       <li>
-        <a class="button-piscando" href="<?= $this->webroot ?>questions/responder">
+        <a class="button-piscando" href="<?= $this->webroot ?>questions/likert">
           <i class="fa fa-question-circle-o"></i> <span>Responder questões</span>
         </a>
       </li>

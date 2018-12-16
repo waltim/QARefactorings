@@ -10,6 +10,7 @@ class AnswersController extends AppController
         $this->loadModel('TransformationType');
         $this->loadModel('Metric');
         $this->loadModel('Language');
+        $this->loadModel('UserLanguage');
         $this->loadModel('Result');
         $this->loadModel('Question');
         $this->loadModel('Answer');
@@ -40,7 +41,7 @@ class AnswersController extends AppController
         ini_set('memory_limit', '512M');
         $answers = $this->Answer->find('all', array(
             'order' => array('Answer.id DESC'),
-            'recursive' => -1,
+            'recursive' => 4,
             'contain' => array(
                 'User',
                 'ResultQuestion' => array(
@@ -55,6 +56,15 @@ class AnswersController extends AppController
                 ),
             ),
         ));
+        foreach($answers as $key => $usuario){
+            $UserLanguage = $this->UserLanguage->find('first', array(
+                'recursive' => -1,
+                'conditions' => array(
+                    'UserLanguage.user_id' => $usuario['User']['id']
+                )
+            ));
+            $answers[$key]['User']['UserLanguage'] = $UserLanguage['UserLanguage'];
+        }
         $this->set('pesquisa', $pesquisa);
         $this->set(compact('answers'));
     }

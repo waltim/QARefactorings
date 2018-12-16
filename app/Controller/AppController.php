@@ -64,7 +64,7 @@ class AppController extends Controller
 			return true; // Admin pode acessar todas as actions;
 		} elseif (isset($user['status']) && $user['UserType']['description'] === 'pesquisador') {
 			if (in_array($this->action, array(
-				'logout', 'home', 'languages', 'responder',
+				'logout', 'home', 'languages', 'likert',
 				'relatorios', 'locAndAmloc', 'accm', 'manipulaMetricas'
 			)) || ($this->params['controller'] === 'transformations' && in_array($this->action, array('add', 'view', 'index')))) {
 					// Todos os pesquisadores podem criar transformações;
@@ -89,7 +89,7 @@ class AppController extends Controller
 				return false;
 			}
 		} elseif (isset($user['status']) && $user['UserType']['description'] === 'candidato') {
-			if ($this->params['action'] === 'responder' || $this->params['action'] === 'home'
+			if ($this->params['action'] === 'likert' || $this->params['action'] === 'home'
 				|| $this->params['action'] === 'logout' || $this->params['action'] === 'languages') {
 				// Todos os candidatos podem ver a página inicial, responder questões e sair do sistema.
 				return true;

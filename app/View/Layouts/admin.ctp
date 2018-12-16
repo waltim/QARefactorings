@@ -7,84 +7,86 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
     <?php echo $this->Html->css(array(
-        '../bower_components/bootstrap/dist/css/bootstrap.min.css',
-        '../bower_components/font-awesome/css/font-awesome.min.css',
-        '../bower_components/Ionicons/css/ionicons.min.css',
-        //'../dist/css/AdminLTE.min.css',
-        '../dist/css/skins/_all-skins.min.css',
-        //'../bower_components/morris.js/morris.css',
-        //'../bower_components/jvectormap/jquery-jvectormap.css',
-        //'../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css',
-        //'../bower_components/bootstrap-daterangepicker/daterangepicker.css',
-        //'../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css',
+    '../bower_components/bootstrap/dist/css/bootstrap.min.css',
+    '../bower_components/font-awesome/css/font-awesome.min.css',
+    '../bower_components/Ionicons/css/ionicons.min.css',
+    //'../dist/css/AdminLTE.min.css',
+    '../dist/css/skins/_all-skins.min.css',
+    //'../bower_components/morris.js/morris.css',
+    //'../bower_components/jvectormap/jquery-jvectormap.css',
+    //'../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css',
+    //'../bower_components/bootstrap-daterangepicker/daterangepicker.css',
+    //'../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css',
+    '../fancybox/dist/jquery.fancybox.min.css',
+    
+));
+?>
+
+    <?php if ($this->request->params['action'] == 'edit' || $this->request->params['action'] == 'add' || $this->request->params['action'] == 'loadDataCsv') {?>
+        <?php echo $this->Html->css(array(
+    '../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css',
+    '../bower_components/select2/dist/css/select2.min.css',
+    '../dist/css/AdminLTE.min.css',
+));
+    ?>
+        <?php
+
+} elseif ($this->request->params['action'] == 'index') {?>
+        <?php echo $this->Html->css(array(
+    '../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
+    '../dist/css/AdminLTE.min.css',
+));
+    ?>
+        <?php
+
+} else {?>
+        <?php echo $this->Html->css(array(
+    '../dist/css/AdminLTE.min.css',
+));
+    ?>
+        <?php
+
+}?>
+    <?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view' || $this->request->params['controller'] == 'questions' && $this->request->params['action'] == 'cadastrar') {?>
+        <?php echo $this->Html->css(array(
+    '../syntaxhighlighter/styles/shCoreDefault.css',
+    'jquery.dataTables.min.css',
+    'buttons.dataTables.min.css',
+));
+    ?>
+        <?php
+
+}?>
+
+    <?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'relatorios') {?>
+        <?php echo $this->Html->css(array(
+    'jquery.dataTables.min.css',
+    'buttons.dataTables.min.css',
+));
+    ?>
+        <?php echo $this->Html->css(array(
+        '../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
+        '../dist/css/AdminLTE.min.css',
     ));
     ?>
-
-    <?php if ($this->request->params['action'] == 'edit' || $this->request->params['action'] == 'add' || $this->request->params['action'] == 'loadDataCsv') { ?>
-        <?php echo $this->Html->css(array(
-            '../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css',
-            '../bower_components/select2/dist/css/select2.min.css',
-            '../dist/css/AdminLTE.min.css',
-        ));
-        ?>
         <?php
 
-    } elseif ($this->request->params['action'] == 'index') { ?>
+}?>
+
+    <?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'respostas') {?>
         <?php echo $this->Html->css(array(
-            '../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
-            '../dist/css/AdminLTE.min.css'
-        ));
-        ?>
+    'jquery.dataTables.min.css',
+    'buttons.dataTables.min.css',
+));
+    ?>
+        <?php echo $this->Html->css(array(
+        '../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
+        '../dist/css/AdminLTE.min.css',
+    ));
+    ?>
         <?php
 
-    } else { ?>
-        <?php echo $this->Html->css(array(
-            '../dist/css/AdminLTE.min.css',
-        ));
-        ?>
-        <?php
-
-    } ?>
-    <?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view' || $this->request->params['controller'] == 'questions' && $this->request->params['action'] == 'cadastrar') { ?>
-        <?php echo $this->Html->css(array(
-            '../syntaxhighlighter/styles/shCoreDefault.css',
-            'jquery.dataTables.min.css',
-            'buttons.dataTables.min.css'
-        ));
-        ?>
-        <?php
-
-    } ?>
-
-    <?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'relatorios') { ?>
-        <?php echo $this->Html->css(array(
-            'jquery.dataTables.min.css',
-            'buttons.dataTables.min.css'
-        ));
-        ?>
-        <?php echo $this->Html->css(array(
-            '../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
-            '../dist/css/AdminLTE.min.css'
-        ));
-        ?>
-        <?php
-
-    } ?>
-
-    <?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'respostas') { ?>
-        <?php echo $this->Html->css(array(
-            'jquery.dataTables.min.css',
-            'buttons.dataTables.min.css'
-        ));
-        ?>
-        <?php echo $this->Html->css(array(
-            '../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
-            '../dist/css/AdminLTE.min.css'
-        ));
-        ?>
-        <?php
-
-    } ?>
+}?>
     <!-- Google Font -->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -93,14 +95,14 @@
 <div class="wrapper">
     <?php echo $this->element('admin/main-header'); ?>
     <?php
-    if ($this->session->read('Auth.User.UserType.description') === 'administrador') {
-        echo $this->element('admin/main-sidebar');
-    } elseif ($this->session->read('Auth.User.UserType.description') === 'pesquisador') {
-        echo $this->element('admin/main-sidebar-pesquisador');
-    } else {
-        echo $this->element('admin/main-sidebar-candidato');
-    }
-    ?>
+if ($this->session->read('Auth.User.UserType.description') === 'administrador') {
+    echo $this->element('admin/main-sidebar');
+} elseif ($this->session->read('Auth.User.UserType.description') === 'pesquisador') {
+    echo $this->element('admin/main-sidebar-pesquisador');
+} else {
+    echo $this->element('admin/main-sidebar-candidato');
+}
+?>
     <div class="content-wrapper">
         <section class="content">
             <?php echo $this->Session->flash(); ?>
@@ -130,11 +132,11 @@
     //'../dist/js/pages/dashboard.js'
 ));
 ?>
-<?php if ($this->request->params['action'] == 'edit' || $this->request->params['action'] == 'add' || $this->request->params['action'] == 'loadDataCsv') { ?>
+<?php if ($this->request->params['action'] == 'edit' || $this->request->params['action'] == 'add' || $this->request->params['action'] == 'loadDataCsv') {?>
     <?php echo $this->Html->script(array(
-        '../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js',
-        '../bower_components/select2/dist/js/select2.full.min.js'
-    ));
+    '../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js',
+    '../bower_components/select2/dist/js/select2.full.min.js',
+));
     ?>
     <script>
         $(function () {
@@ -148,12 +150,12 @@
     </script>
 <?php
 
-} elseif ($this->request->params['action'] == 'index') { ?>
+} elseif ($this->request->params['action'] == 'index') {?>
 <?php echo $this->Html->script(array(
     '../bower_components/datatables.net/js/jquery.dataTables.min.js',
-    '../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js'
+    '../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js',
 ));
-?>
+    ?>
     <script>
         $(function () {
             $('#example2').DataTable({
@@ -168,24 +170,24 @@
     </script>
     <?php
 
-} ?>
-<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view' || $this->request->params['controller'] == 'questions' && $this->request->params['action'] == 'cadastrar') { ?>
+}?>
+<?php if ($this->request->params['controller'] == 'transformations' && $this->request->params['action'] == 'view' || $this->request->params['controller'] == 'questions' && $this->request->params['action'] == 'cadastrar') {?>
     <?php echo $this->Html->script(array(
-        'jquery.dataTables.min.js',
-        'dataTables.buttons.min.js',
-        'jszip.min.js',
-        'pdfmake.min.js',
-        'vfs_fonts.js',
-        'buttons.html5.min.js',
-        '../syntaxhighlighter/scripts/XRegExp.js',
-        '../syntaxhighlighter/scripts/shCore.js',
-        '../syntaxhighlighter/scripts/shBrushXml.js',
-    ));
+    'jquery.dataTables.min.js',
+    'dataTables.buttons.min.js',
+    'jszip.min.js',
+    'pdfmake.min.js',
+    'vfs_fonts.js',
+    'buttons.html5.min.js',
+    '../syntaxhighlighter/scripts/XRegExp.js',
+    '../syntaxhighlighter/scripts/shCore.js',
+    '../syntaxhighlighter/scripts/shBrushXml.js',
+));
     ?>
     <!--    <script type="text/javascript"-->
     <!--            src="--><? //= $this->webroot; ?><!--syntaxhighlighter/scripts/shBrush--><? //= $transformation['Language']['description']; ?><!--.js"></script>-->
     <script type="text/javascript"
-            src="<?= $this->webroot; ?>syntaxhighlighter/scripts/shBrushDiff.js"></script>
+            src="<?=$this->webroot;?>syntaxhighlighter/scripts/shBrushDiff.js"></script>
     <script>
         SyntaxHighlighter.config.tagName = "code";
         SyntaxHighlighter.defaults['gutter'] = true;
@@ -211,46 +213,14 @@
             });
         });
     </script>
-    <?php } ?>
-<?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'relatorios') { ?>
-    
-    <?php echo $this->Html->script(array(
-    //   '../bower_components/datatables.net/js/jquery.dataTables.min.js',
-    //  '../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js'
-));
-?>
-<?php echo $this->Html->script(array(
-        'jquery.dataTables.min.js',
-        'dataTables.buttons.min.js',
-        'jszip.min.js',
-        'pdfmake.min.js',
-        'vfs_fonts.js',
-        'buttons.html5.min.js',
-    ));
-    ?>
-    
-    <script>
-    $(document).ready(function () {
-            $('#example2').DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    'copyHtml5',
-                    'excelHtml5',
-                    'csvHtml5',
-                    'pdfHtml5'
-                ]
-            });
-        });
-    </script>
-<?php } ?>
+    <?php }?>
+<?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'relatorios') {?>
 
-<?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'respostas') { ?>
-    
     <?php echo $this->Html->script(array(
     //   '../bower_components/datatables.net/js/jquery.dataTables.min.js',
     //  '../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js'
 ));
-?>
+    ?>
 <?php echo $this->Html->script(array(
         'jquery.dataTables.min.js',
         'dataTables.buttons.min.js',
@@ -260,7 +230,7 @@
         'buttons.html5.min.js',
     ));
     ?>
-    
+
     <script>
     $(document).ready(function () {
             $('#example2').DataTable({
@@ -274,7 +244,39 @@
             });
         });
     </script>
-<?php } ?>
+<?php }?>
+
+<?php if ($this->request->params['controller'] == 'answers' && $this->request->params['action'] == 'respostas') {?>
+
+    <?php echo $this->Html->script(array(
+    //   '../bower_components/datatables.net/js/jquery.dataTables.min.js',
+    //  '../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js'
+));
+    ?>
+<?php echo $this->Html->script(array(
+        'jquery.dataTables.min.js',
+        'dataTables.buttons.min.js',
+        'jszip.min.js',
+        'pdfmake.min.js',
+        'vfs_fonts.js',
+        'buttons.html5.min.js',
+    ));
+    ?>
+
+    <script>
+    $(document).ready(function () {
+            $('#example2').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copyHtml5',
+                    'excelHtml5',
+                    'csvHtml5',
+                    'pdfHtml5'
+                ]
+            });
+        });
+    </script>
+<?php }?>
 
 <script type="text/javascript">
     function googleTranslateElementInit() {
@@ -288,3 +290,34 @@
         src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
+
+<?php echo $this->Html->script(array(
+    '../fancybox/dist/jquery.fancybox.min.js',
+));
+?>
+
+<script>
+    $(document).ready(function () {
+
+        /* This is basic - uses default settings */
+
+        $("a#single_image").fancybox();
+
+        /* Using custom settings */
+
+        $("a#inline").fancybox({
+            'hideOnContentClick': true
+        });
+
+        /* Apply fancybox to multiple items */
+
+        $("a.group").fancybox({
+            'transitionIn': 'elastic',
+            'transitionOut': 'elastic',
+            'speedIn': 600,
+            'speedOut': 200,
+            'overlayShow': false
+        });
+
+    });
+</script>
