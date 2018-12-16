@@ -41,7 +41,7 @@ class LanguagesController extends AppController
 
                 $this->User->save($update);
                 // $this->Session->setFlash(__('Experiência vinculada com sucesso.'), 'Flash/success');
-                $this->redirect(array('controller' => 'questions', 'action' => 'responder'));
+                $this->redirect(array('controller' => 'questions', 'action' => 'likert'));
             }
         }
         $linguagem = $this->Language->find('first', array(
