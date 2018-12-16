@@ -50,7 +50,7 @@
           <?= (($transformations*$questions)-$answers)/$questions ?>
         </h3>
 
-        <p>Quantidade de trechos a serem avaliados </p>
+        <p>Transformações a serem avaliadas </p>
       </div>
       <?php
 		  }else{ ?>
@@ -203,16 +203,16 @@
         <p style="text-align:justify;">
           A Associação Sociocultural e Desportiva Arte do Saber - ASDAS, cujo nome fantasia é Grupo Arte Luta Brasil de
           Capoeira, fundada em 09/12/2012, porém em atividade desde 2002, inscrita no CNPJ.: 17.375.468/0001-63, com
-          sede em Brasília, é uma entidade não governamental e sem fins lucrativos e econômicos, que tem como
-          propósito contribuir, através de suas ações e projetos, para a promoção da qualidade de vida e dignidade de
-          crianças, adolescentes, jovens, adultos e pessoas com d, bem como o desenvolvimento da igualdade de
+          sede em Brasília, é uma entidade não governamental e sem fins lucrativos e econômicos. A associação tem como
+          propósito, contribuir com a melhoria da qualidade de vida e dignidade de
+          crianças, adolescentes, jovens, adultos através de suas ações e projetos, proporcionando com o desenvolvimento da igualdade,
           oportunidades e valorização humana, onde os alunos assistidos, familiares e comunidade em geral têm a
-          oportunidade de praticar atividade física de forma saudável e prazerosa.
+          oportunidade de praticar atividade física de forma saudável.
         </p>
         <p style="text-align:justify;">
-          O Projeto Educar Capoeira é o carro chefe da Associação. A Capoeira é uma arte/luta/esporte incluído no
+          A principal atividade da Associação é o Projeto Educar Capoeira. A Capoeira é uma arte/luta/esporte incluído no
           nosso folclore, surgida entre os escravos procedentes de Angola, em meados dos séculos XVII e XVIII, que a
-          partir dela reuniam-se e ganhavam perspectivas de se organizarem como grupo social, essa pratica
+          partir dela reuniam-se e ganhavam perspectivas de se organizarem como grupo social. Essa pratica
           proporcionava-lhes melhora na autoestima e força para romper o ciclo da escravidão. Luta, dança, ritmo,
           vigor físico, os negros criaram a Capoeira tanto para servir ao prazer quanto ao combate. Realizaram na
           própria carne essa imagem de vida, fundamental até hoje.
