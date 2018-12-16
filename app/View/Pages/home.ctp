@@ -39,10 +39,21 @@
   </div>
   <?php
 		} ?>
+    
   <!-- ./col -->
   <div class="col-lg-3 col-xs-6">
     <!-- small box -->
     <div class="small-box bg-blue">
+    <?php if ($this->Session->read('Auth.User.UserType.description') == 'candidato') { ?>
+      <div class="inner">
+        <h3>
+          <?= (($transformations*$questions)-$answers)/$questions ?>
+        </h3>
+
+        <p>Quantidade de trechos a serem avaliados </p>
+      </div>
+      <?php
+		  }else{ ?>
       <div class="inner">
         <h3>
           <?= $answers ?>
@@ -50,6 +61,8 @@
 
         <p>Respostas</p>
       </div>
+      <?php
+		  } ?>
       <div class="icon">
         <i class="ion ion-ios-analytics"></i>
       </div>

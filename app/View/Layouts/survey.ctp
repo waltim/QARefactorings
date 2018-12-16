@@ -203,16 +203,16 @@
             dp4.removeAttribute('required', 'required');
             var dp5 = document.getElementById('DP6');
             dp5.removeAttribute('required', 'required');
-            var dp6 = document.getElementById('DP7');
-            dp6.removeAttribute('required', 'required');
-            var dp7 = document.getElementById('DP8');
-            dp7.removeAttribute('required', 'required');
-            var dp8 = document.getElementById('DP9');
-            dp8.removeAttribute('required', 'required');
-            var dp9 = document.getElementById('DP10');
-            dp9.removeAttribute('required', 'required');
-            var dp10 = document.getElementById('DP11');
-            dp10.removeAttribute('required', 'required');
+            // var dp6 = document.getElementById('DP7');
+            // dp6.removeAttribute('required', 'required');
+            // var dp7 = document.getElementById('DP8');
+            // dp7.removeAttribute('required', 'required');
+            // var dp8 = document.getElementById('DP9');
+            // dp8.removeAttribute('required', 'required');
+            // var dp9 = document.getElementById('DP10');
+            // dp9.removeAttribute('required', 'required');
+            // var dp10 = document.getElementById('DP11');
+            // dp10.removeAttribute('required', 'required');
 
             var ndnc1 = document.getElementById('NDNC2');
             ndnc1.setAttribute('checked', 'checked');
@@ -224,16 +224,16 @@
             ndnc4.setAttribute('checked', 'checked');
             var ndnc5 = document.getElementById('NDNC6');
             ndnc5.setAttribute('checked', 'checked');
-            var ndnc6 = document.getElementById('NDNC7');
-            ndnc6.setAttribute('checked', 'checked');
-            var ndnc7 = document.getElementById('NDNC8');
-            ndnc7.setAttribute('checked', 'checked');
-            var ndnc8 = document.getElementById('NDNC9');
-            ndnc8.setAttribute('checked', 'checked');
-            var ndnc9 = document.getElementById('NDNC10');
-            ndnc9.setAttribute('checked', 'checked');
-            var ndnc10 = document.getElementById('NDNC11');
-            ndnc10.setAttribute('checked', 'checked');
+            // var ndnc6 = document.getElementById('NDNC7');
+            // ndnc6.setAttribute('checked', 'checked');
+            // var ndnc7 = document.getElementById('NDNC8');
+            // ndnc7.setAttribute('checked', 'checked');
+            // var ndnc8 = document.getElementById('NDNC9');
+            // ndnc8.setAttribute('checked', 'checked');
+            // var ndnc9 = document.getElementById('NDNC10');
+            // ndnc9.setAttribute('checked', 'checked');
+            // var ndnc10 = document.getElementById('NDNC11');
+            // ndnc10.setAttribute('checked', 'checked');
         }
     });
     $("#check1").click(function () {
@@ -260,16 +260,16 @@
             dp4.setAttribute('required', 'required');
             var dp5 = document.getElementById('DP6');
             dp5.setAttribute('required', 'required');
-            var dp6 = document.getElementById('DP7');
-            dp6.setAttribute('required', 'required');
-            var dp7 = document.getElementById('DP8');
-            dp7.setAttribute('required', 'required');
-            var dp8 = document.getElementById('DP9');
-            dp8.setAttribute('required', 'required');
-            var dp9 = document.getElementById('DP10');
-            dp9.setAttribute('required', 'required');
-            var dp10 = document.getElementById('DP11');
-            dp10.setAttribute('required', 'required');
+            // var dp6 = document.getElementById('DP7');
+            // dp6.setAttribute('required', 'required');
+            // var dp7 = document.getElementById('DP8');
+            // dp7.setAttribute('required', 'required');
+            // var dp8 = document.getElementById('DP9');
+            // dp8.setAttribute('required', 'required');
+            // var dp9 = document.getElementById('DP10');
+            // dp9.setAttribute('required', 'required');
+            // var dp10 = document.getElementById('DP11');
+            // dp10.setAttribute('required', 'required');
 
             var ndnc1 = document.getElementById('NDNC2');
             ndnc1.removeAttribute('checked', 'checked');
@@ -281,16 +281,16 @@
             ndnc4.removeAttribute('checked', 'checked');
             var ndnc5 = document.getElementById('NDNC6');
             ndnc5.removeAttribute('checked', 'checked');
-            var ndnc6 = document.getElementById('NDNC7');
-            ndnc6.removeAttribute('checked', 'checked');
-            var ndnc7 = document.getElementById('NDNC8');
-            ndnc7.removeAttribute('checked', 'checked');
-            var ndnc8 = document.getElementById('NDNC9');
-            ndnc8.removeAttribute('checked', 'checked');
-            var ndnc9 = document.getElementById('NDNC10');
-            ndnc9.removeAttribute('checked', 'checked');
-            var ndnc10 = document.getElementById('NDNC11');
-            ndnc10.removeAttribute('checked', 'checked');
+            // var ndnc6 = document.getElementById('NDNC7');
+            // ndnc6.removeAttribute('checked', 'checked');
+            // var ndnc7 = document.getElementById('NDNC8');
+            // ndnc7.removeAttribute('checked', 'checked');
+            // var ndnc8 = document.getElementById('NDNC9');
+            // ndnc8.removeAttribute('checked', 'checked');
+            // var ndnc9 = document.getElementById('NDNC10');
+            // ndnc9.removeAttribute('checked', 'checked');
+            // var ndnc10 = document.getElementById('NDNC11');
+            // ndnc10.removeAttribute('checked', 'checked');
         }
     });
 </script>
