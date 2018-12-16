@@ -166,18 +166,79 @@
   <div class="col-md-12">
     <div class="box">
       <div class="box-header">
+        <h3 class="box-title">Arrecadação de fundos para o Projeto Educar Capoeira</h3>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body no-padding">
+        <p style="text-align:justify; font-weight: 600; font-size: 16px;">
+          Além da contribuição acadêmica através do projeto de pesquisa,
+          Os pesquisadores responsáveis decidiram realizar a doação de um valor (quantia em dinheiro)
+          arrecadada durante a execução do Survey. Foi decidido que será doado ao Projeto Educar Capoeira R$ 10,00
+          para cada participante que responder as questões do Survey até o final.
+        </p>
+        <!-- /.box-body -->
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header">
         <h3 class="box-title">Projeto Educar Capoeira</h3>
       </div>
       <!-- /.box-header -->
       <div class="box-body no-padding">
-        <a id="single_image" href="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 08.59.21.jpeg">
-          <img style="max-width:20%;" src="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 08.59.21.jpeg" alt="" /></a>
-        <a id="single_image" href="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 08.59.20.jpeg">
-          <img style="max-width:20%;" src="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 08.59.20.jpeg" alt="" /></a>
-        <a id="single_image" href="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 08.59.26.jpeg">
-          <img style="max-width:20%;" src="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 08.59.26.jpeg" alt="" /></a>
-        <a id="single_image" href="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 10.45.30.jpeg">
-          <img style="max-width:20%;" src="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 10.45.30.jpeg" alt="" /></a>
+        <p style="text-align:justify;">
+          A Associação Sociocultural e Desportiva Arte do Saber - ASDAS, cujo nome fantasia é Grupo Arte Luta Brasil de
+          Capoeira, fundada em 09/12/2012, porém em atividade desde 2002, inscrita no CNPJ.: 17.375.468/0001-63, com
+          sede em Brasília, é uma entidade não governamental e sem fins lucrativos e econômicos, que tem como
+          propósito contribuir, através de suas ações e projetos, para a promoção da qualidade de vida e dignidade de
+          crianças, adolescentes, jovens, adultos e pessoas com d, bem como o desenvolvimento da igualdade de
+          oportunidades e valorização humana, onde os alunos assistidos, familiares e comunidade em geral têm a
+          oportunidade de praticar atividade física de forma saudável e prazerosa.
+        </p>
+        <p style="text-align:justify;">
+          O Projeto Educar Capoeira é o carro chefe da Associação. A Capoeira é uma arte/luta/esporte incluído no
+          nosso folclore, surgida entre os escravos procedentes de Angola, em meados dos séculos XVII e XVIII, que a
+          partir dela reuniam-se e ganhavam perspectivas de se organizarem como grupo social, essa pratica
+          proporcionava-lhes melhora na autoestima e força para romper o ciclo da escravidão. Luta, dança, ritmo,
+          vigor físico, os negros criaram a Capoeira tanto para servir ao prazer quanto ao combate. Realizaram na
+          própria carne essa imagem de vida, fundamental até hoje.
+        </p>
+        <p style="text-align:justify; text-indent:4em; font-weight: 600;">
+          “A capoeira é atitude brasileira que reconhece uma história escrita pelo corpo, pelo ritmo e pela imensa
+          natureza libertária do homem frente à intolerância”. (GIL, 2004).
+        </p>
+        <p style="text-align:justify;">
+          A capoeira tem provado sua importância e seu peso histórico brasileiro, uma vez reconhecido pela
+          Constituição de 1988 e PCN- Parâmetro Curriculares Nacionais, sendo este esporte/luta parte integrante do
+          folclore nacional e considerada patrimônio cultural em 2008 pelo IPHAN –Instituto do Patrimônio Histórico e
+          Artístico Nacional.
+        </p>
+        <div class="col-md-10 col-md-offset-1">
+          <a id="single_image" href="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 08.59.21.jpeg">
+            <img style="max-width:200px; height: 179px;" src="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 08.59.21.jpeg" alt="" /></a>
+          <a id="single_image" href="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 08.59.20.jpeg">
+            <img style="max-width:200px; height: 179px;" src="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 08.59.20.jpeg" alt="" /></a>
+          <a id="single_image" href="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 08.59.26.jpeg">
+            <img style="max-width:200px; height: 179px;" src="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 08.59.26.jpeg" alt="" /></a>
+          <a id="single_image" href="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 10.45.30.jpeg">
+            <img style="max-width:200px; height: 179px;" src="<?=$this->webroot?>images/WhatsApp Image 2018-12-12 at 10.45.30.jpeg" alt="" /></a>
+          <a id="single_image" href="<?=$this->webroot?>images/45333789_1738048686341629_1514006010841268224_o.jpg">
+            <img style="max-width:200px; height: 179px;" src="<?=$this->webroot?>images/45333789_1738048686341629_1514006010841268224_o.jpg"
+              alt="" /></a>
+        </div>
+        <div class="clearfix"></div>
+        <br><br>
+        <p>
+          Instagram: <a href="https://www.instagram.com/projeto_educar_capoeira/" target="_blank">
+            https://www.instagram.com/projeto_educar_capoeira/
+          </a>
+          <br>
+          Brasil Cnpj: <a href="https://www.brasilcnpj.com/empresa/associacao-socio-cultural-e-desportiva-arte-do-saber-asdas/cauKnfvAB"
+            target="_blank">
+            https://www.brasilcnpj.com/empresa/associacao-socio-cultural-e-desportiva-arte-do-saber-asdas/cauKnfvAB
+          </a>
+        </p>
       </div>
       <!-- /.box-body -->
     </div>

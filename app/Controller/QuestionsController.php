@@ -264,7 +264,7 @@ class QuestionsController extends AppController
                     }
                 }
 
-                $this->Session->setFlash(__('Respondido com sucesso.'), 'Flash/success');
+                // $this->Session->setFlash(__('Respondido com sucesso.'), 'Flash/success');
                 $this->redirect(array('action' => 'likert'));
             } else {
                 $this->Session->setFlash(__('Esta questão já foi respondida!'), 'Flash/info');
