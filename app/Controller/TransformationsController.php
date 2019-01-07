@@ -72,6 +72,7 @@ class TransformationsController extends AppController
                         'line_end' => strtoupper($refactoring['Transformation']['line_end']),
                     ),
                 );
+                // pr($refactor);exit();
                 $this->Transformation->save($refactor);
 
                 $lastTransformationCreated = $this->Transformation->find('first', array(
@@ -109,7 +110,7 @@ class TransformationsController extends AppController
                 umask($oldmask);
 
                 $this->separaAnteriorETransformado($lastTransformationCreated['Transformation']['id'], $pasta, $caminho);
-
+                // pr($lastTransformationCreated);//exit();
                 $this->Session->setFlash(__('Transformação cadastrada com sucesso.'), 'Flash/success');
                 $this->redirect(array('action' => 'add', $lastTransformationCreated['Transformation']['search_event_id']));
             }
@@ -191,7 +192,7 @@ class TransformationsController extends AppController
                 $pasta = WWW_ROOT . "files/" . $nomecode . "/";
                 $caminho = $pasta;
                 $oldmask = umask(0);
-                
+
                 $path = str_replace('a.txt', "", $transformationModificada['Transformation']['old_code']);
                 $this->delTree($path);
 
@@ -212,7 +213,7 @@ class TransformationsController extends AppController
                 $valorB = str_replace("   -", "", $refactoring['Transformation']['code_before']);
                 $valorB = strip_tags($valorB);
                 fwrite($a, utf8_encode($valorB));
-                
+
                 fclose($a);
                 fclose($b);
 
@@ -350,8 +351,65 @@ class TransformationsController extends AppController
 
     public function locAndAmloc($string = null)
     {
-        $numLoc = substr_count($string, '<br/>') - 2;
+        $numLoc = substr_count($string, '<br/>') - 1;
         return $numLoc;
+    }
+
+    public function qtd_identifiers($string = null)
+    {
+        // $string = $this->params['url']['string'];
+        $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
+        $keywords = explode(',', $keywords);
+
+        foreach ($keywords as $key) {
+            if (strstr($string, $key)) {
+                // echo "Tem " . $key;
+                $string = str_replace($key, ' ', $string);
+            }
+        }
+        $string = strip_tags($string);
+        $string = preg_replace('/\s+/', ' ', trim($string));
+        $string = preg_replace('/[^A-Za-z0-9\-]/', ' ', $string);
+        $string = str_replace('-', ' ', $string);
+        $string = str_replace('+', ' ', $string);
+        $string = str_replace('%', ' ', $string);
+        $string = str_replace('@', ' ', $string);
+        $string = str_replace('>', ' ', $string);
+        $string = str_replace('<', ' ', $string);
+
+        $words = explode(" ", $string);
+        $words = array_filter($words);
+        $words = array_unique($words);
+
+        return count($words);
+    }
+
+    public function cl_max($string = null)
+    {
+        $str = explode("<br/>", $string);
+        $arrayComp = array();
+        foreach ($str as $value) {
+            $value = preg_replace('~[\r\n]+~', '', $value);
+            $value = trim(preg_replace('/\s+/', ' ', $value));
+            $arrayComp[] = strlen($value);
+        }
+        return max($arrayComp);
+    }
+
+    public function cl_average($string = null)
+    {
+        $str = explode("<br/>", $string);
+        $arrayComp = array();
+        foreach ($str as $value) {
+            $value = preg_replace('~[\r\n]+~', '', $value);
+            $value = trim(preg_replace('/\s+/', ' ', $value));
+            $arrayComp[] = strlen($value);
+        }
+        if (count($arrayComp)) {
+            $arrayComp = array_filter($arrayComp);
+            $average = array_sum($arrayComp) / count($arrayComp);
+            return $average;
+        }
     }
 
     public function accm($string = null)
@@ -399,6 +457,34 @@ class TransformationsController extends AppController
                     'Result' => array(
                         'before' => $this->accm($metricas['Transformation']['code_before']),
                         'after' => $this->accm($metricas['Transformation']['code_after']),
+                    ),
+                );
+                $this->Result->save($result);
+            } elseif ($metricas['Metric']['acronym'] == 'CLMAX') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => (int) $this->cl_max($metricas['Transformation']['code_before']),
+                        'after' => (int) $this->cl_max($metricas['Transformation']['code_after']),
+                    ),
+                );
+                $this->Result->save($result);
+            } elseif ($metricas['Metric']['acronym'] == 'CLAVER') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->cl_average($metricas['Transformation']['code_before']),
+                        'after' => $this->cl_average($metricas['Transformation']['code_after']),
+                    ),
+                );
+                $this->Result->save($result);
+            }
+            elseif ($metricas['Metric']['acronym'] == 'QTDIDENT') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->qtd_identifiers($metricas['Transformation']['code_before']),
+                        'after' => $this->qtd_identifiers($metricas['Transformation']['code_after']),
                     ),
                 );
                 $this->Result->save($result);
