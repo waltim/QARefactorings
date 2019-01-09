@@ -354,6 +354,156 @@ class TransformationsController extends AppController
         return $numLoc;
     }
 
+    public function countblanklines($string)
+    {
+        $str = explode("<br/>", $string);
+        $arrayComp = array();
+        foreach ($str as $value) {
+            $value = preg_replace('/\s+/', '', $value);
+            $value = trim($value);
+            if ($value !== '') {
+                $arrayComp[] = 0;
+            } else {
+                $arrayComp[] = 1;
+            }
+        }
+        return array_sum($arrayComp);
+    }
+
+    public function countatribution_max($string)
+    {
+        $str = explode("<br/>", $string);
+        $arrayComp = array();
+        foreach ($str as $value) {
+            $occ1 = substr_count($value, ' = ');
+            $arrayComp[] = $occ1;
+        }
+        return max($arrayComp);
+    }
+
+    public function countatribution_avg($string)
+    {
+        $str = explode("<br/>", $string);
+        $arrayComp = array();
+        $average = 0;
+        foreach ($str as $value) {
+            $occ1 = substr_count($value, ' = ');
+            $arrayComp[] = $occ1;
+        }
+        if (max($arrayComp) > 0) {
+            $arrayComp = array_filter($arrayComp);
+            $average = array_sum($arrayComp) / count($arrayComp);
+        }
+        return $average;
+    }
+
+    public function countcomparators_max($string)
+    {
+        $str = explode("<br/>", $string);
+        $arrayComp = array();
+        foreach ($str as $value) {
+            $occ1 = substr_count($value, '==');
+            $occ1 += substr_count($value, '!=');
+            $occ1 += substr_count($value, '!=');
+            $occ1 += substr_count($value, '&gt;');
+            $occ1 += substr_count($value, '&lt;');
+            $occ1 += substr_count($value, '&gt;=');
+            $occ1 += substr_count($value, '&lt;=');
+            $occ1 += substr_count($value, '&&');
+            $occ1 += substr_count($value, '||');
+            $arrayComp[] = $occ1;
+        }
+        return max($arrayComp);
+    }
+
+    public function countcomparators_avg($string)
+    {
+        $str = explode("<br/>", $string);
+        $arrayComp = array();
+        $average = 0;
+        foreach ($str as $value) {
+            $occ1 = substr_count($value, '==');
+            $occ1 += substr_count($value, '!=');
+            $occ1 += substr_count($value, '!=');
+            $occ1 += substr_count($value, '&gt;');
+            $occ1 += substr_count($value, '&lt;');
+            $occ1 += substr_count($value, '&gt;=');
+            $occ1 += substr_count($value, '&lt;=');
+            $occ1 += substr_count($value, '&&');
+            $occ1 += substr_count($value, '||');
+            $arrayComp[] = $occ1;
+        }
+        if (max($arrayComp) > 0) {
+            $arrayComp = array_filter($arrayComp);
+            $average = array_sum($arrayComp) / count($arrayComp);
+        }
+        return $average;
+    }
+
+    public function countoperations_max($string)
+    {
+        $str = explode("<br/>", $string);
+        $arrayComp = array();
+        foreach ($str as $value) {
+            $occ1 = substr_count($value, '+');
+            $occ1 += substr_count($value, '-');
+            $occ1 += substr_count($value, '*');
+            $occ1 += substr_count($value, '%');
+            $occ1 += substr_count($value, '/');
+            $arrayComp[] = $occ1;
+        }
+        return max($arrayComp);
+    }
+
+    public function countoperations_avg($string)
+    {
+        $str = explode("<br/>", $string);
+        $arrayComp = array();
+        $average = 0;
+        foreach ($str as $value) {
+            $occ1 = substr_count($value, '+');
+            $occ1 += substr_count($value, '-');
+            $occ1 += substr_count($value, '*');
+            $occ1 += substr_count($value, '%');
+            $occ1 += substr_count($value, '/');
+            $arrayComp[] = $occ1;
+        }
+        if (max($arrayComp) > 0) {
+            $arrayComp = array_filter($arrayComp);
+            $average = array_sum($arrayComp) / count($arrayComp);
+        }
+        return $average;
+    }
+
+    public function countparents_max($string)
+    {
+        $str = explode("<br/>", $string);
+        $arrayComp = array();
+        foreach ($str as $value) {
+            $occ1 = substr_count($value, '(');
+            $arrayComp[] = $occ1;
+        }
+        return max($arrayComp);
+    }
+
+    public function countparents_avg($string)
+    {
+        $str = explode("<br/>", $string);
+        $arrayComp = array();
+        $average = 0;
+        foreach ($str as $value) {
+            $occ1 = 0;
+            $occ2 = 0;
+            $occ1 = substr_count($value, '(');
+            $arrayComp[] = $occ1;
+        }
+        if (max($arrayComp) > 0) {
+            $arrayComp = array_filter($arrayComp);
+            $average = array_sum($arrayComp) / count($arrayComp);
+        }
+        return $average;
+    }
+
     public function countspaces_max($string)
     {
         $str = explode("<br/>", $string);
@@ -512,17 +662,18 @@ class TransformationsController extends AppController
                 }
             }
             $value = strip_tags($value);
+            $value = str_replace('&gt', ' ', $value);
+            $value = str_replace('&lt', ' ', $value);
             $value = preg_replace('/\s+/', ' ', trim($value));
             $value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
             $value = str_replace('-', ' ', $value);
             $value = str_replace('+', ' ', $value);
             $value = str_replace('%', ' ', $value);
             $value = str_replace('@', ' ', $value);
-            $value = str_replace('>', ' ', $value);
-            $value = str_replace('<', ' ', $value);
 
             $words = explode(" ", $value);
             $words = array_filter($words);
+
             $arrayComp[] = count($words);
         }
         return max($arrayComp);
@@ -543,14 +694,14 @@ class TransformationsController extends AppController
                 }
             }
             $value = strip_tags($value);
+            $value = str_replace('&gt', ' ', $value);
+            $value = str_replace('&lt', ' ', $value);
             $value = preg_replace('/\s+/', ' ', trim($value));
             $value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
             $value = str_replace('-', ' ', $value);
             $value = str_replace('+', ' ', $value);
             $value = str_replace('%', ' ', $value);
             $value = str_replace('@', ' ', $value);
-            $value = str_replace('>', ' ', $value);
-            $value = str_replace('<', ' ', $value);
 
             $words = explode(" ", $value);
             $words = array_filter($words);
@@ -577,19 +728,18 @@ class TransformationsController extends AppController
                 }
             }
             $value = strip_tags($value);
+            $value = str_replace('&gt', ' ', $value);
+            $value = str_replace('&lt', ' ', $value);
             $value = preg_replace('/\s+/', ' ', trim($value));
             $value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
             $value = str_replace('-', ' ', $value);
             $value = str_replace('+', ' ', $value);
             $value = str_replace('%', ' ', $value);
             $value = str_replace('@', ' ', $value);
-            $value = str_replace('>', ' ', $value);
-            $value = str_replace('<', ' ', $value);
 
             $words = explode(" ", $value);
             $words = array_filter($words);
             $words = array_unique($words);
-
             $arrayComp[] = count($words);
         }
         return max($arrayComp);
@@ -609,14 +759,14 @@ class TransformationsController extends AppController
                 }
             }
             $value = strip_tags($value);
+            $value = str_replace('&gt', ' ', $value);
+            $value = str_replace('&lt', ' ', $value);
             $value = preg_replace('/\s+/', ' ', trim($value));
             $value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
             $value = str_replace('-', ' ', $value);
             $value = str_replace('+', ' ', $value);
             $value = str_replace('%', ' ', $value);
             $value = str_replace('@', ' ', $value);
-            $value = str_replace('>', ' ', $value);
-            $value = str_replace('<', ' ', $value);
 
             $words = explode(" ", $value);
             $words = array_filter($words);
@@ -653,7 +803,7 @@ class TransformationsController extends AppController
     {
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
         $keywords = explode(',', $keywords);
-
+        $average = 0;
         $str = explode("<br/>", $string);
         $arrayComp = array();
         foreach ($str as $value) {
@@ -664,11 +814,11 @@ class TransformationsController extends AppController
                 }
             }$arrayComp[] = $count;
         }
-        if (count($arrayComp)) {
+        if (max($arrayComp) > 0) {
             $arrayComp = array_filter($arrayComp);
             $average = array_sum($arrayComp) / count($arrayComp);
-            return $average;
         }
+        return $average;
     }
 
     public function cl_max($string = null)
@@ -813,7 +963,7 @@ class TransformationsController extends AppController
                     ),
                 );
                 $this->Result->save($result);
-            }elseif ($metricas['Metric']['acronym'] == 'QTDPERIODS') {
+            } elseif ($metricas['Metric']['acronym'] == 'QTDPERIODS') {
                 $this->Result->id = $metricas['Result']['id'];
                 $result = array(
                     'Result' => array(
@@ -824,7 +974,7 @@ class TransformationsController extends AppController
                     ),
                 );
                 $this->Result->save($result);
-            }elseif ($metricas['Metric']['acronym'] == 'QTDVIRGULAS') {
+            } elseif ($metricas['Metric']['acronym'] == 'QTDVIRGULAS') {
                 $this->Result->id = $metricas['Result']['id'];
                 $result = array(
                     'Result' => array(
@@ -835,8 +985,7 @@ class TransformationsController extends AppController
                     ),
                 );
                 $this->Result->save($result);
-            }
-            elseif ($metricas['Metric']['acronym'] == 'QTDSPACES') {
+            } elseif ($metricas['Metric']['acronym'] == 'QTDSPACES') {
                 $this->Result->id = $metricas['Result']['id'];
                 $result = array(
                     'Result' => array(
@@ -844,6 +993,59 @@ class TransformationsController extends AppController
                         'after' => $this->countspaces_max($metricas['Transformation']['code_after']),
                         'avg_before' => $this->countspaces_avg($metricas['Transformation']['code_before']),
                         'avg_after' => $this->countspaces_avg($metricas['Transformation']['code_after']),
+                    ),
+                );
+                $this->Result->save($result);
+            } elseif ($metricas['Metric']['acronym'] == 'QTDPARENTHESES') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->countparents_max($metricas['Transformation']['code_before']),
+                        'after' => $this->countparents_max($metricas['Transformation']['code_after']),
+                        'avg_before' => $this->countparents_avg($metricas['Transformation']['code_before']),
+                        'avg_after' => $this->countparents_avg($metricas['Transformation']['code_after']),
+                    ),
+                );
+                $this->Result->save($result);
+            } elseif ($metricas['Metric']['acronym'] == 'QTDCOMPARATIONS') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->countcomparators_max($metricas['Transformation']['code_before']),
+                        'after' => $this->countcomparators_max($metricas['Transformation']['code_after']),
+                        'avg_before' => $this->countcomparators_avg($metricas['Transformation']['code_before']),
+                        'avg_after' => $this->countcomparators_avg($metricas['Transformation']['code_after']),
+                    ),
+                );
+                $this->Result->save($result);
+            } elseif ($metricas['Metric']['acronym'] == 'QTDATRIBUTIONS') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->countatribution_max($metricas['Transformation']['code_before']),
+                        'after' => $this->countatribution_max($metricas['Transformation']['code_after']),
+                        'avg_before' => $this->countatribution_avg($metricas['Transformation']['code_before']),
+                        'avg_after' => $this->countatribution_avg($metricas['Transformation']['code_after']),
+                    ),
+                );
+                $this->Result->save($result);
+            } elseif ($metricas['Metric']['acronym'] == 'QTDBLANKLINES') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->countblanklines($metricas['Transformation']['code_before']),
+                        'after' => $this->countblanklines($metricas['Transformation']['code_after']),
+                    ),
+                );
+                $this->Result->save($result);
+            } elseif ($metricas['Metric']['acronym'] == 'QTDARITHMETICS') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->countoperations_max($metricas['Transformation']['code_before']),
+                        'after' => $this->countoperations_max($metricas['Transformation']['code_after']),
+                        'avg_before' => $this->countoperations_avg($metricas['Transformation']['code_before']),
+                        'avg_after' => $this->countoperations_avg($metricas['Transformation']['code_after']),
                     ),
                 );
                 $this->Result->save($result);

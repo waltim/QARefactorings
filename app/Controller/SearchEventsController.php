@@ -71,6 +71,7 @@ class SearchEventsController extends AppController
     // public function capturaCodigo($pesquisa = null, $transformationType = null, $language = null, $url = null, $start = null, $end = null, $metricas = null)
     public function capturaCodigo($pesquisa = null, $language = null, $url = null, $start = null, $end = null, $metricas = null)
     {
+        $language = 1;
         $start = strtoupper($start);
         $end = strtoupper($end);
         $transformationType = null;
