@@ -65,6 +65,29 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Programação funcional</label>
+                            <div class="col-sm-4">
+                                <select name="data[User][functional_program]" required class="form-control">
+                                    <option disabled selected value> -- experiência --</option>
+                                    <option value="NC">Nunca programei em linguagens funcionais</option>
+                                    <option value="1">Menos de um ano</option>
+                                    <option value="1-4">De 1 a 4 anos</option>
+                                    <option value="4-5">De 4 a 5 anos</option>
+                                    <option value="5+">mMais que 5 anos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Você conhece/utiliza expressões lambda?</label>
+                            <div class="col-sm-4">
+                                <select name="data[User][lambda_exp]" required class="form-control">
+                                    <option disabled selected value> -- selecione uma resposta --</option>
+                                    <option value="S">Sim</option>
+                                    <option value="N">Não</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label">Formação</label>
                             <div class="col-sm-4">
                                 <select name="data[User][formation]" required class="form-control">

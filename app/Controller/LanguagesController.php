@@ -35,7 +35,9 @@ class LanguagesController extends AppController
                     'User' => array(
                         'id' => $this->Session->read('Auth.User.id'),
                         'formation' => $this->request->data['User']['formation'],
-                        'profession' => $this->request->data['User']['profession']
+                        'profession' => $this->request->data['User']['profession'],
+                        'lambda_exp' => $this->request->data['User']['lambda_exp'],
+                        'functional_program' => $this->request->data['User']['functional_program']
                     )
                 );
 
