@@ -157,7 +157,7 @@
             </td>
             <td>
               <?php
-										$calculo = ceil(($ranking2['User']['trophy'] * 100) / ($totalQuestions/2));
+										$calculo = ceil(($ranking2['User']['trophy'] * 100) / $totalQuestions);
 										if($calculo > 100){
 											$calculo = 100;
 										}

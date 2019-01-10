@@ -149,9 +149,11 @@
                             <div class="form-group text-center" style="font-size: 18px;">
                             <div class="form-group">
                             <label>Justificativa (Opcional)</label>
-                                <textarea rows="5" maxlength="1200" name="data[Answer][justify][]" class="form-control"
+                                <textarea rows="5" maxlength="1200" name="data[Answer][justify][<?= $z ?>]" class="form-control"
                                     placeholder="Detalhe sua resposta aqui."></textarea>
                             </div>
+                            <input type="hidden" id="asdasd<?= $z ?>" name="data[Answer][choice][<?= $z ?>]" value="5"
+                                        class="btn btn-raised btn-default flat-red" type="submit">
                         </div>
                         <?php } ?>
                         <?php $z++;
