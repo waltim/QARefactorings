@@ -132,6 +132,19 @@ if ($this->session->read('Auth.User.UserType.description') === 'administrador') 
     //'../dist/js/pages/dashboard.js'
 ));
 ?>
+<?php
+    $metrics = ClassRegistry::init('Metrics')->find('list');
+    function js_str($s)
+{
+    return '"' . addcslashes($s, "\0..\37\"\\") . '"';
+}
+
+function js_array($array)
+{
+    $temp = array_map('js_str', $array);
+    return '[' . implode(',', $temp) . ']';
+}
+?>
 <?php if ($this->request->params['action'] == 'edit' || $this->request->params['action'] == 'add' || $this->request->params['action'] == 'loadDataCsv') {?>
     <?php echo $this->Html->script(array(
     '../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js',
@@ -143,7 +156,7 @@ if ($this->session->read('Auth.User.UserType.description') === 'administrador') 
             $('.textarea').wysihtml5()
         })
         $(function () {
-            var arrayOfValues = ["1", "2", "4"];
+            var arrayOfValues = <?=js_array($metrics), ';'?>;
             $('.select2').val(arrayOfValues)
             $('.select2').select2()
         })

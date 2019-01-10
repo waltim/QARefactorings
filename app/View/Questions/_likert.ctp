@@ -72,8 +72,8 @@
                     <form id="reused_form" method="post" action="<?= $this->webroot ?>questions/likert">
                         <input type="hidden" name="data[Answer][start_time]" value="<?= $tempo = date('H:i:s'); ?>">
                         <?php $z = 1;
-                            foreach ($question['Result']['ResultQuestion'] as $key => $questoes) {?>
-                        <?php if ($questoes['Question']['question_type_id'] == 6) { ?>
+                            foreach ($question['Result']['ResultQuestion'] as $key => $questoes) { ?>
+                        <?php if ($questoes['Question']['id'] == 1) { ?>
                         <input type="hidden" id="result-<?= $z ?>" name="data[Answer][result_question_id][]" value="<?= $question['Result']['ResultQuestion'][$key]['id']; ?>">
                         <div id="questao-<?= $z ?>">
                             <div class="form-group text-center">
@@ -83,21 +83,21 @@
                             </div>
                             <div class="form-group text-center" style="font-size: 18px;">
                                 <div class="borda-radio">
-                                    <input type="radio" required="required" value="OP1" name="check" id="check">
-                                    <label for="check">Código antigo</label>
+                                    <input type="radio" required="required" value="N" name="check" id="check">
+                                    <label for="check">Não</label>
                                 </div>
                                 <div class="borda-radio">
-                                    <input type="radio" name="check" id="check1" value="OP2">
-                                    <label for="check1">Código transformado</label>
+                                    <input type="radio" name="check" id="check1" value="S">
+                                    <label for="check1">Sim</label>
                                 </div>
                             </div>
-                            <!-- <div class="form-group">
+                            <div class="form-group">
                                 <label>Justificativa (Opcional)</label>
                                 <textarea rows="5" id="text-justifique" maxlength="1200" name="data[Answer][justify][]"
                                     class="form-control" placeholder="Detalhe sua escolha aqui."></textarea>
-                            </div> -->
+                            </div>
                         </div>
-                        <?php } elseif($questoes['Question']['question_type_id'] == 4) { ?>
+                        <?php } else { ?>
                         <input type="hidden" id="result-<?= $z ?>" name="data[Answer][result_question_id][]" value="<?= $question['Result']['ResultQuestion'][$key]['id']; ?>">
                         <div id="questao-<?= $z ?>">
                             <div class="form-group text-center">
@@ -132,25 +132,10 @@
                                     <label for="CP<?= $z ?>">Concordo plenamente</label>
                                 </div>
                             </div>
-                            <!-- <div class="form-group">
+                            <div class="form-group">
                                 <label>Justificativa (Opcional)</label>
                                 <textarea rows="5" maxlength="1200" name="data[Answer][justify][]" class="form-control"
                                     placeholder="Detalhe sua escolha aqui."></textarea>
-                            </div> -->
-                        </div>
-                        <?php } elseif($questoes['Question']['question_type_id'] == 2) { ?>
-                        <input type="hidden" id="result-<?= $z ?>" name="data[Answer][result_question_id][]" value="<?= $question['Result']['ResultQuestion'][$key]['id']; ?>">
-                        <div id="questao-<?= $z ?>">
-                            <div class="form-group text-center">
-                                <h3>
-                                    <?= $questoes['Question']['description']; ?>
-                                </h3>
-                            </div>
-                            <div class="form-group text-center" style="font-size: 18px;">
-                            <div class="form-group">
-                            <label>Justificativa (Opcional)</label>
-                                <textarea rows="5" maxlength="1200" name="data[Answer][justify][]" class="form-control"
-                                    placeholder="Detalhe sua resposta aqui."></textarea>
                             </div>
                         </div>
                         <?php } ?>
@@ -165,11 +150,11 @@
                                 Responder
                             </button>
                         </a>
-                        <!-- <a href="<?= $this->webroot ?>questions/responder" class="pull-right">
+                        <a href="<?= $this->webroot ?>questions/responder" class="pull-right">
                             <button value="pular" formnovalidate name="data[Answer][botao]" class="btn btn-raised btn-default">Pular
                                 questão
                             </button>
-                        </a> -->
+                        </a>
                     </form>
                 </div>
             </div>

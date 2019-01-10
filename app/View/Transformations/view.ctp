@@ -141,11 +141,38 @@
                     <h3 class="timeline-header"><a>Detalhe e resultados</a></h3>
 
                     <div class="timeline-body">
-                        <?php foreach ($quantitativas as $key => $metrica) { ?>
-                            <p><b><?= $metrica['Metric']['acronym'] ?>:</b> <?= $metrica['Metric']['description'] ?></p>
-                            <b>Resultados</b> --> <b>Antes:</b> <?= $metrica['Result']['before']; ?> |
-                            <b>Depois:</b> <?= $metrica['Result']['after']; ?>
-                        <?php } ?>
+                    <table class="table">
+                    <thead class="thead-dark">        
+                            <tr>
+                                <th>Métrica</th>
+								<th>Antes</th>
+								<th>Depois</th>
+                                <th>Média antes</th>
+                                <th>Média depois</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                            <?php foreach ($quantitativas as $key => $metrica) { ?>
+							<tr>
+                                <td style="border: 1px solid #444;">
+                                <b><?= $metrica['Metric']['description'] ?></b>
+								</td>
+								<td style="border: 1px solid #444;">
+                                <?= $metrica['Result']['before']; ?>
+								</td>
+								<td style="border: 1px solid #444;">
+                                <?= $metrica['Result']['after']; ?>
+                                </td>
+                                <td style="border: 1px solid #444;">
+                                <?= number_format($metrica['Result']['avg_before'], 2, '.', ''); ?>
+                                </td>
+                                <td style="border: 1px solid #444;">
+                                <?= number_format($metrica['Result']['avg_after'], 2, '.', ''); ?>
+								</td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+						</table>
                     </div>
                     <div class="timeline-footer">
                         .

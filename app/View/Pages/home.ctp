@@ -106,7 +106,7 @@
             <th style="width: 40px">Total</th>
           </tr>
           <?php $position = 1;
-							foreach ($ranking as $user) { ?>
+							foreach ($ranking as $user) { if($user['User']['trophy'] > 0){ ?>
           <tr>
             <td>
               <?= $position ?>.</td>
@@ -115,7 +115,7 @@
             </td>
             <td>
               <?php
-										$calculo = ceil(($user['User']['trophy'] * 100) / $totalQuestions);
+										$calculo = ceil(($user['User']['trophy'] * 100) / ($totalQuestions/2));
 										if($calculo > 100){
 											$calculo = 100;
 										}
@@ -129,7 +129,7 @@
                 <?= $user['User']['trophy']; ?></span></td>
           </tr>
           <?php $position++;
-						} ?>
+						}} ?>
         </table>
       </div>
       <!-- /.box-body -->
@@ -157,7 +157,7 @@
             </td>
             <td>
               <?php
-										$calculo = ceil(($ranking2['User']['trophy'] * 100) / $totalQuestions);
+										$calculo = ceil(($ranking2['User']['trophy'] * 100) / ($totalQuestions/2));
 										if($calculo > 100){
 											$calculo = 100;
 										}

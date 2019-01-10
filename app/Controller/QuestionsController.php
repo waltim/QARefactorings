@@ -12,7 +12,7 @@ class QuestionsController extends AppController
         } elseif($this->action == 'likert') {
             $this->layout = 'survey';
         }else{
-
+            $this->layout = 'admin';
         }
         $this->loadModel('Transformation');
         $this->loadModel('Result');
@@ -272,7 +272,7 @@ class QuestionsController extends AppController
             }
         }
 
-        $respondidas = $this->Answer->find('all', array(
+        $respondidas = $this->Answer->find('count', array(
             'conditions' => array(
                 'Answer.user_id' => $this->Auth->user('id'),
             ),
@@ -297,18 +297,26 @@ class QuestionsController extends AppController
             $arrayFiltrado[$k]['ResultQuestion.id !='] = $ar['ResultQuestion']['id'];
             $k++;
         }
-
-        $question = $this->ResultQuestion->find('first', array(
-            'recursive' => 3,
-            'order' => 'rand()',
-            'conditions' => array(
-                'AND' => $arrayFiltrado,
-            ),
-        ));
-
+        if($this->Auth->user('id') % 2 == 0){
+            $question = $this->ResultQuestion->find('first', array(
+                'recursive' => 3,
+                'order' => array('ResultQuestion.id' => 'asc'),
+                'conditions' => array(
+                    'AND' => $arrayFiltrado,
+                ),
+            ));
+        }else{
+            $question = $this->ResultQuestion->find('first', array(
+                'recursive' => 3,
+                'order' => array('ResultQuestion.id' => 'desc'),
+                'conditions' => array(
+                    'AND' => $arrayFiltrado,
+                ),
+            ));
+        }
         //pr($question['Result']['ResultQuestion']);exit();
 
-        if (empty($question)) {
+        if (empty($question) || $respondidas >= 42) {
             $this->Session->setFlash(__('Você não possui questões para responder, volte mais tarde!'), 'Flash/info');
             $this->redirect(array('controller' => 'pages', 'action' => 'home'));
         }
