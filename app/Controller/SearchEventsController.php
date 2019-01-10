@@ -99,11 +99,11 @@ class SearchEventsController extends AppController
             $conteudo = str_replace('<span class="blob-code-inner blob-code-marker-addition">', "+", $conteudo);
             $conteudo = strip_tags($conteudo, '<br>');
             $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\r\n", $conteudo);
-            
+
             $isLambda = strpos($conteudo, '-&gt;');
 
-            if(stristr($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') == false ||
-            stristr($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"') == false || $isLambda == null){
+            if (stristr($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') == false ||
+                stristr($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"') == false || $isLambda == null) {
                 $conecurl = @fopen("$url", "r") or die('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
                 $lin = '';
                 while (!feof($conecurl)) {
@@ -111,7 +111,7 @@ class SearchEventsController extends AppController
                 }
                 fclose($conecurl);
             }
-        }else{
+        } else {
             $stringz = str_replace(" · GitHub", ".html", $stringz);
             if (file_exists($pages . html_entity_decode($stringz, ENT_QUOTES))) {
                 $file = fopen($pages . html_entity_decode($stringz, ENT_QUOTES), "r");
@@ -122,20 +122,22 @@ class SearchEventsController extends AppController
                 fclose($file);
 
                 $inicio = strpos($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') + 323;
-    
+
                 $fim = strpos($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"');
-    
+
                 $quantopula = $fim - $inicio;
                 $conteudo = substr($lin, $inicio, $quantopula);
                 $conteudo = str_replace('<span class="blob-code-inner blob-code-marker-deletion">', "-", $conteudo);
                 $conteudo = str_replace('<span class="blob-code-inner blob-code-marker-addition">', "+", $conteudo);
                 $conteudo = strip_tags($conteudo, '<br>');
                 $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\r\n", $conteudo);
-                
+
+                // pr($conteudo);exit();
+
                 $isLambda = strpos($conteudo, '-&gt;');
-                
-                if(stristr($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') == false ||
-                stristr($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"') == false || $isLambda == null){
+
+                if (stristr($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') == false ||
+                    stristr($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"') == false || $isLambda == null) {
                     $conecurl = @fopen("$url", "r") or die('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
                     $lin = '';
                     while (!feof($conecurl)) {
@@ -143,31 +145,50 @@ class SearchEventsController extends AppController
                     }
                     fclose($conecurl);
                 }
-            }else {
+            } else {
                 $conecurl = @fopen("$url", "r") or die('<center>erro na conexão<br><b>informe o administrador erro 15 </b></center>');
                 $lin = '';
                 while (!feof($conecurl)) {
                     $lin .= fgets($conecurl, 4096);
                 }
                 fclose($conecurl);
+
+                $inicio = strpos($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') + 370;
+
+                $fim = strpos($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"');
+
+                $quantopula = $fim - $inicio;
+                $conteudo = substr($lin, $inicio, $quantopula);
+                
+                $conteudo = str_replace('<td class="blob-code blob-code-deletion">', "-", $conteudo);
+                $conteudo = str_replace('<td class="blob-code blob-code-addition">', "+", $conteudo);
+                $conteudo = strip_tags($conteudo, '<br>');
+                $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\r\n", $conteudo);
+                $conteudo = str_replace(array("\r\n", "\r", "\n"), "<br>", $conteudo);
+                // $conteudo = preg_replace( "/\r|\n/", "", $conteudo);
+                $arrayCont = explode("<br>",$conteudo);
+                $conteudo = '';
+                // pr($arrayCont);exit();
+                foreach($arrayCont as $key => $value){
+                    // pr($value);
+                    if($value == '  -' || $value == '  +'){
+                        $k = $key +1;
+                        $arrayCont[$k] = '    '.$value.$arrayCont[$k];
+                        unset($arrayCont[$key]);
+                    }
+                }
+
+                foreach($arrayCont as $key => $value){
+                    $conteudo .= $value.'<br>';
+                }            
             }
         }
-        // pr($lin);exit();
+        // pr($url);exit();
         if (stristr($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') == false) {
             // $this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
         } elseif (stristr($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"') == false) {
             // $this->Session->setFlash(__("A refatoração: <b>" . $cortaLink[1] . "</b> está com problema e não foi importada. verifique os dados!"), 'Flash/error');
         } else {
-            $inicio = strpos($lin, 'id="' . $cortaLink[1] . $start . '" data-line-number="' . substr($start, 1) . '"') + 323;
-
-            $fim = strpos($lin, 'id="' . $cortaLink[1] . $end . '" data-line-number="' . substr($end, 1) . '"');
-
-            $quantopula = $fim - $inicio;
-            $conteudo = substr($lin, $inicio, $quantopula);
-            $conteudo = str_replace('<span class="blob-code-inner blob-code-marker-deletion">', "-", $conteudo);
-            $conteudo = str_replace('<span class="blob-code-inner blob-code-marker-addition">', "+", $conteudo);
-            $conteudo = strip_tags($conteudo, '<br>');
-            $conteudo = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\r\n", $conteudo);
             
             $isLambda = strpos($conteudo, '-&gt;');
 
@@ -190,15 +211,15 @@ class SearchEventsController extends AppController
                 $transformationType = 6;
             } elseif ($tokenFilter != null && $tokenFlatMap != null) {
                 $transformationType = 11;
-            }elseif ($tokenMap != null && $tokenFlatMap != null) {
+            } elseif ($tokenMap != null && $tokenFlatMap != null) {
                 $transformationType = 13;
-            }elseif ($tokenForeach != null && $tokenFlatMap != null) {
+            } elseif ($tokenForeach != null && $tokenFlatMap != null) {
                 $transformationType = 14;
-            }elseif ($tokenMap != null && $tokenCount != null) {
+            } elseif ($tokenMap != null && $tokenCount != null) {
                 $transformationType = 15;
-            }elseif ($tokenFilter != null && $tokenForeach != null) {
+            } elseif ($tokenFilter != null && $tokenForeach != null) {
                 $transformationType = 10;
-            }elseif ($tokenFilter != null) {
+            } elseif ($tokenFilter != null) {
                 $transformationType = 3;
             } elseif ($tokenForeach != null) {
                 $transformationType = 2;
@@ -206,13 +227,13 @@ class SearchEventsController extends AppController
                 $transformationType = 5;
             } elseif ($tokenAnyMatch != null) {
                 $transformationType = 4;
-            }elseif ($tokenFlatMap != null) {
+            } elseif ($tokenFlatMap != null) {
                 $transformationType = 16;
             } else {
                 $transformationType = 1;
             }
-            
-            // pr($transformationType);exit();
+
+            // pr($conteudo);exit();
 
             $conditions = array(
                 'search_event_id' => $pesquisa,
@@ -270,6 +291,8 @@ class SearchEventsController extends AppController
                 $caminho = $caminho . "ab.txt";
                 $fp = fopen($caminho, "w+");
 //                pr($conteudo);
+                $breaks = array("<br />","<br>","<br/>");  
+                $conteudo = str_ireplace($breaks, "\r\n", $conteudo);
                 $escreve = fwrite($fp, utf8_encode($conteudo));
 
                 fclose($fp);
@@ -294,17 +317,21 @@ class SearchEventsController extends AppController
         $Bconteudo = '';
         $Cconteudo = '';
         $Dconteudo = '';
+        $breaks = array("<br />","<br>","<br/>"); 
         while (!feof($fp)) {
             $valor = fgets($fp, 4096);
             if (strstr($valor, "    +")) {
                 $Cconteudo .= $valor . '<br/>';
                 $valor = str_replace("    +", "      ", $valor);
+                $valor = str_ireplace($breaks, "\r\n", $valor);
                 $Bconteudo .= fwrite($b, utf8_encode($valor));
             } elseif (strstr($valor, "    -")) {
                 $Dconteudo .= $valor . '<br/>';
                 $valor = str_replace("    -", "      ", $valor);
+                $valor = str_ireplace($breaks, "\r\n", $valor);
                 $Aconteudo .= fwrite($a, utf8_encode($valor));
             } else {
+                $valor = str_ireplace($breaks, "\r\n", $valor);
                 $Aconteudo .= fwrite($a, utf8_encode($valor));
                 $Bconteudo .= fwrite($b, utf8_encode($valor));
                 $Cconteudo .= $valor . '<br/>';

@@ -148,8 +148,8 @@
                             </div>
                             <div class="form-group text-center" style="font-size: 18px;">
                             <div class="form-group">
-                                <!-- <label>Descreva sua resposta</label> -->
-                                <textarea rows="5" maxlength="1200" required="required" name="data[Answer][justify][]" class="form-control"
+                            <label>Justificativa (Opcional)</label>
+                                <textarea rows="5" maxlength="1200" name="data[Answer][justify][]" class="form-control"
                                     placeholder="Detalhe sua resposta aqui."></textarea>
                             </div>
                         </div>
@@ -165,11 +165,11 @@
                                 Responder
                             </button>
                         </a>
-                        <a href="<?= $this->webroot ?>questions/responder" class="pull-right">
+                        <!-- <a href="<?= $this->webroot ?>questions/responder" class="pull-right">
                             <button value="pular" formnovalidate name="data[Answer][botao]" class="btn btn-raised btn-default">Pular
                                 questão
                             </button>
-                        </a>
+                        </a> -->
                     </form>
                 </div>
             </div>
