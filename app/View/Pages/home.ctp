@@ -160,7 +160,9 @@
 										$calculo = ceil(($ranking2['User']['trophy'] * 100) / $totalQuestions);
 										if($calculo > 100){
 											$calculo = 100;
-										}
+										}elseif($ranking2['User']['trophy'] == 42){
+                      $calculo = 100;
+                    }
 										?>
               <?= $calculo ?>%
               <div class="progress progress-xs progress-striped active">
