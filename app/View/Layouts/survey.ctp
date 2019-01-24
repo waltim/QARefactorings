@@ -158,17 +158,17 @@
 </html>
 
 <script>
-    var offsetHeight = document.getElementById('calcula-height').offsetHeight;
-    if (offsetHeight >= 450) {
-        var element = document.getElementById('calcula-height');
-        element.style.position = null;
-        element.style.block = null;
-        element.style.hidden = null;
-        document.getElementById('calcula-height').style.width = '99%';
-    } else {
-        offsetHeight = offsetHeight + 30;
-        var dm = document.getElementById("distancia-medida").style.marginTop = offsetHeight + "px";
-    }
+    //var offsetHeight = document.getElementById('calcula-height').offsetHeight;
+    //if (offsetHeight >= 100) {
+    //    var element = document.getElementById('calcula-height');
+    //    element.style.position = null;
+    //    element.style.block = null;
+    //    element.style.hidden = null;
+    //    document.getElementById('calcula-height').style.width = '99%';
+   // } else {
+   //     offsetHeight = offsetHeight + 30;
+   //     var dm = document.getElementById("distancia-medida").style.marginTop = offsetHeight + "px";
+   // }
 
     // $("#questao-2").show();
     // $("#questao-3").show();

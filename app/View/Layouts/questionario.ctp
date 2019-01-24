@@ -39,7 +39,7 @@
 <script>
 
     var offsetHeight = document.getElementById('calcula-height').offsetHeight;
-    if(offsetHeight >= 500){
+    if(offsetHeight >= 350){
         var element = document.getElementById('calcula-height');
         element.style.position = null;
         element.style.block = null;

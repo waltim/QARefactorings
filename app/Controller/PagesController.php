@@ -137,7 +137,7 @@ class PagesController extends AppController
 
 		$ranking = $this->User->find('all', array(
 			'order' => array('User.trophy DESC'),
-			'limit' => 10,
+			'limit' => 100,
 			'conditions' => array(
 				'UserType.description !=' => 'administrador',
 				'User.trophy <' => $totalQuestions

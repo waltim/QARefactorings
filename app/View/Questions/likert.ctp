@@ -6,7 +6,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="col-md-12">
-            <div id="calcula-height" style="position: fixed;display: block;overflow: hidden;z-index: +9999; width: 94%;">
+            <div id="calcula-height notranslate">
                 <a class="button-piscando" target="_blank" href="<?= $question['Result']['Transformation']['site_link'].$question['Result']['Transformation']['line_start'] ?>">Abrir
                     código no GitHub</a>
                 <?php
@@ -36,7 +36,7 @@
                                             // Initialize the diff class
                                             $diff = new Diff($a, $b, $options);
                                             ?>
-                <div style="background-color: white; color: black;">
+                <div class="notranslate" style="background-color: white; color: black;">
                     <?php
                                                 // Generate a side by side diff
                                                 require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/SideBySide.php';
