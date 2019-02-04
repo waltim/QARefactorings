@@ -47,7 +47,7 @@
     <?php if ($this->Session->read('Auth.User.UserType.description') == 'candidato') { ?>
       <div class="inner">
         <h3>
-          <?= (($transformations*$questions)-$answers)/$questions ?>
+          <?= ((($transformations*$questions)-$answers)/$questions)-9 ?>
         </h3>
 
         <p>Transformações a serem avaliadas </p>
@@ -116,7 +116,7 @@
             <td>
               <?php
 										$calculo = ceil(($user['User']['trophy'] * 100) / ($totalQuestions/2));
-										if($calculo > 100){
+										if($calculo > 42){
 											$calculo = 100;
 										}
 										?>
@@ -157,11 +157,11 @@
             </td>
             <td>
               <?php
-										$calculo = ceil(($ranking2['User']['trophy'] * 100) / $totalQuestions);
-										if($calculo > 100){
-											$calculo = 100;
-										}
-										?>
+				$calculo = ceil(($ranking2['User']['trophy'] * 100) / $totalQuestions);
+				if($calculo > 100 || $ranking2['User']['trophy'] == 42){
+					$calculo = 100;
+				}
+			  ?>
               <?= $calculo ?>%
               <div class="progress progress-xs progress-striped active">
                 <div class="progress-bar progress-bar-primary" style="width: <?= $calculo ?>%"></div>
@@ -179,15 +179,15 @@
   <div class="col-md-12">
     <div class="box">
       <div class="box-header">
-        <h3 class="box-title">Arrecadação de fundos para o Projeto Educar Capoeira</h3>
+        <h1 class="box-title" style="font-size: 30px!important">OBRIGADO PELA CONTRIBUIÇÃO! =)</h1>
       </div>
       <!-- /.box-header -->
       <div class="box-body no-padding">
         <p style="text-align:justify; font-weight: 600; font-size: 16px;">
           Além da contribuição acadêmica através do projeto de pesquisa,
           Os pesquisadores responsáveis decidiram realizar a doação de um valor (quantia em dinheiro)
-          arrecadada durante a execução do Survey. Foi decidido que será doado ao Projeto Educar Capoeira R$ 10,00
-          para cada participante que responder as questões do Survey até o final.
+          arrecadada durante a execução do Survey. Foi decidido que será doado ao Projeto Educar Capoeira R$ 500,00 (quinhentos reais)
+          ao fim da execução do Survey.
         </p>
         <!-- /.box-body -->
       </div>

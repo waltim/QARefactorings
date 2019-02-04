@@ -48,8 +48,8 @@ class AppController extends Controller
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
-		//$this->Auth->allow('login', 'register', 'forgot');
-		$this->Auth->allow('login');
+		$this->Auth->allow('login', 'register');
+//		$this->Auth->allow('login');
 	}
 
 	public function isAuthorized($user)

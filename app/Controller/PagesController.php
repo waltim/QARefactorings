@@ -43,6 +43,10 @@ class PagesController extends AppController
 	{
 		parent::beforeFilter();
 		$this->layout = 'admin';
+//		pr($this->Auth->user());exit();
+		if($this->Auth->user('trophy') < 42 && $this->Auth->user('UserType.description') == 'candidato'){
+            $this->redirect(array('controller' => 'questions', 'action' => 'likert'));
+        }
 	}
 
 	/**
@@ -137,7 +141,7 @@ class PagesController extends AppController
 
 		$ranking = $this->User->find('all', array(
 			'order' => array('User.trophy DESC'),
-			'limit' => 10,
+			'limit' => 100,
 			'conditions' => array(
 				'UserType.description !=' => 'administrador',
 				'User.trophy <' => $totalQuestions

@@ -196,7 +196,29 @@ class QuestionsController extends AppController
             $this->request->data['Answer']['choice'][0] = $this->request->data['check'];
             unset($this->request->data['check']);
             ksort($this->request->data['Answer']['choice']);
-            // pr($this->request->data['Answer']);exit();
+//            pr($this->request->data['Answer']['result_question_id']);
+            $arr = array();
+            $arr[0] = $this->request->data['Answer']['result_question_id'][5];
+            unset($this->request->data['Answer']['result_question_id'][5]);
+
+            $arr[1] = $this->request->data['Answer']['result_question_id'][0];
+            unset($this->request->data['Answer']['result_question_id'][0]);
+            $arr[2] = $this->request->data['Answer']['result_question_id'][1];
+            unset($this->request->data['Answer']['result_question_id'][1]);
+            $arr[3] = $this->request->data['Answer']['result_question_id'][2];
+            unset($this->request->data['Answer']['result_question_id'][2]);
+            $arr[4] = $this->request->data['Answer']['result_question_id'][3];
+            unset($this->request->data['Answer']['result_question_id'][3]);
+            $arr[5] = $this->request->data['Answer']['result_question_id'][4];
+            unset($this->request->data['Answer']['result_question_id'][4]);
+
+            $arr[6] = $this->request->data['Answer']['result_question_id'][6];
+            unset($this->request->data['Answer']['result_question_id'][6]);
+
+//            pr($this->request->data['Answer']['result_question_id']);
+            $this->request->data['Answer']['result_question_id'] = $arr;
+//            pr($this->request->data['Answer']['choice']);
+//            pr($this->request->data['Answer']['result_question_id']);exit();
             $this->request->data['Answer']['user_id'] = $this->Auth->user('id');
             if ($this->request->data['Answer']['choice'][0] == "N") {
                 foreach ($this->request->data['Answer']['choice'] as $key => $cho) {
@@ -210,7 +232,7 @@ class QuestionsController extends AppController
                     $this->request->data['Answer']['justify'][$key] = 'N/A';
                 }
             }
-        //    pr($this->request->data);exit();
+//            pr($this->request->data);exit();
             if ($this->request->data['Answer']['botao'] == 'pular') {
                 $this->redirect(array('action' => 'likert'));
             }
@@ -363,7 +385,7 @@ class QuestionsController extends AppController
         ));
 
         if ($userLanguage < 1) {
-            $this->Session->setFlash(__('Qual sua experiência com a linguagem abaixo?'), 'Flash/info');
+            $this->Session->setFlash(__('Por favor, preencha os dados abaixo para iniciar o survey.'), 'Flash/info');
             $this->redirect(array('controller' => 'languages', 'action' => 'languages', $question['Result']['Transformation']['language_id']));
         }
         $this->set('question', $question);

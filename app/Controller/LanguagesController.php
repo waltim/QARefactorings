@@ -37,9 +37,12 @@ class LanguagesController extends AppController
                         'formation' => $this->request->data['User']['formation'],
                         'profession' => $this->request->data['User']['profession'],
                         'lambda_exp' => $this->request->data['User']['lambda_exp'],
-                        'functional_program' => $this->request->data['User']['functional_program']
+                        'functional_program' => $this->request->data['User']['functional_program'],
+                        'sex' => $this->request->data['User']['sex']
                     )
                 );
+
+//                pr($update);exit();
 
                 $this->User->save($update);
                 // $this->Session->setFlash(__('Experiência vinculada com sucesso.'), 'Flash/success');

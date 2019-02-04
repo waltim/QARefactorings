@@ -3,6 +3,7 @@ App::uses('AppModel', 'Model', 'AuthComponent', 'Controller/Component');
 
 class User extends AppModel
 {
+	public $actsAs = array('Containable');
 
 	public $displayField = 'username';
 
