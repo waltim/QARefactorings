@@ -43,6 +43,10 @@ class PagesController extends AppController
 	{
 		parent::beforeFilter();
 		$this->layout = 'admin';
+//		pr($this->Auth->user());exit();
+		if($this->Auth->user('trophy') < 42 && $this->Auth->user('UserType.description') == 'candidato'){
+            $this->redirect(array('controller' => 'questions', 'action' => 'likert'));
+        }
 	}
 
 	/**

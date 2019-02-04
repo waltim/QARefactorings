@@ -385,7 +385,7 @@ class QuestionsController extends AppController
         ));
 
         if ($userLanguage < 1) {
-            $this->Session->setFlash(__('Qual sua experiência com a linguagem abaixo?'), 'Flash/info');
+            $this->Session->setFlash(__('Por favor, preencha os dados abaixo para iniciar o survey.'), 'Flash/info');
             $this->redirect(array('controller' => 'languages', 'action' => 'languages', $question['Result']['Transformation']['language_id']));
         }
         $this->set('question', $question);

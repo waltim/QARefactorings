@@ -32,13 +32,15 @@
                         sobre os trechos de código apresentados no topo da tela.<br>
                         - Os trechos de código estão organizados em: o <b>código anterior</b> (código antes da
                         alteração para adição das novas construções) e
-                        o <b>código transformado</b> (depois da alteração e introdução de expressões lambda ao trecho).<br>
+                        o <b>código transformado</b> (depois da alteração e introdução de expressões lambda ao
+                        trecho).<br>
                         - Logo abaixo o participador terá 5 opções para informar seu nível concordância/discordância de
                         acordo com
                         sua observação em relação aos dois códigos apresentados.<br>
                         - Além das opções a serem selecionadas, o participador poderá informar o motivo de sua escolha
                         através
-                        de um campo de texto (<b>Opcional, mas de extrema importância para contribuição com a pesquisa</b>)
+                        de um campo de texto (<b>Opcional, mas de extrema importância para contribuição com a
+                            pesquisa</b>)
                         logo abaixo das opções.
 
                     </p>
@@ -78,7 +80,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-2 control-label">Você conhece/utiliza expressões lambda?</label>
+                            <label for="inputEmail3" class="col-sm-2 control-label">Você conhece/utiliza expressões
+                                lambda?</label>
                             <div class="col-sm-4">
                                 <select name="data[User][lambda_exp]" required class="form-control">
                                     <option disabled selected value> -- selecione uma resposta --</option>
@@ -118,11 +121,24 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Sexo</label>
+                            <div class="col-sm-4">
+                                <select name="data[User][sex]" required class="form-control">
+                                    <option disabled selected value> -- Sexo --</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Feminino">Feminino</option>
+                                    <option value="Não informado">Não informar</option>
+                                </select>
+                            </div>
+                            <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <button type="submit" name="data[UsersLanguage][languages_id]" value="<?= $linguagem['Language']['id']; ?>"
-                            class="btn btn-info pull-right">Salvar
+                        <button type="submit" name="data[UsersLanguage][languages_id]"
+                                value="<?= $linguagem['Language']['id']; ?>"
+                                class="btn btn-info pull-right">Salvar
                         </button>
                     </div>
                     <!-- /.box-footer -->

@@ -55,10 +55,7 @@
                         </li> -->
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-left">
-                                <a href="<?= $this->webroot ?>users/alterar" class="btn btn-default btn-flat">Alterar
-                                    dados</a>
-                            </div>
+
                             <div class="pull-right">
                                 <a href="<?= $this->webroot ?>users/logout" class="btn btn-default btn-flat">Sair</a>
                             </div>
