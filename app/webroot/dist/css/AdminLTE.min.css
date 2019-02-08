@@ -5784,6 +5784,14 @@ table.text-center th {
     margin: 10px!important;
     padding: 12px!important;
 }
+
+.borda-radio-likertAgrupada {
+    /* border: solid 2px whitesmoke; */
+    display: inline-block;
+    margin: 10px!important;
+    /* padding: 12px!important; */
+}
+
 .assaltante{
     color: white;
     font-size: 16px;

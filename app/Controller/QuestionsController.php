@@ -106,11 +106,28 @@ class QuestionsController extends AppController
                     ),
                 ));
                 $questoes = $this->Participant->find('all', array(
-                    'conditions' => array(
-                        'Participant.search_event_id' => $id,
-                        // 'Participant.participant_type_id' => 4
+                    'contain' => array(
+                        'User',
+                        'SearchEvent',
+                        'Question'
                     ),
+                    'joins' => array(
+                        array(
+                            'table' => 'questions',
+                            'alias' => 'Question',
+                            'type' => 'INNER',
+                            'conditions' => array(
+                                'Question.participant_id = Participant.id'
+                            )
+                        )
+                    ),
+                    'conditions' => array(
+                        'Participant.search_event_id' => $id
+                    ),
+                    'order' => 'Question.id ASC'
                 ));
+
+//                pr($questoes);exit();
 
                 foreach ($questoes as $participations) {
                     foreach ($participations['Question'] as $question) {
@@ -196,6 +213,8 @@ class QuestionsController extends AppController
             $this->request->data['Answer']['choice'][0] = $this->request->data['check'];
             unset($this->request->data['check']);
             ksort($this->request->data['Answer']['choice']);
+
+//            pr($this->request->data['Answer']);
 //            pr($this->request->data['Answer']['result_question_id']);
             $arr = array();
             $arr[0] = $this->request->data['Answer']['result_question_id'][5];
@@ -215,10 +234,20 @@ class QuestionsController extends AppController
             $arr[6] = $this->request->data['Answer']['result_question_id'][6];
             unset($this->request->data['Answer']['result_question_id'][6]);
 
-//            pr($this->request->data['Answer']['result_question_id']);
-            $this->request->data['Answer']['result_question_id'] = $arr;
+
+            $arr[7] = $this->request->data['Answer']['result_question_id'][7];
+            unset($this->request->data['Answer']['result_question_id'][7]);
+            $arr[8] = $this->request->data['Answer']['result_question_id'][8];
+            unset($this->request->data['Answer']['result_question_id'][8]);
+            $arr[9] = $this->request->data['Answer']['result_question_id'][9];
+            unset($this->request->data['Answer']['result_question_id'][9]);
+            $arr[10] = $this->request->data['Answer']['result_question_id'][10];
+            unset($this->request->data['Answer']['result_question_id'][10]);
+
 //            pr($this->request->data['Answer']['choice']);
-//            pr($this->request->data['Answer']['result_question_id']);exit();
+            $this->request->data['Answer']['result_question_id'] = $arr;
+//            pr($arr);
+//            exit();
             $this->request->data['Answer']['user_id'] = $this->Auth->user('id');
             if ($this->request->data['Answer']['choice'][0] == "N") {
                 foreach ($this->request->data['Answer']['choice'] as $key => $cho) {
@@ -252,12 +281,13 @@ class QuestionsController extends AppController
                     ),
                 ),
             ));
+
             if ($contador < 1) {
                 foreach ($this->request->data['Answer']['choice'] as $key => $answer) {
                     $this->Answer->create();
                         $jkey = $key;
                         pr($key);
-                    if (array_key_exists($jkey, $this->request->data['Answer']['justify']) && $key != 7) {
+                    if (array_key_exists($jkey, $this->request->data['Answer']['justify']) && $key != 11) {
                         $Newresp = array(
                             'Answer' => array(
                                 'result_question_id' => $this->request->data['Answer']['result_question_id'][$jkey],
@@ -268,14 +298,14 @@ class QuestionsController extends AppController
                                 'end_time' => $this->request->data['Answer']['end_time'],
                             ),
                         );
-                    }elseif($key == 7){
+                    }elseif($key == 11){
                         $jkey = $key -1;
                         $jkey = $key -1;
                         $Newresp = array(
                             'Answer' => array(
                                 'result_question_id' => $this->request->data['Answer']['result_question_id'][$jkey],
                                 'user_id' => $this->request->data['Answer']['user_id'],
-                                'justify' => $this->request->data['Answer']['justify'][7],
+                                'justify' => $this->request->data['Answer']['justify'][11],
                                 'choice' => 'N/A',
                                 'start_time' => $this->request->data['Answer']['start_time'],
                                 'end_time' => $this->request->data['Answer']['end_time'],
