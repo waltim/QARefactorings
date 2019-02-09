@@ -27,21 +27,19 @@
                         para realização desta pesquisa.</p>
 
                     <h3>INSTRUÇÕES</h3>
-                    <p style="text-align: justify">Para participar desta pesquisa, será necessário que o participador
-                        responda 10 questões
-                        sobre os trechos de código apresentados no topo da tela.<br>
+                    <p style="text-align: justify">Para participar desta pesquisa, será necessário responder 11 questões
+                        para cada par de trechos de código apresentados no topo da tela.<br>
                         - Os trechos de código estão organizados em: o <b>código anterior</b> (código antes da
                         alteração para adição das novas construções) e
                         o <b>código transformado</b> (depois da alteração e introdução de expressões lambda ao
                         trecho).<br>
                         - Logo abaixo o participador terá 5 opções para informar seu nível concordância/discordância de
-                        acordo com
-                        sua observação em relação aos dois códigos apresentados.<br>
-                        - Além das opções a serem selecionadas, o participador poderá informar o motivo de sua escolha
+                        acordo com sua observação em relação aos dois códigos apresentados.<br>
+                        - Além das questões com opções a serem selecionadas, o participante poderá informar o motivo de suas escolhas
                         através
                         de um campo de texto (<b>Opcional, mas de extrema importância para contribuição com a
-                            pesquisa</b>)
-                        logo abaixo das opções.
+                            pesquisa</b>) localizado no fim da página logo abaixo das opções. <br>
+                        - <b>O participante deverá avaliar 6 trechos de código respondendo as 11 questões apresentadas na tela</b>.
 
                     </p>
                 </div>
