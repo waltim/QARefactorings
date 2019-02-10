@@ -107,7 +107,7 @@
             </li> -->
       <li>
         <a class="button-piscando" href="<?= $this->webroot ?>questions/likert">
-          <i class="fa fa-question-circle-o"></i> <span>Responder questões</span>
+          <i class="fa fa-question-circle-o"></i> <span>Answer Questions</span>
         </a>
       </li>
       <!-- <li>

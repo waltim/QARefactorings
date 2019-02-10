@@ -5,48 +5,43 @@
             <!-- Horizontal Form -->
             <div class="box box-info">
                 <div style="margin-left: 8px; margin-right: 8px;">
-                    <h3>OBJETIVO DA PESQUISA</h3>
+                    <h3>Survey Objective</h3>
 
-                    <p style="text-align: justify">Desenvolvedores utilizam IDEs e bibliotecas de transformação
-                        de código para introduzir novas construções de linguagem de programação em
-                        sistemas legados, suportando assim esforços de rejuvenescimento de software.
-                        No entanto, existem alguns fatores que impedem a aplicação de tais ferramentas, incluindo
-                        sugestões inadequadas de ferramentas de refatoração e transformações que não levam a
-                        melhorias efetivas no código-fonte. Dessa forma, o principal objetivo desta pesquisa é
-                        investigar empiricamente
-                        se a adoção de expressões lambda melhora ou não a compreensão do programa—um dos
-                        benefícios esperados pelo uso de expressões lambda em Java.</p>
+                    <p style="text-align: justify">Developers use IDEs and code transformation libraries to introduce
+                        new programming language constructions into legacy systems, thereby supporting software
+                        rejuvenation efforts. However, there are some factors that prevent the application of such
+                        tools, including inadequate suggestions of refactoring tools and transformations that do not
+                        lead to effective improvements in the source code. Therefore, the main purpose of this research
+                        is to investigate empirically whether the adoption of lambda expressions improves or not the
+                        understanding of the program-one of the expected benefits by the use of lambda expressions in
+                        Java.</p>
 
-                    <h3>TERMOS DE CONSENTIMENTO</h3>
+                    <h3>CONSENT TERMS</h3>
                     <p style="text-align: justify; font-size: medium;">
-                        Os participantes não possuem a obrigação de responder o questionário de pesquisa até o fim, <b>
-                            mas é de suma importância
-                            que todas as questões sejam respondidas com o maior grau de seriedade e sinceridade</b>.
-                        Acreditamos que sua participação seja por livre e espontanea vontade. Ao prosseguir para a
-                        próxima tela, você estara concordando com os termos
-                        para realização desta pesquisa.</p>
+                        Participants do not have the obligation to answer the research questionnaire until the end, but
+                        it is of the utmost importance to answer all questions with seriousness and sincerity. We
+                        believe that your attendance is your own free will. By proceeding to the next screen, you agree
+                        to the terms for this research.</p>
 
-                    <h3>INSTRUÇÕES</h3>
-                    <p style="text-align: justify">Para participar desta pesquisa, será necessário que o participador
-                        responda 10 questões
-                        sobre os trechos de código apresentados no topo da tela.<br>
-                        - Os trechos de código estão organizados em: o <b>código anterior</b> (código antes da
-                        alteração para adição das novas construções) e
-                        o <b>código transformado</b> (depois da alteração e introdução de expressões lambda ao
-                        trecho).<br>
-                        - Logo abaixo o participador terá 5 opções para informar seu nível concordância/discordância de
-                        acordo com
-                        sua observação em relação aos dois códigos apresentados.<br>
-                        - Além das opções a serem selecionadas, o participador poderá informar o motivo de sua escolha
-                        através
-                        de um campo de texto (<b>Opcional, mas de extrema importância para contribuição com a
-                            pesquisa</b>)
-                        logo abaixo das opções.
+                    <h3>INSTRUCTIONS</h3>
+                    <p style="text-align: justify">To participate in this survey, it is necessary to answer 11 questions
+                        for each pair of code snippets presented at the top of the screen.<br>
+                        - The code snippets are organized in: the <b>previous code</b> (code before the change to add
+                        the new
+                        constructions) and the <b>transformed code</b> (after the change and introduction of lambda
+                        expressions
+                        to the snippet).<br>
+                        - Below the participant will have 5 options to inform their agreement / disagreement level
+                        according to their observation regarding the two codes presented.<br>
+                        - In addition to the questions with options to be selected, the participant can inform the
+                        reason for their choices through a text field (<b>Optional, but of extreme importance for
+                        contribution to the research</b>) located at the bottom of the page just below the options. <br>
+                        - <b>The participant may evaluate 6 pieces of code answering the 11 questions presented on the screen.</b>.
 
                     </p>
                 </div>
                 <div class="box-header with-border">
-                    <h3 class="box-title">Linguagem
+                    <h3 class="box-title">Language
                         <?= $linguagem['Language']['description']; ?>
                     </h3>
                 </div>
@@ -54,81 +49,80 @@
                 <form class="form-horizontal" method="post" action="<?= $this->webroot ?>languages/languages">
                     <div class="box-body">
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-2 control-label">Tempo de experiência</label>
+                            <label for="inputEmail3" class="col-sm-2 control-label">Time experience</label>
                             <div class="col-sm-4">
                                 <?php echo $this->Form->input('UserLanguage.experience', array(
                                     'type' => 'select',
                                     'label' => false,
-                                    'options' => array('1' => '1 ano', '2' => '2 anos', '3' => '3 anos', '4' => '4 anos', '5' => '5 anos',
-                                        '6' => '6 anos', '7' => '7 anos', '8' => '8 anos', '9' => '9 anos', '10' => '10 anos', '11' => 'mais de 10 anos'),
+                                    'options' => array('1' => '1 year', '2' => '2 years', '3' => '3 years', '4' => '4 years', '5' => '5 years',
+                                        '6' => '6 years', '7' => '7 years', '8' => '8 years', '9' => '9 years', '10' => '10 years', '11' => 'over 10 years'),
                                     'default' => 5,
                                     'class' => 'form-control'
                                 )); ?>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-2 control-label">Programação funcional</label>
+                            <label for="inputEmail3" class="col-sm-2 control-label">functional programming</label>
                             <div class="col-sm-4">
                                 <select name="data[User][functional_program]" required class="form-control">
-                                    <option disabled selected value> -- experiência --</option>
-                                    <option value="NC">Nunca programei em linguagens funcionais</option>
-                                    <option value="1">Menos de um ano</option>
-                                    <option value="1-4">De 1 a 4 anos</option>
-                                    <option value="4-5">De 4 a 5 anos</option>
-                                    <option value="5+">mMais que 5 anos</option>
+                                    <option disabled selected value> -- experience --</option>
+                                    <option value="NC">I never programmed in functional languages</option>
+                                    <option value="1">Less than a year</option>
+                                    <option value="1-4">1 a 4 years</option>
+                                    <option value="4-5">4 a 5 years</option>
+                                    <option value="5+">over 5 years</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-2 control-label">Você conhece/utiliza expressões
-                                lambda?</label>
+                            <label for="inputEmail3" class="col-sm-2 control-label">Do you know / use lambda expressions?</label>
                             <div class="col-sm-4">
                                 <select name="data[User][lambda_exp]" required class="form-control">
-                                    <option disabled selected value> -- selecione uma resposta --</option>
-                                    <option value="S">Sim</option>
-                                    <option value="N">Não</option>
+                                    <option disabled selected value> -- select an answer --</option>
+                                    <option value="S">Yes</option>
+                                    <option value="N">No</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-2 control-label">Formação</label>
+                            <label for="inputEmail3" class="col-sm-2 control-label">Formation</label>
                             <div class="col-sm-4">
                                 <select name="data[User][formation]" required class="form-control">
-                                    <option disabled selected value> -- Formação --</option>
-                                    <option value="EMC">Ensino médio completo</option>
-                                    <option value="SI">Superior incompleto</option>
-                                    <option value="SC">Superior completo</option>
-                                    <option value="PGI">Pós Graduação incompleta</option>
-                                    <option value="PGC">Pós Graduação completa</option>
-                                    <option value="MM">Mestrado</option>
-                                    <option value="DC">Doutorado</option>
-                                    <option value="PDC">Pós Doutorado</option>
+                                    <option disabled selected value> -- Formation --</option>
+                                    <option value="EMC">Complete high school</option>
+                                    <option value="SI">Incomplete higher</option>
+                                    <option value="SC">Graduated</option>
+                                    <option value="PGI">Post incomplete graduation</option>
+                                    <option value="PGC">Complete post graduation</option>
+                                    <option value="MM">Master's degree</option>
+                                    <option value="DC">Doctorate degree</option>
+                                    <option value="PDC">Post Doctoral</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-2 control-label">Profissão</label>
+                            <label for="inputEmail3" class="col-sm-2 control-label">Profession</label>
                             <div class="col-sm-4">
                                 <select name="data[User][profession]" required class="form-control">
-                                    <option disabled selected value> -- Profissão --</option>
-                                    <option value="DJ">Desenvolvedor junior</option>
-                                    <option value="DP">Desenvolvedor pleno</option>
-                                    <option value="DS">Desenvolvedor sênior</option>
-                                    <option value="AD">Analista/Desenvolvedor</option>
-                                    <option value="AS">Analista sênior</option>
+                                    <option disabled selected value> -- Profession --</option>
+                                    <option value="DJ">Developer junior</option>
+                                    <option value="DP">Developer Full</option>
+                                    <option value="DS">Senior Developer</option>
+                                    <option value="AD">Analyst/Developer</option>
+                                    <option value="AS">Senior analyst</option>
                                     <option value="TT">Tester</option>
-                                    <option value="OT">Outros</option>
+                                    <option value="OT">Others</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-2 control-label">Sexo</label>
+                            <label for="inputEmail3" class="col-sm-2 control-label">Sex</label>
                             <div class="col-sm-4">
                                 <select name="data[User][sex]" required class="form-control">
-                                    <option disabled selected value> -- Sexo --</option>
-                                    <option value="Masculino">Masculino</option>
-                                    <option value="Feminino">Feminino</option>
-                                    <option value="Não informado">Não informar</option>
+                                    <option disabled selected value> -- Sex --</option>
+                                    <option value="Masculino">Male</option>
+                                    <option value="Feminino">Female</option>
+                                    <option value="Não informado">Not inform</option>
                                 </select>
                             </div>
                             <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
@@ -138,7 +132,7 @@
                     <div class="box-footer">
                         <button type="submit" name="data[UsersLanguage][languages_id]"
                                 value="<?= $linguagem['Language']['id']; ?>"
-                                class="btn btn-info pull-right">Salvar
+                                class="btn btn-info pull-right">Save
                         </button>
                     </div>
                     <!-- /.box-footer -->

@@ -1,5 +1,5 @@
 <div class="login-box-body">
-    <p class="login-box-msg">Informe seu email para iniciar o questionário</p>
+    <p class="login-box-msg">Enter your email to start the survey</p>
 
     <form action="<?= $this->webroot ?>Users/login" method="post">
       <div class="form-group has-feedback">
@@ -20,7 +20,7 @@
         </div>
         <!-- /.col -->
         <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Começar</button>
+          <button type="submit" class="btn btn-primary btn-block btn-flat">Start</button>
         </div>
         <!-- /.col -->
       </div>
