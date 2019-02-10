@@ -50,7 +50,7 @@
           <?= ((($transformations*$questions)-$answers)/$questions)-9 ?>
         </h3>
 
-        <p>Transformações a serem avaliadas </p>
+        <p>Transformations to be evaluated</p>
       </div>
       <?php
 		  }else{ ?>
@@ -59,7 +59,7 @@
           <?= $answers ?>
         </h3>
 
-        <p>Respostas</p>
+        <p>Answers</p>
       </div>
       <?php
 		  } ?>
@@ -78,7 +78,7 @@
           <?= $questions ?>
         </h3>
         <?php if ($this->Session->read('Auth.User.UserType.description') == 'candidato') { ?>
-        <p>Questões por transformação</p>
+        <p>Transformation issues</p>
         <?php }elseif($this->Session->read('Auth.User.UserType.description') == 'pesquisador'){ ?>
         <p>Minhas questões</p>
         <?php }else{ ?>
@@ -141,14 +141,14 @@
   <div class="col-md-6 pull-right">
     <div class="box">
       <div class="box-header">
-        <h3 class="box-title">Progresso por questões respondidas</h3>
+        <h3 class="box-title">Progress for answered questions</h3>
       </div>
       <!-- /.box-header -->
       <div class="box-body no-padding">
         <table class="table table-condensed">
           <tr>
-            <th>Usuário</th>
-            <th>Progresso</th>
+            <th>User</th>
+            <th>Progress</th>
             <th style="width: 40px">Total</th>
           </tr>
           <tr>
@@ -179,15 +179,15 @@
   <div class="col-md-12">
     <div class="box">
       <div class="box-header">
-        <h1 class="box-title" style="font-size: 30px!important">OBRIGADO PELA CONTRIBUIÇÃO! =)</h1>
+        <h1 class="box-title" style="font-size: 30px!important">Thank you for the contribution! =)</h1>
       </div>
       <!-- /.box-header -->
       <div class="box-body no-padding">
         <p style="text-align:justify; font-weight: 600; font-size: 16px;">
-          Além da contribuição acadêmica através do projeto de pesquisa,
-          Os pesquisadores responsáveis decidiram realizar a doação de um valor (quantia em dinheiro)
-          arrecadada durante a execução do Survey. Foi decidido que será doado ao Projeto Educar Capoeira R$ 500,00 (quinhentos reais)
-          ao fim da execução do Survey.
+            In addition to the academic contribution through the research project, the responsible
+            researchers decided to donate a value (amount in money) collected during the execution of the
+            Survey. It was decided that it will be donated to the Capoeira Educate Project R$ 500.00 (five
+            hundred reais) at the end of the survey.
         </p>
         <!-- /.box-body -->
       </div>

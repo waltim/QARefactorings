@@ -415,7 +415,7 @@ class QuestionsController extends AppController
         //pr($question['Result']['ResultQuestion']);exit();
 
         if (empty($question) || $respondidas >= 66) {
-            $this->Session->setFlash(__('Obrigado por responder até o fim!'), 'Flash/info');
+            $this->Session->setFlash(__('Thank you for responding to the end!'), 'Flash/info');
             $this->redirect(array('controller' => 'pages', 'action' => 'home'));
         }
 
@@ -427,7 +427,7 @@ class QuestionsController extends AppController
         ));
 
         if ($userLanguage < 1) {
-            $this->Session->setFlash(__('Por favor, preencha os dados abaixo para iniciar o survey.'), 'Flash/info');
+            $this->Session->setFlash(__('Please fill in the information below to start the survey.'), 'Flash/info');
             $this->redirect(array('controller' => 'languages', 'action' => 'languages', $question['Result']['Transformation']['language_id']));
         }
         $this->set('question', $question);
