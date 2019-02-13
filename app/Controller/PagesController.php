@@ -49,7 +49,7 @@ class PagesController extends AppController
                     'User.id' => $this->Auth->user('id')
                 )
             ));
-            if ($id['User']['trophy'] < 66 && $id['UserType']['description'] == 'candidato') {
+            if ($id['User']['trophy'] < 60 && $id['UserType']['description'] == 'candidato') {
                 $this->redirect(array('controller' => 'questions', 'action' => 'likert'));
             }
         }
@@ -143,14 +143,15 @@ class PagesController extends AppController
 			$this->set(compact('transformations', 'answers', 'questions'));
 		}
 
-		$totalQuestions = $this->ResultQuestion->find('count');
+		$totalQuestions = $this->Question->find('count');
+//		pr($totalQuestions);exit();
 
 		$ranking = $this->User->find('all', array(
 			'order' => array('User.trophy DESC'),
 			'limit' => 100,
 			'conditions' => array(
 				'UserType.description !=' => 'administrador',
-				'User.trophy <' => $totalQuestions
+//				'User.trophy <' => $totalQuestions
 			)
 		));
 
