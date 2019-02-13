@@ -25,6 +25,10 @@ class AnswersController extends AppController
             $transformations = $this->Transformation->find('all', array(
                 'order' => array('Transformation.id DESC'),
             ));
+//            $transformations = $this->Transformation->find('all', array(
+//                'order' => array('Transformation.id DESC'),
+//                'fields' => 'Transformation.site_link'
+//            ));
         } else {
             $transformations = $this->Transformation->find('all', array(
                 'conditions' => array(
@@ -33,6 +37,18 @@ class AnswersController extends AppController
                 'order' => array('Transformation.id DESC'),
             ));
         }
+//        $arrayLinks = array();
+//        foreach ($transformations as $links) {
+//            $arrayLinks[] = $links['Transformation']['site_link'];
+//        }
+//        $projects = array();
+//        foreach ($arrayLinks as $url){
+//            $pieces = explode("/", $url);
+//            $projects[] = $pieces[3];
+//        }
+//        $names = array_unique($projects);
+//        pr($names);
+//        exit();
         $this->set('pesquisa', $pesquisa);
         $this->set(compact('transformations'));
     }
