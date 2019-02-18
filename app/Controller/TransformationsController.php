@@ -14,6 +14,7 @@ class TransformationsController extends AppController
         $this->loadModel('Question');
         $this->loadModel('Answer');
         $this->loadModel('Transformation');
+        $this->loadModel('SearchEvent');
     }
 
     public function index($pesquisa = null)
@@ -348,15 +349,177 @@ class TransformationsController extends AppController
         $this->set('qualitativas', $qualitativas);
     }
 
+    function array_iunique( $array ) {
+        return array_intersect_key(
+            $array,
+            array_unique( array_map( "strtolower", $array))
+        );
+    }
+
+    public function hl_N2($string = null)
+    {
+        $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
+        $keywords = explode(',', $keywords);
+
+        $operators = " = ,expr++,expr--,++expr,--expr,+expr,-expr,~, ! ,*, / ,%,==,!=, & ,^,|,&&,||,?,:,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
+            "&lt;&lt;,&gt;&gt;,&gt;&gt;&gt;,&lt;&lt;=,&gt;&gt;=,&gt;&gt;&gt;=";
+        $operators = explode(',', $operators);
+
+        $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
+//        pr($str);
+        $arrayComp = array();
+        foreach ($str as $key => $line) {
+            $checkOperators = 0;
+            foreach ($operators as $operator) {
+                if (strstr($line, $operator)) {
+                    $checkOperators++;
+                }
+            }
+            if ($checkOperators >= 1) {
+                $arrayComp[$key] = $line;
+            }
+        }
+        $totalWords = '';
+        foreach ($arrayComp as $kk => $value) {
+            foreach ($keywords as $key) {
+                if (strstr($value, $key)) {
+                    $value = str_replace($key, ' ', $value);
+                }
+            }
+            $value = strip_tags($value);
+            $value = str_replace('&gt', ' ', $value);
+            $value = str_replace('&lt', ' ', $value);
+            $value = preg_replace('/\s+/', ' ', trim($value));
+            $value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
+            $value = str_replace('-', ' ', $value);
+            $value = str_replace('+', ' ', $value);
+            $value = str_replace('%', ' ', $value);
+            $value = str_replace('@', ' ', $value);
+
+            $words = explode(" ", $value);
+            $totalWords .= $value;
+            $words = array_filter($words);
+            $words = array_unique($words);
+            $arrayComp[] = count($words);
+        }
+        $totalWords = str_replace('     ', ' ', $totalWords);
+        $totalWords = str_replace('    ', ' ', $totalWords);
+        $totalWords = str_replace('   ', ' ', $totalWords);
+        $totalWords = str_replace('  ', ' ', $totalWords);
+        $totalWords = explode(' ', $totalWords);
+        $totalWords = array_filter($totalWords);
+        return count($totalWords);
+    }
+
+    public function hln2($string = null)
+    {
+        $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
+        $keywords = explode(',', $keywords);
+
+        $operators = " = ,expr++,expr--,++expr,--expr,+expr,-expr,~, ! ,*, / ,%,==,!=, & ,^,|,&&,||,?,:,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
+            "&lt;&lt;,&gt;&gt;,&gt;&gt;&gt;,&lt;&lt;=,&gt;&gt;=,&gt;&gt;&gt;=";
+        $operators = explode(',', $operators);
+
+        $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
+//        pr($str);
+        $arrayComp = array();
+        foreach ($str as $key => $line) {
+            $checkOperators = 0;
+            foreach ($operators as $operator) {
+                if (strstr($line, $operator)) {
+                    $checkOperators++;
+                }
+            }
+            if ($checkOperators >= 1) {
+                $arrayComp[$key] = $line;
+            }
+        }
+        $totalWords = '';
+        foreach ($arrayComp as $kk => $value) {
+            foreach ($keywords as $key) {
+                if (strstr($value, $key)) {
+                    $value = str_replace($key, ' ', $value);
+                }
+            }
+            $value = strip_tags($value);
+            $value = str_replace('&gt', ' ', $value);
+            $value = str_replace('&lt', ' ', $value);
+            $value = preg_replace('/\s+/', ' ', trim($value));
+            $value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
+            $value = str_replace('-', ' ', $value);
+            $value = str_replace('+', ' ', $value);
+            $value = str_replace('%', ' ', $value);
+            $value = str_replace('@', ' ', $value);
+
+            $words = explode(" ", $value);
+            $totalWords .= $value;
+            $words = array_filter($words);
+            $words = array_unique($words);
+            $arrayComp[] = count($words);
+        }
+        $totalWords = str_replace('     ', ' ', $totalWords);
+        $totalWords = str_replace('    ', ' ', $totalWords);
+        $totalWords = str_replace('   ', ' ', $totalWords);
+        $totalWords = str_replace('  ', ' ', $totalWords);
+        $totalWords = explode(' ', $totalWords);
+        $totalWords = array_filter($totalWords);
+        $totalWords = $this->array_iunique($totalWords);
+        return count($totalWords);
+    }
+
+    public function hln1($string = null)
+    {
+        $operators = " = ,expr++,expr--,++expr,--expr,+expr,-expr,~, ! ,*, / ,%,==,!=, & ,^,|,&&,||,?,:,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
+            "&lt;&lt;,&gt;&gt;,&gt;&gt;&gt;,&lt;&lt;=,&gt;&gt;=,&gt;&gt;&gt;=";
+        $arrayOperators = explode(',', $operators);
+        $list = array();
+//        pr($string);
+        foreach ($arrayOperators as $operator) {
+            $validate = substr_count($string, $operator);
+            if ($validate != 0) {
+                $list[] = $operator;
+            }
+        }
+        return count(array_unique($list));
+    }
+
+    public function hl_N1($string = null)
+    {
+        $operators = " = ,expr++,expr--,++expr,--expr,+expr,-expr,~, ! ,*, / ,%,==,!=, & ,^,|,&&,||,?,:,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
+            "&lt;&lt;,&gt;&gt;,&gt;&gt;&gt;,&lt;&lt;=,&gt;&gt;=,&gt;&gt;&gt;=";
+        $arrayOperators = explode(',', $operators);
+        $list = array();
+//        pr($string);
+        foreach ($arrayOperators as $operator) {
+            $validate = substr_count($string, $operator);
+            if ($validate != 0) {
+                $list[] = $validate;
+            }
+        }
+        return array_sum($list);
+    }
+
     public function locAndAmloc($string = null)
     {
-        $numLoc = substr_count($string, '<br/>') - 1;
+        $numLoc = substr_count($string, '<br/>') - 2;
+        if ($numLoc == -2) {
+            $numLoc = substr_count($string, '<br>') - 3;
+        }
         return $numLoc;
     }
 
     public function countblanklines($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $value = preg_replace('/\s+/', '', $value);
@@ -373,6 +536,9 @@ class TransformationsController extends AppController
     public function countatribution_max($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $occ1 = substr_count($value, ' = ');
@@ -384,6 +550,9 @@ class TransformationsController extends AppController
     public function countatribution_avg($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         $average = 0;
         foreach ($str as $value) {
@@ -400,13 +569,16 @@ class TransformationsController extends AppController
     public function countcomparators_max($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $occ1 = substr_count($value, '==');
             $occ1 += substr_count($value, '!=');
             $occ1 += substr_count($value, '!=');
-            $occ1 += substr_count($value, '&gt;');
-            $occ1 += substr_count($value, '&lt;');
+            $occ1 += substr_count($value, ' &gt; ');
+            $occ1 += substr_count($value, ' &lt; ');
             $occ1 += substr_count($value, '&gt;=');
             $occ1 += substr_count($value, '&lt;=');
             $occ1 += substr_count($value, '&&');
@@ -419,14 +591,17 @@ class TransformationsController extends AppController
     public function countcomparators_avg($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         $average = 0;
         foreach ($str as $value) {
             $occ1 = substr_count($value, '==');
             $occ1 += substr_count($value, '!=');
             $occ1 += substr_count($value, '!=');
-            $occ1 += substr_count($value, '&gt;');
-            $occ1 += substr_count($value, '&lt;');
+            $occ1 += substr_count($value, ' &gt; ');
+            $occ1 += substr_count($value, ' &lt; ');
             $occ1 += substr_count($value, '&gt;=');
             $occ1 += substr_count($value, '&lt;=');
             $occ1 += substr_count($value, '&&');
@@ -443,6 +618,9 @@ class TransformationsController extends AppController
     public function countoperations_max($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $occ1 = substr_count($value, '+');
@@ -458,6 +636,9 @@ class TransformationsController extends AppController
     public function countoperations_avg($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         $average = 0;
         foreach ($str as $value) {
@@ -478,6 +659,9 @@ class TransformationsController extends AppController
     public function countparents_max($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $occ1 = substr_count($value, '(');
@@ -489,6 +673,9 @@ class TransformationsController extends AppController
     public function countparents_avg($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         $average = 0;
         foreach ($str as $value) {
@@ -507,6 +694,9 @@ class TransformationsController extends AppController
     public function countspaces_max($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $occ1 = substr_count($value, ' ');
@@ -518,6 +708,9 @@ class TransformationsController extends AppController
     public function countspaces_avg($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         $average = 0;
         foreach ($str as $value) {
@@ -536,6 +729,9 @@ class TransformationsController extends AppController
     public function countvirgulas_max($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $occ1 = substr_count($value, ',');
@@ -547,6 +743,9 @@ class TransformationsController extends AppController
     public function countvirgulas_avg($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         $average = 0;
         foreach ($str as $value) {
@@ -565,6 +764,9 @@ class TransformationsController extends AppController
     public function countperiods_max($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $occ1 = substr_count($value, '.');
@@ -576,6 +778,9 @@ class TransformationsController extends AppController
     public function countperiods_avg($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         $average = 0;
         foreach ($str as $value) {
@@ -594,6 +799,9 @@ class TransformationsController extends AppController
     public function countComments_max($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $occ1 = substr_count($value, '//');
@@ -606,6 +814,9 @@ class TransformationsController extends AppController
     public function countComments_avg($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         $average = 0;
         foreach ($str as $value) {
@@ -625,6 +836,9 @@ class TransformationsController extends AppController
     public function countDigits_max($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $arrayComp[] = preg_match_all("/[0-9]/", $value);
@@ -635,6 +849,9 @@ class TransformationsController extends AppController
     public function countDigits_avg($string)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         $average = 0;
         foreach ($str as $value) {
@@ -653,6 +870,9 @@ class TransformationsController extends AppController
         $keywords = explode(',', $keywords);
 
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $str = array_filter($str);
         $arrayComp = array();
         foreach ($str as $value) {
@@ -685,6 +905,9 @@ class TransformationsController extends AppController
         $keywords = explode(',', $keywords);
 
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $str = array_filter($str);
         $arrayComp = array();
         foreach ($str as $value) {
@@ -720,6 +943,9 @@ class TransformationsController extends AppController
         $keywords = explode(',', $keywords);
 
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             foreach ($keywords as $key) {
@@ -751,6 +977,9 @@ class TransformationsController extends AppController
         $keywords = explode(',', $keywords);
 
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             foreach ($keywords as $key) {
@@ -787,6 +1016,9 @@ class TransformationsController extends AppController
         $keywords = explode(',', $keywords);
 
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $count = 0;
@@ -794,7 +1026,8 @@ class TransformationsController extends AppController
                 if (strstr($string, $key)) {
                     $count++;
                 }
-            }$arrayComp[] = $count;
+            }
+            $arrayComp[] = $count;
         }
         return max($arrayComp);
     }
@@ -805,6 +1038,9 @@ class TransformationsController extends AppController
         $keywords = explode(',', $keywords);
         $average = 0;
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $count = 0;
@@ -812,7 +1048,8 @@ class TransformationsController extends AppController
                 if (strstr($string, $key)) {
                     $count++;
                 }
-            }$arrayComp[] = $count;
+            }
+            $arrayComp[] = $count;
         }
         if (max($arrayComp) > 0) {
             $arrayComp = array_filter($arrayComp);
@@ -824,6 +1061,9 @@ class TransformationsController extends AppController
     public function cl_max($string = null)
     {
         $str = explode("<br/>", $string);
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         $arrayComp = array();
         foreach ($str as $value) {
             $value = preg_replace('~[\r\n]+~', '', $value);
@@ -836,7 +1076,9 @@ class TransformationsController extends AppController
     public function cl_average($string = null)
     {
         $str = explode("<br/>", $string);
-        $arrayComp = array();
+        if (count($str) == 1) {
+            $str = explode("<br>", $string);
+        }
         foreach ($str as $value) {
             $value = preg_replace('~[\r\n]+~', '', $value);
             $value = trim(preg_replace('/\s+/', ' ', $value));
@@ -883,8 +1125,8 @@ class TransformationsController extends AppController
                 $this->Result->id = $metricas['Result']['id'];
                 $result = array(
                     'Result' => array(
-                        'before' => (int) $this->locAndAmloc($metricas['Transformation']['code_before']),
-                        'after' => (int) $this->locAndAmloc($metricas['Transformation']['code_after']),
+                        'before' => (int)$this->locAndAmloc($metricas['Transformation']['code_before']),
+                        'after' => (int)$this->locAndAmloc($metricas['Transformation']['code_after']),
                     ),
                 );
                 $this->Result->save($result);
@@ -901,10 +1143,10 @@ class TransformationsController extends AppController
                 $this->Result->id = $metricas['Result']['id'];
                 $result = array(
                     'Result' => array(
-                        'before' => (int) $this->cl_max($metricas['Transformation']['code_before']),
-                        'after' => (int) $this->cl_max($metricas['Transformation']['code_after']),
-                        'avg_before' => (int) $this->cl_average($metricas['Transformation']['code_before']),
-                        'avg_after' => (int) $this->cl_average($metricas['Transformation']['code_after']),
+                        'before' => (int)$this->cl_max($metricas['Transformation']['code_before']),
+                        'after' => (int)$this->cl_max($metricas['Transformation']['code_after']),
+                        'avg_before' => (int)$this->cl_average($metricas['Transformation']['code_before']),
+                        'avg_after' => (int)$this->cl_average($metricas['Transformation']['code_after']),
                     ),
                 );
                 $this->Result->save($result);
@@ -1049,7 +1291,87 @@ class TransformationsController extends AppController
                     ),
                 );
                 $this->Result->save($result);
+            } elseif ($metricas['Metric']['acronym'] == 'HLn1') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->hln1($metricas['Transformation']['code_before']),
+                        'after' => $this->hln1($metricas['Transformation']['code_after'])
+                    ),
+                );
+                $this->Result->save($result);
+            } elseif ($metricas['Metric']['acronym'] == 'HL_N1') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->hl_N1($metricas['Transformation']['code_before']),
+                        'after' => $this->hl_N1($metricas['Transformation']['code_after'])
+                    ),
+                );
+                $this->Result->save($result);
+            } elseif ($metricas['Metric']['acronym'] == 'HLn2') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->hln2($metricas['Transformation']['code_before']),
+                        'after' => $this->hln2($metricas['Transformation']['code_after'])
+                    ),
+                );
+                $this->Result->save($result);
+            } elseif ($metricas['Metric']['acronym'] == 'HL_N2') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->hl_N2($metricas['Transformation']['code_before']),
+                        'after' => $this->hl_N2($metricas['Transformation']['code_after'])
+                    ),
+                );
+                $this->Result->save($result);
             }
         }
+    }
+
+    public function atualizaTodasAsMetricas($id = null)
+    {
+        $this->loadModel('Metric');
+
+        $pesquisa = $this->SearchEvent->find('first', array(
+            'recursive' => 2,
+            'conditions' => array(
+                'SearchEvent.id' => $id
+            )
+        ));
+
+        foreach ($pesquisa['Transformation'] as $trasnformation) {
+            $metricas = $this->Metric->find('list', array('fields' => 'Metric.acronym'));
+            foreach ($trasnformation['Metric'] as $filter) {
+                if (in_array($filter['acronym'], $metricas)) {
+                    $key = array_search($filter['acronym'], $metricas);
+                    unset($metricas[$key]);
+                }
+            }
+            if (!empty($metricas)) {
+                foreach ($metricas as $key => $metrica) {
+//                    pr($key);exit();
+                    $this->Result->create();
+                    $result = array(
+                        'Result' => array(
+                            'transformation_id' => $trasnformation['id'],
+                            'metric_id' => $key,
+                        ),
+                    );
+                    $this->Result->save($result);
+                }
+            }
+            $this->manipulaMetricas($trasnformation['id']);
+        }
+
+        $this->redirect(array('action' => 'index', $id));
+    }
+
+    public function AtualizaMetricasIndividual($id = null)
+    {
+        $this->manipulaMetricas($id);
+        $this->redirect(array('action' => 'view', $id));
     }
 }

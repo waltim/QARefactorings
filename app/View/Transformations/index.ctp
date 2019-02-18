@@ -12,6 +12,9 @@
                 <a href="/searchEvents/loadDataCsv/<?= $pesquisa ?>">
                     <button type="button" class="btn btn-primary pull-right">Carregar CSV</button>
                 </a>
+                <a href="/transformations/atualizaTodasAsMetricas/<?= $pesquisa ?>">
+                    <button type="button" class="btn btn-primary pull-right">Atualizar Métricas</button>
+                </a>
             </div>
             <!-- /.box-header -->
             <div class="box-body">

@@ -9,6 +9,10 @@
            title="Tabela de transformações">
             <button class="btn btn-primary pull-right">Banco da pesquisa</button>
         </a>
+        <a href="<?= $this->webroot ?>transformations/AtualizaMetricasIndividual/<?= $transformation['Transformation']['id'] ?>"
+           title="Tabela de transformações">
+            <button class="btn btn-primary pull-right">Recalcular métricas</button>
+        </a>
     </div>
     <div class="col-md-12">
         <!-- The time line -->
