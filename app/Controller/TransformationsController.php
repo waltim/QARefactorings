@@ -349,11 +349,75 @@ class TransformationsController extends AppController
         $this->set('qualitativas', $qualitativas);
     }
 
-    function array_iunique( $array ) {
+    function array_iunique($array)
+    {
         return array_intersect_key(
             $array,
-            array_unique( array_map( "strtolower", $array))
+            array_unique(array_map("strtolower", $array))
         );
+    }
+
+    public function posnetReadability($string = null)
+    {
+        $readability = 8.87 - 0.033*$this->HalsteadV($string) + 0.40*$this->locAndAmloc($string) - 1.5*$this->entropy($string);
+        return round($readability, 2)/10;
+    }
+
+    public function entropyByCharacter($string = null)
+    {
+        $h = 0;
+        $string = str_replace("+   ", "    ", $string);
+        $string = str_replace("-   ", "    ", $string);
+        $size = strlen($string);
+        $frequencies = array_count_values(str_word_count($string,1));
+        $frequencies['=='] = substr_count($string, '==');
+        $frequencies['!='] = substr_count($string, '!=');
+        $frequencies['!='] = substr_count($string, '!=');
+        $frequencies['&gt;'] = substr_count($string, '&gt;');
+        $frequencies['&lt;'] = substr_count($string, '&lt;');
+        $frequencies['&gt;='] = substr_count($string, '&gt;=');
+        $frequencies['&lt;='] = substr_count($string, '&lt;=');
+        $frequencies['&&'] = substr_count($string, '&&');
+        $frequencies['||'] = substr_count($string, '||');
+        $frequencies['+'] = substr_count($string, '+');
+        $frequencies['-'] = substr_count($string, '-');
+        $frequencies['*'] = substr_count($string, '*');
+        $frequencies['%'] = substr_count($string, '%');
+        $frequencies['/'] = substr_count($string, '/');
+        $frequencies['{'] = substr_count($string, '{');
+        $frequencies['}'] = substr_count($string, '}');
+        $frequencies['('] = substr_count($string, '(');
+        $frequencies[')'] = substr_count($string, ')');
+        $frequencies[' '] = substr_count($string, ' ');
+        foreach ($frequencies as $key => $fr){
+            if($fr == 0){
+                unset($frequencies[$key]);
+            }
+        }
+        foreach ($frequencies as $v) {
+            $p = $v / $size;
+            $h -= $p*log($p)/log(2);
+        }
+        return round($h, 2);
+
+    }
+
+    public function entropy($string = null)
+    {
+        $h = 0;
+        $size = strlen($string);
+        foreach (count_chars($string, 1) as $v) {
+            $p = $v / $size;
+            $h -= $p*log($p)/log(2);
+        }
+        return round($h, 2);
+    }
+
+    public function HalsteadV($string = null){
+        $vocabulary = $this->hln1($string) + $this->hln2($string);
+        $lenght = $this->hl_N1($string) + $this->hl_N2($string);
+        $volume = $lenght*log($vocabulary,2);
+        return round($volume, 2);
     }
 
     public function hl_N2($string = null)
@@ -369,49 +433,37 @@ class TransformationsController extends AppController
         if (count($str) == 1) {
             $str = explode("<br>", $string);
         }
-//        pr($str);
+        $arrayOperator = array();
         $arrayComp = array();
         foreach ($str as $key => $line) {
             $checkOperators = 0;
             foreach ($operators as $operator) {
                 if (strstr($line, $operator)) {
                     $checkOperators++;
+                    $arrayOperator[] = $operator;
                 }
             }
             if ($checkOperators >= 1) {
                 $arrayComp[$key] = $line;
             }
         }
-        $totalWords = '';
+        $arrayOperator = array_unique($arrayOperator);
+        $totalWords = 0;
+        $divideString = array();
         foreach ($arrayComp as $kk => $value) {
-            foreach ($keywords as $key) {
-                if (strstr($value, $key)) {
-                    $value = str_replace($key, ' ', $value);
-                }
+            foreach ($arrayOperator as $opr) {
+//                pr($opr);
+                $divideString[] = explode($opr, $value);
             }
-            $value = strip_tags($value);
-            $value = str_replace('&gt', ' ', $value);
-            $value = str_replace('&lt', ' ', $value);
-            $value = preg_replace('/\s+/', ' ', trim($value));
-            $value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
-            $value = str_replace('-', ' ', $value);
-            $value = str_replace('+', ' ', $value);
-            $value = str_replace('%', ' ', $value);
-            $value = str_replace('@', ' ', $value);
-
-            $words = explode(" ", $value);
-            $totalWords .= $value;
-            $words = array_filter($words);
-            $words = array_unique($words);
-            $arrayComp[] = count($words);
         }
-        $totalWords = str_replace('     ', ' ', $totalWords);
-        $totalWords = str_replace('    ', ' ', $totalWords);
-        $totalWords = str_replace('   ', ' ', $totalWords);
-        $totalWords = str_replace('  ', ' ', $totalWords);
-        $totalWords = explode(' ', $totalWords);
-        $totalWords = array_filter($totalWords);
-        return count($totalWords);
+        foreach ($divideString as $ky => $divide) {
+            if (sizeof($divide) <= 1) {
+                unset($divideString[$ky]);
+            } else {
+                $totalWords += count($divide);
+            }
+        }
+        return $totalWords;
     }
 
     public function hln2($string = null)
@@ -427,50 +479,90 @@ class TransformationsController extends AppController
         if (count($str) == 1) {
             $str = explode("<br>", $string);
         }
-//        pr($str);
+        $arrayOperator = array();
         $arrayComp = array();
         foreach ($str as $key => $line) {
             $checkOperators = 0;
             foreach ($operators as $operator) {
                 if (strstr($line, $operator)) {
                     $checkOperators++;
+                    $arrayOperator[] = $operator;
                 }
             }
             if ($checkOperators >= 1) {
                 $arrayComp[$key] = $line;
             }
         }
-        $totalWords = '';
+        $arrayOperator = array_unique($arrayOperator);
+        $totalWords = 0;
+        $divideString = array();
         foreach ($arrayComp as $kk => $value) {
-            foreach ($keywords as $key) {
-                if (strstr($value, $key)) {
-                    $value = str_replace($key, ' ', $value);
+            foreach ($arrayOperator as $opr) {
+//                pr($opr);
+                $divideString[] = explode($opr, $value);
+            }
+        }
+
+        foreach ($divideString as $ky => $divide) {
+            if (sizeof($divide) <= 1) {
+                unset($divideString[$ky]);
+            } else {
+                $totalWords += count($divide);
+            }
+        }
+        foreach ($divideString as $yk => $str) {
+            foreach ($str as $kkyy => $value) {
+                foreach ($keywords as $key) {
+                    if (strstr($value, $key)) {
+                        $value = str_replace($key, ' ', $value);
+                    }
+                }
+                $value = strip_tags($value);
+                $value = str_replace('&gt', ' ', $value);
+                $value = str_replace('&lt', ' ', $value);
+                $value = preg_replace('/\s+/', ' ', trim($value));
+                $value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
+                $value = str_replace('-', ' ', $value);
+                $value = str_replace('+', ' ', $value);
+                $value = str_replace('%', ' ', $value);
+                $value = str_replace('@', ' ', $value);
+                $divideString[$yk][$kkyy] = $value;
+                $words = explode(" ", $value);
+                $words = array_filter($words);
+            }
+        }
+        foreach ($divideString as $yk => $str) {
+            foreach ($str as $kkyy => $val) {
+                $divideString[$yk][$kkyy] = trim($val);
+            }
+        }
+
+        foreach ($divideString as $yk => $str) {
+            foreach ($str as $st => $ss) {
+                $contador = 1;
+                $check = explode(' ', $str[$st]);
+                foreach ($divideString as $jk => $valid) {
+                    foreach ($valid as $kkyy => $val) {
+                        if(count($check) > 1) {
+                            if ($check[1] == $val) {
+                                $contador++;
+                            }
+                        }
+                    }
+                }
+                if ($contador > 1) {
+                    unset($divideString[$yk][$st]);
                 }
             }
-            $value = strip_tags($value);
-            $value = str_replace('&gt', ' ', $value);
-            $value = str_replace('&lt', ' ', $value);
-            $value = preg_replace('/\s+/', ' ', trim($value));
-            $value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
-            $value = str_replace('-', ' ', $value);
-            $value = str_replace('+', ' ', $value);
-            $value = str_replace('%', ' ', $value);
-            $value = str_replace('@', ' ', $value);
-
-            $words = explode(" ", $value);
-            $totalWords .= $value;
-            $words = array_filter($words);
-            $words = array_unique($words);
-            $arrayComp[] = count($words);
         }
-        $totalWords = str_replace('     ', ' ', $totalWords);
-        $totalWords = str_replace('    ', ' ', $totalWords);
-        $totalWords = str_replace('   ', ' ', $totalWords);
-        $totalWords = str_replace('  ', ' ', $totalWords);
-        $totalWords = explode(' ', $totalWords);
-        $totalWords = array_filter($totalWords);
-        $totalWords = $this->array_iunique($totalWords);
-        return count($totalWords);
+
+        $arrayOperandosUnicos = array();
+        foreach ($divideString as $yk => $str) {
+            foreach ($str as $kkyy => $val) {
+                $arrayOperandosUnicos[] = strtolower($val);
+            }
+        }
+        return count($arrayOperandosUnicos);
     }
 
     public function hln1($string = null)
@@ -507,9 +599,9 @@ class TransformationsController extends AppController
 
     public function locAndAmloc($string = null)
     {
-        $numLoc = substr_count($string, '<br/>') - 2;
-        if ($numLoc == -2) {
-            $numLoc = substr_count($string, '<br>') - 3;
+        $numLoc = substr_count($string, '<br/>') - 1;
+        if ($numLoc == -1) {
+            $numLoc = substr_count($string, '<br>') - 2;
         }
         return $numLoc;
     }
@@ -1327,7 +1419,35 @@ class TransformationsController extends AppController
                     ),
                 );
                 $this->Result->save($result);
+            }elseif ($metricas['Metric']['acronym'] == 'SHEntropy') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->entropy($metricas['Transformation']['code_before']),
+                        'after' => $this->entropy($metricas['Transformation']['code_after'])
+                    ),
+                );
+                $this->Result->save($result);
+            }elseif ($metricas['Metric']['acronym'] == 'HalsteadV') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->HalsteadV($metricas['Transformation']['code_before']),
+                        'after' => $this->HalsteadV($metricas['Transformation']['code_after'])
+                    ),
+                );
+                $this->Result->save($result);
+            }elseif ($metricas['Metric']['acronym'] == 'PostnetReadability') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->posnetReadability($metricas['Transformation']['code_before']),
+                        'after' => $this->posnetReadability($metricas['Transformation']['code_after'])
+                    ),
+                );
+                $this->Result->save($result);
             }
+
         }
     }
 
