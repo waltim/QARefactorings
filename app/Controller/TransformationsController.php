@@ -357,17 +357,35 @@ class TransformationsController extends AppController
         );
     }
 
-    public function posnetReadability($string = null)
-    {
-        $readability = 8.87 - 0.033*$this->HalsteadV($string) + 0.40*$this->locAndAmloc($string) - 1.5*$this->entropy($string);
-        return round($readability, 2)/10;
-    }
-
-    public function entropyByCharacter($string = null)
-    {
-        $h = 0;
+    public function clearString($string = null){
         $string = str_replace("+   ", "    ", $string);
         $string = str_replace("-   ", "    ", $string);
+        return $string;
+    }
+
+    public function posnetReadability($string = null)
+    {
+        $readability = 8.87 - (0.033*$this->HalsteadV($string)) + (0.40*$this->locAndAmloc($string)) - (1.5*$this->entropy($string));
+       $part1 = 8.87 - (0.033*$this->HalsteadV($string));
+        $part2 =(0.40*$this->locAndAmloc($string));
+        $part3 =(1.5*$this->entropy($string));
+        $val = $part1;
+//        pr($part1);
+//        pr($val = $val + $part2);
+//        pr($val = $val - $part3);
+//        exit();
+        return round($readability, 2);
+    }
+
+    public function posnetReadabilityToken($string = null){
+        $readability = 8.87 - (0.033*$this->HalsteadV($string)) + (0.40*$this->locAndAmloc($string)) - (1.5*$this->entropyByTokens($string));
+        return round($readability, 2);
+    }
+
+    public function entropyByTokens($string = null)
+    {
+        $h = 0;
+        $string = $this->clearString($string);
         $size = strlen($string);
         $frequencies = array_count_values(str_word_count($string,1));
         $frequencies['=='] = substr_count($string, '==');
@@ -388,7 +406,7 @@ class TransformationsController extends AppController
         $frequencies['}'] = substr_count($string, '}');
         $frequencies['('] = substr_count($string, '(');
         $frequencies[')'] = substr_count($string, ')');
-        $frequencies[' '] = substr_count($string, ' ');
+//        $frequencies[' '] = substr_count($string, ' ');
         foreach ($frequencies as $key => $fr){
             if($fr == 0){
                 unset($frequencies[$key]);
@@ -399,33 +417,41 @@ class TransformationsController extends AppController
             $h -= $p*log($p)/log(2);
         }
         return round($h, 2);
-
     }
 
     public function entropy($string = null)
     {
+        $string = $this->clearString($string);
         $h = 0;
         $size = strlen($string);
         foreach (count_chars($string, 1) as $v) {
             $p = $v / $size;
             $h -= $p*log($p)/log(2);
         }
-        return round($h, 2);
+        $entropy = round($h, 2);
+        return $entropy;
     }
 
     public function HalsteadV($string = null){
         $vocabulary = $this->hln1($string) + $this->hln2($string);
+        if($vocabulary == 0){
+            $vocabulary = 1;
+        }
         $lenght = $this->hl_N1($string) + $this->hl_N2($string);
+        if($lenght == 0){
+            $lenght = 1;
+        }
         $volume = $lenght*log($vocabulary,2);
         return round($volume, 2);
     }
 
     public function hl_N2($string = null)
     {
+        $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
         $keywords = explode(',', $keywords);
 
-        $operators = " = ,expr++,expr--,++expr,--expr,+expr,-expr,~, ! ,*, / ,%,==,!=, & ,^,|,&&,||,?,:,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
+        $operators = " - , + ,+=,-=,*=,/=,%=,&=,^=,|=, = ,expr++,expr--,++expr,--expr,+expr,-expr, ~ , ! ,*, / , % ,==,!=, & ,^, | , && , || , ? , : ,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
             "&lt;&lt;,&gt;&gt;,&gt;&gt;&gt;,&lt;&lt;=,&gt;&gt;=,&gt;&gt;&gt;=";
         $operators = explode(',', $operators);
 
@@ -468,10 +494,11 @@ class TransformationsController extends AppController
 
     public function hln2($string = null)
     {
+        $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
         $keywords = explode(',', $keywords);
 
-        $operators = " = ,expr++,expr--,++expr,--expr,+expr,-expr,~, ! ,*, / ,%,==,!=, & ,^,|,&&,||,?,:,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
+        $operators = " - , + ,+=,-=,*=,/=,%=,&=,^=,|=, = ,expr++,expr--,++expr,--expr,+expr,-expr, ~ , ! ,*, / , % ,==,!=, & ,^, | , && , || , ? , : ,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
             "&lt;&lt;,&gt;&gt;,&gt;&gt;&gt;,&lt;&lt;=,&gt;&gt;=,&gt;&gt;&gt;=";
         $operators = explode(',', $operators);
 
@@ -567,7 +594,8 @@ class TransformationsController extends AppController
 
     public function hln1($string = null)
     {
-        $operators = " = ,expr++,expr--,++expr,--expr,+expr,-expr,~, ! ,*, / ,%,==,!=, & ,^,|,&&,||,?,:,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
+        $string = $this->clearString($string);
+        $operators = " - , + ,+=,-=,*=,/=,%=,&=,^=,|=, = ,expr++,expr--,++expr,--expr,+expr,-expr, ~ , ! ,*, / , % ,==,!=, & ,^, | , && , || , ? , : ,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
             "&lt;&lt;,&gt;&gt;,&gt;&gt;&gt;,&lt;&lt;=,&gt;&gt;=,&gt;&gt;&gt;=";
         $arrayOperators = explode(',', $operators);
         $list = array();
@@ -583,15 +611,15 @@ class TransformationsController extends AppController
 
     public function hl_N1($string = null)
     {
-        $operators = " = ,expr++,expr--,++expr,--expr,+expr,-expr,~, ! ,*, / ,%,==,!=, & ,^,|,&&,||,?,:,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
+        $string = $this->clearString($string);
+        $operators = " - , + ,+=,-=,*=,/=,%=,&=,^=,|=, = ,expr++,expr--,++expr,--expr,+expr,-expr, ~ , ! ,*, / , % ,==,!=, & ,^, | , && , || , ? , : ,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
             "&lt;&lt;,&gt;&gt;,&gt;&gt;&gt;,&lt;&lt;=,&gt;&gt;=,&gt;&gt;&gt;=";
         $arrayOperators = explode(',', $operators);
         $list = array();
-//        pr($string);
-        foreach ($arrayOperators as $operator) {
+        foreach ($arrayOperators as $key => $operator) {
             $validate = substr_count($string, $operator);
             if ($validate != 0) {
-                $list[] = $validate;
+                $list[$operator] = $validate;
             }
         }
         return array_sum($list);
@@ -599,15 +627,14 @@ class TransformationsController extends AppController
 
     public function locAndAmloc($string = null)
     {
-        $numLoc = substr_count($string, '<br/>') - 1;
-        if ($numLoc == -1) {
-            $numLoc = substr_count($string, '<br>') - 2;
-        }
+        $string = $this->clearString($string);
+        $numLoc = substr_count( $string, "\n");
         return $numLoc;
     }
 
     public function countblanklines($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -627,6 +654,7 @@ class TransformationsController extends AppController
 
     public function countatribution_max($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -641,6 +669,7 @@ class TransformationsController extends AppController
 
     public function countatribution_avg($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -660,6 +689,7 @@ class TransformationsController extends AppController
 
     public function countcomparators_max($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -682,6 +712,7 @@ class TransformationsController extends AppController
 
     public function countcomparators_avg($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -709,6 +740,7 @@ class TransformationsController extends AppController
 
     public function countoperations_max($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -727,6 +759,7 @@ class TransformationsController extends AppController
 
     public function countoperations_avg($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -750,6 +783,7 @@ class TransformationsController extends AppController
 
     public function countparents_max($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -764,6 +798,7 @@ class TransformationsController extends AppController
 
     public function countparents_avg($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -785,6 +820,7 @@ class TransformationsController extends AppController
 
     public function countspaces_max($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -794,11 +830,13 @@ class TransformationsController extends AppController
             $occ1 = substr_count($value, ' ');
             $arrayComp[] = $occ1;
         }
+//        pr($arrayComp);exit();
         return max($arrayComp);
     }
 
     public function countspaces_avg($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -820,6 +858,7 @@ class TransformationsController extends AppController
 
     public function countvirgulas_max($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -834,6 +873,7 @@ class TransformationsController extends AppController
 
     public function countvirgulas_avg($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -855,6 +895,7 @@ class TransformationsController extends AppController
 
     public function countperiods_max($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -869,6 +910,7 @@ class TransformationsController extends AppController
 
     public function countperiods_avg($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -890,6 +932,7 @@ class TransformationsController extends AppController
 
     public function countComments_max($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -905,6 +948,7 @@ class TransformationsController extends AppController
 
     public function countComments_avg($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -927,6 +971,7 @@ class TransformationsController extends AppController
 
     public function countDigits_max($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -940,6 +985,7 @@ class TransformationsController extends AppController
 
     public function countDigits_avg($string)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -958,6 +1004,7 @@ class TransformationsController extends AppController
 
     public function qtd_identifiers_max($string = null)
     {
+        $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
         $keywords = explode(',', $keywords);
 
@@ -993,6 +1040,7 @@ class TransformationsController extends AppController
 
     public function qtd_identifiers_avg($string = null)
     {
+        $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
         $keywords = explode(',', $keywords);
 
@@ -1031,6 +1079,7 @@ class TransformationsController extends AppController
 
     public function uq_qtd_identifiers_max($string = null)
     {
+        $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
         $keywords = explode(',', $keywords);
 
@@ -1065,6 +1114,7 @@ class TransformationsController extends AppController
 
     public function uq_qtd_identifiers_avg($string = null)
     {
+        $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
         $keywords = explode(',', $keywords);
 
@@ -1104,6 +1154,7 @@ class TransformationsController extends AppController
 
     public function qtd_keywords_max($string = null)
     {
+        $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
         $keywords = explode(',', $keywords);
 
@@ -1126,6 +1177,7 @@ class TransformationsController extends AppController
 
     public function qtd_keywords_avg($string = null)
     {
+        $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
         $keywords = explode(',', $keywords);
         $average = 0;
@@ -1152,6 +1204,7 @@ class TransformationsController extends AppController
 
     public function cl_max($string = null)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -1167,6 +1220,7 @@ class TransformationsController extends AppController
 
     public function cl_average($string = null)
     {
+        $string = $this->clearString($string);
         $str = explode("<br/>", $string);
         if (count($str) == 1) {
             $str = explode("<br>", $string);
@@ -1185,6 +1239,7 @@ class TransformationsController extends AppController
 
     public function accm($string = null)
     {
+        $string = $this->clearString($string);
         $complex = 1;
         $complex = $complex + substr_count($string, 'if (');
         $complex = $complex + substr_count($string, 'while (');
@@ -1443,6 +1498,15 @@ class TransformationsController extends AppController
                     'Result' => array(
                         'before' => $this->posnetReadability($metricas['Transformation']['code_before']),
                         'after' => $this->posnetReadability($metricas['Transformation']['code_after'])
+                    ),
+                );
+                $this->Result->save($result);
+            }elseif ($metricas['Metric']['acronym'] == 'PostnetReadabilityToken') {
+                $this->Result->id = $metricas['Result']['id'];
+                $result = array(
+                    'Result' => array(
+                        'before' => $this->posnetReadabilityToken($metricas['Transformation']['code_before']),
+                        'after' => $this->posnetReadabilityToken($metricas['Transformation']['code_after'])
                     ),
                 );
                 $this->Result->save($result);

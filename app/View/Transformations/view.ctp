@@ -40,7 +40,7 @@
                                 cadastro:</b> <?= date('d/m/Y', strtotime($transformation['Transformation']['created'])); ?>
                         </p>
                         <p><b>Link da transformação:</b> <a target="_blank"
-                                                            href="<?= $transformation['Transformation']['site_link'] ?>">Clique
+                                                            href="<?= $transformation['Transformation']['site_link'].$transformation['Transformation']['line_start'] ?>">Clique
                                 aqui para abrir o local</a></p>
                     </div>
                     <div class="timeline-footer">
