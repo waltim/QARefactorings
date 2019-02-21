@@ -434,13 +434,13 @@ class TransformationsController extends AppController
 
     public function HalsteadV($string = null){
         $vocabulary = $this->hln1($string) + $this->hln2($string);
-        if($vocabulary == 0){
-            $vocabulary = 1;
-        }
+//        if($vocabulary == 0){
+//            $vocabulary = 1;
+//        }
         $lenght = $this->hl_N1($string) + $this->hl_N2($string);
-        if($lenght == 0){
-            $lenght = 1;
-        }
+//        if($lenght == 0){
+//            $lenght = 1;
+//        }
         $volume = $lenght*log($vocabulary,2);
         return round($volume, 2);
     }
