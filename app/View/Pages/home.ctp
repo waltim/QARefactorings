@@ -50,7 +50,7 @@
             <?php if ($this->Session->read('Auth.User.UserType.description') == 'candidato') { ?>
                 <div class="inner">
                     <h3>
-                        <?= ((($transformations * $questions) - $answers) / $questions) - 15 ?>
+                        <?= ((($transformations * $questions) - $answers) / $questions) - 6 ?>
                     </h3>
 
                     <p>Transformations to be evaluated</p>
@@ -121,7 +121,7 @@
                                     <td>
                                         <?php
                                         $calculo = ceil(($user['User']['trophy'] * 100) / ($totalQuestions * 6));
-                                        if ($user['User']['trophy'] >= 60) {
+                                        if ($user['User']['trophy'] >= 48) {
                                             $calculo = 100;
                                         }
                                         ?>
@@ -165,7 +165,7 @@
                             <td>
                                 <?php
                                 $calculo = ceil(($ranking2['User']['trophy'] * 100) / $totalQuestions);
-                                if ($calculo > 100 || $ranking2['User']['trophy'] == 60) {
+                                if ($calculo > 100 || $ranking2['User']['trophy'] == 48) {
                                     $calculo = 100;
                                 }
                                 ?>
