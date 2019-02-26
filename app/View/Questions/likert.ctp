@@ -40,13 +40,21 @@
                 <div class="notranslate" style="background-color: white; color: black;">
                     <?php
                     // Generate a side by side diff
-                    require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/SideBySide.php';
-                    $renderer = new Diff_Renderer_Html_SideBySide;
-                    echo $diff->Render($renderer);
+//                    require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/SideBySide.php';
+//                    $renderer = new Diff_Renderer_Html_SideBySide;
+//                    echo $diff->Render($renderer);
                     // Generate an inline diff
-                    // require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/Inline.php';
-                    // $renderer = new Diff_Renderer_Html_Inline;
-                    // echo $diff->render($renderer);
+                     require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/Inline.php';
+                     $renderer = new Diff_Renderer_Html_Inline;
+                     echo $diff->render($renderer);
+                    // Generate a unified diff
+//                    require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Unified.php';
+//                    $renderer = new Diff_Renderer_Text_Unified;
+//                    echo htmlspecialchars($diff->render($renderer));
+                    // Generate a context diff
+//                    require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Context.php';
+//                    $renderer = new Diff_Renderer_Text_Context;
+//                    echo htmlspecialchars($diff->render($renderer));
                     ?>
                 </div>
                 <!-- <div id="codigo-antes" class="form-group">
