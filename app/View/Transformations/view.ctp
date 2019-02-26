@@ -9,6 +9,10 @@
            title="Tabela de transformações">
             <button class="btn btn-primary pull-right">Banco da pesquisa</button>
         </a>
+        <a href="<?= $this->webroot ?>transformations/AtualizaMetricasIndividual/<?= $transformation['Transformation']['id'] ?>"
+           title="Tabela de transformações">
+            <button class="btn btn-primary pull-right">Recalcular métricas</button>
+        </a>
     </div>
     <div class="col-md-12">
         <!-- The time line -->
@@ -36,7 +40,7 @@
                                 cadastro:</b> <?= date('d/m/Y', strtotime($transformation['Transformation']['created'])); ?>
                         </p>
                         <p><b>Link da transformação:</b> <a target="_blank"
-                                                            href="<?= $transformation['Transformation']['site_link'] ?>">Clique
+                                                            href="<?= $transformation['Transformation']['site_link'].$transformation['Transformation']['line_start'] ?>">Clique
                                 aqui para abrir o local</a></p>
                     </div>
                     <div class="timeline-footer">

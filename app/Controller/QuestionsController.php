@@ -51,7 +51,7 @@ class QuestionsController extends AppController
         $numberOfTypes = $this->TransformationType->find('count');
 
         // $getAmostration = ($numberOfTransformations / $numberOfTypes);
-        $getAmostration = 5;
+        $getAmostration = 3;
         // pr($getAmostration);
         // pr(ceil($getAmostration));
         // exit();
@@ -60,10 +60,12 @@ class QuestionsController extends AppController
         ));
 
 //        pr($allTransformationType);exit();
+        $arrayFiltradoWeBMiner = array();
+        $arrayFiltradoRjtl = array();
         $arrayFiltrado = array();
 
         $k = 0;
-
+        $y = 0;
         foreach ($allTransformationType as $type) {
 
             $transfPorTipo = $this->Transformation->find('all', array(
@@ -73,35 +75,76 @@ class QuestionsController extends AppController
                     'Transformation.search_event_id' => $id,
                     'Transformation.apt' => "S",
                     'Transformation.transformation_type_id' => $type['TransformationType']['id'],
+                    'Transformation.id <=' => 1073
                 ),
                 'limit' => ceil($getAmostration)
             ));
 
-            // pr($transfPorTipo);
+            $transfPorTipo2 = $this->Transformation->find('all', array(
+                'recursive' => -1,
+                'order' => 'rand()',
+                'conditions' => array(
+                    'Transformation.search_event_id' => $id,
+                    'Transformation.apt' => "S",
+                    'Transformation.transformation_type_id' => $type['TransformationType']['id'],
+                    'Transformation.id >' => 1073
+                ),
+                'limit' => ceil($getAmostration)
+            ));
 
+//             pr($type);
+
+//             if(sizeof($transfPorTipo2) > 0){
             foreach ($transfPorTipo as $ar) {
-                $arrayFiltrado[$k]['Transformation.id'] = $ar['Transformation']['id'];
+                $arrayFiltradoWeBMiner[$k]['Transformation.id'] = $ar['Transformation']['id'];
+                $arrayFiltradoWeBMiner[$k]['transformation_type_id'] = $type['TransformationType']['id'];
                 $k++;
             }
+            foreach ($transfPorTipo2 as $ar2) {
+                $arrayFiltradoRjtl[$y]['Transformation.id'] = $ar2['Transformation']['id'];
+                $arrayFiltradoRjtl[$y]['transformation_type_id'] = $type['TransformationType']['id'];
+                $y++;
+            }
+//             }
+
+//            pr($arrayFiltrado);
         }
 
-//        pr($arrayFiltrado);exit();
+//
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[0]['Transformation.id'];
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[0]['Transformation.id'];
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[1]['Transformation.id'];
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[1]['Transformation.id'];
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[3]['Transformation.id'];
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[3]['Transformation.id'];
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[4]['Transformation.id'];
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[4]['Transformation.id'];
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[7]['Transformation.id'];
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[6]['Transformation.id'];
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[9]['Transformation.id'];
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[8]['Transformation.id'];
 
-        $transformacoes = $this->Transformation->find('all', array(
-            'conditions' => array(
-                'Transformation.search_event_id' => $id,
-                'Transformation.apt' => "S",
-                'OR' => $arrayFiltrado,
-            ),
-        ));
+//        pr($arrayFiltradoWeBMiner);
+//        pr($arrayFiltradoRjtl);
+//        pr($arrayFiltrado);
+//        exit();
+//
+//        $transformacoes = $this->Transformation->find('all', array(
+//            'conditions' => array(
+//                'Transformation.search_event_id' => $id,
+//                'Transformation.apt' => "S",
+//                'OR' => $arrayFiltrado,
+//            ),
+//        ));
 
 //         pr($transformacoes);exit();
 
-        if ($transformacoes) {
-            foreach ($transformacoes as $transformation) {
+        if ($arrayFiltrado) {
+            foreach ($arrayFiltrado as $transformation) {
+//                pr($transformation);exit();
                 $resultado = $this->Result->find('first', array(
                     'conditions' => array(
-                        'Result.transformation_id' => $transformation['Transformation']['id'],
+                        'Result.transformation_id' => $transformation['Transformation.id'],
                         'Result.metric_id' => 4,
                     ),
                 ));
@@ -214,7 +257,8 @@ class QuestionsController extends AppController
 //            $this->request->data['Answer']['choice'][0] = $this->request->data['check'];
 //            unset($this->request->data['check']);
 //            ksort($this->request->data['Answer']['choice']);
-            pr($this->request->data);
+//            pr($this->request->data);
+//            exit();
 //            pr($this->request->data['Answer']);
 //            $arr = array();
 //            $arr[0] = $this->request->data['Answer']['result_question_id'][5];
@@ -263,10 +307,10 @@ class QuestionsController extends AppController
             unset($this->request->data['Answer']['choice'][7]);
             $choices[7] = $this->request->data['Answer']['choice'][8];
             unset($this->request->data['Answer']['choice'][8]);
-            $choices[8] = $this->request->data['Answer']['choice'][9];
-            unset($this->request->data['Answer']['choice'][9]);
-            $choices[9] = $this->request->data['Answer']['choice'][10];
-            unset($this->request->data['Answer']['choice'][10]);
+//            $choices[8] = $this->request->data['Answer']['choice'][9];
+//            unset($this->request->data['Answer']['choice'][9]);
+//            $choices[9] = $this->request->data['Answer']['choice'][10];
+//            unset($this->request->data['Answer']['choice'][10]);
 
             $this->request->data['Answer']['choice'] = $choices;
 //            pr($this->request->data['Answer']);
@@ -308,12 +352,12 @@ class QuestionsController extends AppController
             if ($contador < 1) {
                 foreach ($this->request->data['Answer']['choice'] as $key => $answer) {
                     $this->Answer->create();
-                    if ($key == 9) {
+                    if ($key == 7) {
                         $Newresp = array(
                             'Answer' => array(
                                 'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
                                 'user_id' => $this->request->data['Answer']['user_id'],
-                                'justify' => $this->request->data['Answer']['justify'][10],
+                                'justify' => $this->request->data['Answer']['justify'][8],
                                 'choice' => 'N/A',
                                 'start_time' => $this->request->data['Answer']['start_time'],
                                 'end_time' => $this->request->data['Answer']['end_time'],
@@ -370,6 +414,7 @@ class QuestionsController extends AppController
             'order' => array('Answer.result_question_id ASC'),
         ));
 
+
         $array = $this->Answer->find('all', array(
             'recursive' => -1,
             'contain' => array(
@@ -388,21 +433,46 @@ class QuestionsController extends AppController
         $arrayFiltrado = array();
         $k = 0;
         foreach ($array as $ar) {
-            $arrayFiltrado[$k]['Result.id !='] = $ar['ResultQuestion']['Result']['id'];
+            $arrayFiltrado[$k] = $ar['ResultQuestion']['Result']['transformation_id'];
             $k++;
         }
+        $arrayFiltrado = array_unique($arrayFiltrado);
+        $group = array();
+        $par = array(1022,1026,1042,1178,1180,1183);
+        $impar = array(1060,1061,1070,1185,1188,1192);
 
+        if($this->Auth->user('id') % 2 == 0){
+//            echo $this->Auth->user('id');
+//            echo "par";
+            foreach ($par as $p){
+                if (!in_array($p, $arrayFiltrado)) {
+                    $group[]['Result.transformation_id'] = $p;
+                }
+            }
+        } else {
+//            echo $this->Auth->user('id');
+//            echo "impar";
+            foreach ($impar as $i){
+                if (!in_array($i, $arrayFiltrado)) {
+                    $group[]['Result.transformation_id'] = $i;
+                }
+            }
+        }
+//        pr($arrayFiltrado);
+//        pr($group);
+//        exit();
         $question = $this->ResultQuestion->find('first', array(
             'recursive' => 3,
             'order' => 'rand()',
             'conditions' => array(
-                'AND' => $arrayFiltrado,
+//                'AND' => $arrayFiltrado,
+                'OR' => $group
             ),
         ));
-
+//        echo $question['Result']['transformation_id'];
 //        pr($question['Result']['ResultQuestion']);exit();
 
-        if (empty($question) || $respondidas >= 60) {
+        if (empty($question) || $respondidas >= 48) {
             $this->Session->setFlash(__('Thank you for responding to the end!'), 'Flash/info');
             $this->redirect(array('controller' => 'pages', 'action' => 'home'));
         }
