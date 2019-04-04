@@ -17,7 +17,62 @@ class TransformationsController extends AppController
         $this->loadModel('SearchEvent');
     }
 
-    public function index($pesquisa = null)
+
+    public function MatchDiffsAndReturnMetricsForAllCodes()
+    {
+        $arquivo = fopen('C:\Users\03873243130\Desktop\lambdaanalysisresults\allTransformationMetrics\estatisticaExtratorCodigo.txt', 'r');
+        $linhas = array();
+        while (!feof($arquivo)) {
+            $linhas[] = fgets($arquivo, 1024);
+        }
+        fclose($arquivo);
+        foreach ($linhas as $linha) {
+            $diff = explode(" - ", $linha);
+            $transformation = $this->Transformation->find('first', array(
+                'recursive' => -1,
+                'conditions' => array(
+                    'Transformation.diff_id' => $diff[0]
+                ),
+            ));
+            pr($transformation['Transformation']['id']);
+            if (!empty($transformation)) {
+                $metric = explode(" | ", $diff[1]);
+            }
+            $this->Result->create();
+            $result = array(
+                'Result' => array(
+                    'transformation_id' => $transformation['Transformation']['id'],
+                    'metric_id' => 28,
+                    'before' => str_replace(',', '.', $metric[0]),
+                    'after' => str_replace(',', '.', $metric[1]
+                    ),
+                )
+            );
+            $this->Result->save($result);
+        }
+        $this->redirect(array('controller'=>'SearchEvents','action' => 'index'));
+    }
+
+
+    public function countTransformationByProject()
+    {
+        $transformations = $this->Transformation->find('all', array(
+            'recursive' => -1,
+            'order' => array('Transformation.id DESC'),
+        ));
+        $projects = array();
+        foreach ($transformations as $tr) {
+//            pr($tr['Transformation']['site_link']);
+            $aux = explode('/', $tr['Transformation']['site_link']);
+//            pr($aux);exit();
+            $projects[] = $aux[3];
+        }
+        pr(array_count_values($projects));
+        exit();
+    }
+
+    public
+    function index($pesquisa = null)
     {
         if ($pesquisa == null) {
             $transformations = $this->Transformation->find('all', array(
@@ -36,7 +91,8 @@ class TransformationsController extends AppController
         $this->set('pesquisa', $pesquisa);
     }
 
-    public function add($id = null)
+    public
+    function add($id = null)
     {
         if ($this->request->is('post')) {
             $uid = $id;
@@ -123,7 +179,8 @@ class TransformationsController extends AppController
         $this->set('pesquisa', $id);
     }
 
-    public function separaAnteriorETransformado($transformation = null, $pasta = null, $arquivo = null)
+    public
+    function separaAnteriorETransformado($transformation = null, $pasta = null, $arquivo = null)
     {
         //pr($arquivo);exit();
         //Variável $fp armazena a conexão com o arquivo e o tipo de ação.
@@ -174,7 +231,8 @@ class TransformationsController extends AppController
         $this->manipulaMetricas($transformation);
     }
 
-    public function edit($id = null)
+    public
+    function edit($id = null)
     {
         if ($this->request->is('post')) {
             $refactoring['Transformation'] = $this->request->data['Transformation'];
@@ -238,7 +296,8 @@ class TransformationsController extends AppController
         $this->set('metrics', $metricas);
     }
 
-    public static function delTree($dir)
+    public
+    static function delTree($dir)
     {
         $files = array_diff(scandir($dir), array('.', '..'));
         foreach ($files as $file) {
@@ -247,7 +306,8 @@ class TransformationsController extends AppController
         return rmdir($dir);
     }
 
-    public function delete($id = null, $pesquisa = null)
+    public
+    function delete($id = null, $pesquisa = null)
     {
         $Selected = $this->Transformation->find('first', array(
             'conditions' => array('Transformation.id' => $id),
@@ -263,7 +323,8 @@ class TransformationsController extends AppController
         }
     }
 
-    public function deleteAll($pesquisa = null)
+    public
+    function deleteAll($pesquisa = null)
     {
         $Selected = $this->Transformation->find('all', array(
             'conditions' => array('Transformation.search_event_id' => $pesquisa),
@@ -277,7 +338,8 @@ class TransformationsController extends AppController
         $this->redirect(array('action' => 'index', $pesquisa));
     }
 
-    public function view($id = null)
+    public
+    function view($id = null)
     {
         if ($id == null) {
             $this->Session->setFlash(__('Esta transformação não existe!'), 'Flash/error');
@@ -357,18 +419,21 @@ class TransformationsController extends AppController
         );
     }
 
-    public function clearString($string = null){
+    public
+    function clearString($string = null)
+    {
         $string = str_replace("+   ", "    ", $string);
         $string = str_replace("-   ", "    ", $string);
         return $string;
     }
 
-    public function posnetReadability($string = null)
+    public
+    function posnetReadability($string = null)
     {
-        $readability = 8.87 - (0.033*$this->HalsteadV($string)) + (0.40*$this->locAndAmloc($string)) - (1.5*$this->entropy($string));
-       $part1 = 8.87 - (0.033*$this->HalsteadV($string));
-        $part2 =(0.40*$this->locAndAmloc($string));
-        $part3 =(1.5*$this->entropy($string));
+        $readability = 8.87 - (0.033 * $this->HalsteadV($string)) + (0.40 * $this->locAndAmloc($string)) - (1.5 * $this->entropy($string));
+        $part1 = 8.87 - (0.033 * $this->HalsteadV($string));
+        $part2 = (0.40 * $this->locAndAmloc($string));
+        $part3 = (1.5 * $this->entropy($string));
         $val = $part1;
 //        pr($part1);
 //        pr($val = $val + $part2);
@@ -377,17 +442,20 @@ class TransformationsController extends AppController
         return round($readability, 2);
     }
 
-    public function posnetReadabilityToken($string = null){
-        $readability = 8.87 - (0.033*$this->HalsteadV($string)) + (0.40*$this->locAndAmloc($string)) - (1.5*$this->entropyByTokens($string));
+    public
+    function posnetReadabilityToken($string = null)
+    {
+        $readability = 8.87 - (0.033 * $this->HalsteadV($string)) + (0.40 * $this->locAndAmloc($string)) - (1.5 * $this->entropyByTokens($string));
         return round($readability, 2);
     }
 
-    public function entropyByTokens($string = null)
+    public
+    function entropyByTokens($string = null)
     {
         $h = 0;
         $string = $this->clearString($string);
         $size = strlen($string);
-        $frequencies = array_count_values(str_word_count($string,1));
+        $frequencies = array_count_values(str_word_count($string, 1));
         $frequencies['=='] = substr_count($string, '==');
         $frequencies['!='] = substr_count($string, '!=');
         $frequencies['!='] = substr_count($string, '!=');
@@ -407,32 +475,35 @@ class TransformationsController extends AppController
         $frequencies['('] = substr_count($string, '(');
         $frequencies[')'] = substr_count($string, ')');
 //        $frequencies[' '] = substr_count($string, ' ');
-        foreach ($frequencies as $key => $fr){
-            if($fr == 0){
+        foreach ($frequencies as $key => $fr) {
+            if ($fr == 0) {
                 unset($frequencies[$key]);
             }
         }
         foreach ($frequencies as $v) {
             $p = $v / $size;
-            $h -= $p*log($p)/log(2);
+            $h -= $p * log($p) / log(2);
         }
         return round($h, 2);
     }
 
-    public function entropy($string = null)
+    public
+    function entropy($string = null)
     {
         $string = $this->clearString($string);
         $h = 0;
         $size = strlen($string);
         foreach (count_chars($string, 1) as $v) {
             $p = $v / $size;
-            $h -= $p*log($p)/log(2);
+            $h -= $p * log($p) / log(2);
         }
         $entropy = round($h, 2);
         return $entropy;
     }
 
-    public function HalsteadV($string = null){
+    public
+    function HalsteadV($string = null)
+    {
         $vocabulary = $this->hln1($string) + $this->hln2($string);
 //        if($vocabulary == 0){
 //            $vocabulary = 1;
@@ -441,11 +512,12 @@ class TransformationsController extends AppController
 //        if($lenght == 0){
 //            $lenght = 1;
 //        }
-        $volume = $lenght*log($vocabulary,2);
+        $volume = $lenght * log($vocabulary, 2);
         return round($volume, 2);
     }
 
-    public function hl_N2($string = null)
+    public
+    function hl_N2($string = null)
     {
         $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
@@ -492,7 +564,8 @@ class TransformationsController extends AppController
         return $totalWords;
     }
 
-    public function hln2($string = null)
+    public
+    function hln2($string = null)
     {
         $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
@@ -570,7 +643,7 @@ class TransformationsController extends AppController
                 $check = explode(' ', $str[$st]);
                 foreach ($divideString as $jk => $valid) {
                     foreach ($valid as $kkyy => $val) {
-                        if(count($check) > 1) {
+                        if (count($check) > 1) {
                             if ($check[1] == $val) {
                                 $contador++;
                             }
@@ -592,7 +665,8 @@ class TransformationsController extends AppController
         return count($arrayOperandosUnicos);
     }
 
-    public function hln1($string = null)
+    public
+    function hln1($string = null)
     {
         $string = $this->clearString($string);
         $operators = " - , + ,+=,-=,*=,/=,%=,&=,^=,|=, = ,expr++,expr--,++expr,--expr,+expr,-expr, ~ , ! ,*, / , % ,==,!=, & ,^, | , && , || , ? , : ,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
@@ -609,7 +683,8 @@ class TransformationsController extends AppController
         return count(array_unique($list));
     }
 
-    public function hl_N1($string = null)
+    public
+    function hl_N1($string = null)
     {
         $string = $this->clearString($string);
         $operators = " - , + ,+=,-=,*=,/=,%=,&=,^=,|=, = ,expr++,expr--,++expr,--expr,+expr,-expr, ~ , ! ,*, / , % ,==,!=, & ,^, | , && , || , ? , : ,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
@@ -625,14 +700,16 @@ class TransformationsController extends AppController
         return array_sum($list);
     }
 
-    public function locAndAmloc($string = null)
+    public
+    function locAndAmloc($string = null)
     {
         $string = $this->clearString($string);
-        $numLoc = substr_count( $string, "\n");
+        $numLoc = substr_count($string, "\n");
         return $numLoc;
     }
 
-    public function countblanklines($string)
+    public
+    function countblanklines($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -652,7 +729,8 @@ class TransformationsController extends AppController
         return array_sum($arrayComp);
     }
 
-    public function countatribution_max($string)
+    public
+    function countatribution_max($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -667,7 +745,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function countatribution_avg($string)
+    public
+    function countatribution_avg($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -687,7 +766,8 @@ class TransformationsController extends AppController
         return $average;
     }
 
-    public function countcomparators_max($string)
+    public
+    function countcomparators_max($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -710,7 +790,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function countcomparators_avg($string)
+    public
+    function countcomparators_avg($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -738,7 +819,8 @@ class TransformationsController extends AppController
         return $average;
     }
 
-    public function countoperations_max($string)
+    public
+    function countoperations_max($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -757,7 +839,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function countoperations_avg($string)
+    public
+    function countoperations_avg($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -781,7 +864,8 @@ class TransformationsController extends AppController
         return $average;
     }
 
-    public function countparents_max($string)
+    public
+    function countparents_max($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -796,7 +880,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function countparents_avg($string)
+    public
+    function countparents_avg($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -818,7 +903,8 @@ class TransformationsController extends AppController
         return $average;
     }
 
-    public function countspaces_max($string)
+    public
+    function countspaces_max($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -834,7 +920,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function countspaces_avg($string)
+    public
+    function countspaces_avg($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -856,7 +943,8 @@ class TransformationsController extends AppController
         return $average;
     }
 
-    public function countvirgulas_max($string)
+    public
+    function countvirgulas_max($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -871,7 +959,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function countvirgulas_avg($string)
+    public
+    function countvirgulas_avg($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -893,7 +982,8 @@ class TransformationsController extends AppController
         return $average;
     }
 
-    public function countperiods_max($string)
+    public
+    function countperiods_max($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -908,7 +998,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function countperiods_avg($string)
+    public
+    function countperiods_avg($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -930,7 +1021,8 @@ class TransformationsController extends AppController
         return $average;
     }
 
-    public function countComments_max($string)
+    public
+    function countComments_max($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -946,7 +1038,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function countComments_avg($string)
+    public
+    function countComments_avg($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -969,7 +1062,8 @@ class TransformationsController extends AppController
         return $average;
     }
 
-    public function countDigits_max($string)
+    public
+    function countDigits_max($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -983,7 +1077,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function countDigits_avg($string)
+    public
+    function countDigits_avg($string)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -1002,7 +1097,8 @@ class TransformationsController extends AppController
         return $average;
     }
 
-    public function qtd_identifiers_max($string = null)
+    public
+    function qtd_identifiers_max($string = null)
     {
         $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
@@ -1038,7 +1134,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function qtd_identifiers_avg($string = null)
+    public
+    function qtd_identifiers_avg($string = null)
     {
         $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
@@ -1077,7 +1174,8 @@ class TransformationsController extends AppController
         }
     }
 
-    public function uq_qtd_identifiers_max($string = null)
+    public
+    function uq_qtd_identifiers_max($string = null)
     {
         $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
@@ -1112,7 +1210,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function uq_qtd_identifiers_avg($string = null)
+    public
+    function uq_qtd_identifiers_avg($string = null)
     {
         $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
@@ -1152,7 +1251,8 @@ class TransformationsController extends AppController
         }
     }
 
-    public function qtd_keywords_max($string = null)
+    public
+    function qtd_keywords_max($string = null)
     {
         $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
@@ -1175,7 +1275,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function qtd_keywords_avg($string = null)
+    public
+    function qtd_keywords_avg($string = null)
     {
         $string = $this->clearString($string);
         $keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
@@ -1202,7 +1303,8 @@ class TransformationsController extends AppController
         return $average;
     }
 
-    public function cl_max($string = null)
+    public
+    function cl_max($string = null)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -1218,7 +1320,8 @@ class TransformationsController extends AppController
         return max($arrayComp);
     }
 
-    public function cl_average($string = null)
+    public
+    function cl_average($string = null)
     {
         $string = $this->clearString($string);
         $str = explode("<br/>", $string);
@@ -1237,7 +1340,8 @@ class TransformationsController extends AppController
         }
     }
 
-    public function accm($string = null)
+    public
+    function accm($string = null)
     {
         $string = $this->clearString($string);
         $complex = 1;
@@ -1255,7 +1359,8 @@ class TransformationsController extends AppController
         return $complex;
     }
 
-    public function manipulaMetricas($id = null)
+    public
+    function manipulaMetricas($id = null)
     {
         $this->loadModel('Result');
 
@@ -1474,7 +1579,7 @@ class TransformationsController extends AppController
                     ),
                 );
                 $this->Result->save($result);
-            }elseif ($metricas['Metric']['acronym'] == 'SHEntropy') {
+            } elseif ($metricas['Metric']['acronym'] == 'SHEntropy') {
                 $this->Result->id = $metricas['Result']['id'];
                 $result = array(
                     'Result' => array(
@@ -1483,7 +1588,7 @@ class TransformationsController extends AppController
                     ),
                 );
                 $this->Result->save($result);
-            }elseif ($metricas['Metric']['acronym'] == 'HalsteadV') {
+            } elseif ($metricas['Metric']['acronym'] == 'HalsteadV') {
                 $this->Result->id = $metricas['Result']['id'];
                 $result = array(
                     'Result' => array(
@@ -1492,7 +1597,7 @@ class TransformationsController extends AppController
                     ),
                 );
                 $this->Result->save($result);
-            }elseif ($metricas['Metric']['acronym'] == 'PostnetReadability') {
+            } elseif ($metricas['Metric']['acronym'] == 'PostnetReadability') {
                 $this->Result->id = $metricas['Result']['id'];
                 $result = array(
                     'Result' => array(
@@ -1501,7 +1606,7 @@ class TransformationsController extends AppController
                     ),
                 );
                 $this->Result->save($result);
-            }elseif ($metricas['Metric']['acronym'] == 'PostnetReadabilityToken') {
+            } elseif ($metricas['Metric']['acronym'] == 'PostnetReadabilityToken') {
                 $this->Result->id = $metricas['Result']['id'];
                 $result = array(
                     'Result' => array(
@@ -1515,7 +1620,8 @@ class TransformationsController extends AppController
         }
     }
 
-    public function atualizaTodasAsMetricas($id = null)
+    public
+    function atualizaTodasAsMetricas($id = null)
     {
         $this->loadModel('Metric');
 
@@ -1553,7 +1659,8 @@ class TransformationsController extends AppController
         $this->redirect(array('action' => 'index', $id));
     }
 
-    public function AtualizaMetricasIndividual($id = null)
+    public
+    function AtualizaMetricasIndividual($id = null)
     {
         $this->manipulaMetricas($id);
         $this->redirect(array('action' => 'view', $id));
