@@ -19,21 +19,93 @@ class TransformationsController extends AppController
 
 	public function loadAllTransformationByFolder($pesquisa = null)
 	{
+		pr($pesquisa);
 		$path = WWW_ROOT . 'files';
 		$dirs = scandir($path);
+		$language = 1;
 //		pr($dirs);
 		foreach ($dirs as $dir) {
 			$folder = $path . '/' . $dir;
 			if (is_dir($folder) && ($dir != ".") && ($dir != "..")) {
 //			pr($folder);
 				$snippetPath = scandir($folder);
-				$a = $snippetPath[2];
-				$b = $snippetPath[3];
+				$a = $folder . '/' . $snippetPath[2];
+				$b = $folder . '/' . $snippetPath[3];
 				pr($folder);
 				pr($a);
 				pr($b);
+				$conteudo1 = file_get_contents($a);
+				$conteudo2 = file_get_contents($b);
+
+				$typeCode1 = $this->checkCodeHasLambda($conteudo1);
+				$typeCode2 = $this->checkCodeHasLambda($conteudo2);
+
+				//pr($typeCode1);
+				pr($typeCode2);
+				if ($typeCode1 === 0 && $typeCode2 !== 0) {
+					$apt = 'S';
+				} else {
+					$apt = 'N';
+				}
+				pr($apt);
+				pr("lang_id = ".$language);
 			}
-		}exit();
+		}
+		exit();
+	}
+
+	public function checkCodeHasLambda($conteudo = null)
+	{
+//		pr($conteudo);
+		$changed = str_replace("->","LAMBDAARROW",$conteudo);
+//		pr($changed);
+		if (strpos($changed, "LAMBDAARROW") === false) {
+			$transformationType = 0;
+//			pr('n tem');
+			return $transformationType;
+		}
+
+		$tokenFilter = strpos($conteudo, '.filter');
+		$tokenCount = strpos($conteudo, '.count');
+		$tokenCollect = strpos($conteudo, '.collect');
+		$tokenMap = strpos($conteudo, '.map');
+		$tokenReduce = strpos($conteudo, '.reduce');
+		$tokenForeach = strpos($conteudo, '.forEach');
+		$tokenAnyMatch = strpos($conteudo, '.anyMatch');
+		$tokenFlatMap = strpos($conteudo, '.flatMap');
+
+		if ($tokenFilter != null && $tokenCount != null) {
+			$transformationType = 8;
+		} elseif ($tokenFilter != null && $tokenCollect != null) {
+			$transformationType = 9;
+		} elseif ($tokenMap != null && $tokenCollect != null) {
+			$transformationType = 7;
+		} elseif ($tokenMap != null && $tokenReduce != null) {
+			$transformationType = 6;
+		} elseif ($tokenFilter != null && $tokenFlatMap != null) {
+			$transformationType = 11;
+		} elseif ($tokenMap != null && $tokenFlatMap != null) {
+			$transformationType = 13;
+		} elseif ($tokenForeach != null && $tokenFlatMap != null) {
+			$transformationType = 14;
+		} elseif ($tokenMap != null && $tokenCount != null) {
+			$transformationType = 15;
+		} elseif ($tokenFilter != null && $tokenForeach != null) {
+			$transformationType = 10;
+		} elseif ($tokenFilter != null) {
+			$transformationType = 3;
+		} elseif ($tokenForeach != null) {
+			$transformationType = 2;
+		} elseif ($tokenMap != null) {
+			$transformationType = 5;
+		} elseif ($tokenAnyMatch != null) {
+			$transformationType = 4;
+		} elseif ($tokenFlatMap != null) {
+			$transformationType = 16;
+		} else {
+			$transformationType = 1;
+		}
+		return $transformationType;
 	}
 
 
