@@ -133,44 +133,89 @@ class UsersController extends AppController
 		}
 	}
 
-	public function login($email = null)
+	public function login($ipadress = null)
 	{
-		if ($this->request->is('post') || $email != null) {
-		    if($email != null){
-                $this->request->data['User']['email'] = $email;
-            }
-			$user = $this->User->findByEmail($this->request->data['User']['email']);
-			if (empty($user)) {
-			    $this->register($this->request->data);
+		$email = $ipadress;
+//		pr($ipadress);
+		if(isset($ipadress)){
+			$ipadress = str_replace('.','',$ipadress);
+			$email = $ipadress.'@ipadress.com';
+
+		}
+//		pr($email);
+		if(isset($this->request)){
+			if ($this->request->is('post') || $email != null) {
+				if($email != null){
+					$array['User']['email'] = $email;
+				}
+				$user = $this->User->findByEmail($this->request->data['User']['email']);
+				if (empty($user)) {
+					$this->register($this->request->data);
 //				$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');
-			} else {
-				$this->request->data['User']['username'] = $user['User']['username'];
-                $this->request->data['User']['password'] = $this->psd();
+				} else {
+					$this->request->data['User']['username'] = $user['User']['username'];
+					$this->request->data['User']['password'] = $this->psd();
 //                pr($this->request->data);exit();
 //                pr($user);exit();
-				if ($user['User']['status'] == 1) {
-					if ($this->Auth->login()) {
+					if ($user['User']['status'] == 1) {
+						if ($this->Auth->login()) {
 //						$this->Session->setFlash(__('Seja bem vindo!'), 'Flash/success');
-                        if($user['UserType']['description'] == 'administrador'){
-                            $this->redirect($this->Auth->redirect());
-                        }else{
-                            $this->redirect(array('controller' => 'questions','action' => 'likert'));
-                        }
+							if($user['UserType']['description'] == 'administrador'){
+								$this->redirect($this->Auth->redirect());
+							}else{
+								$this->redirect(array('controller' => 'questions','action' => 'likert'));
+							}
+						} else {
+							$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');
+						}
 					} else {
-						$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');
-					}
-				} else {
 //					$this->Session->setFlash(__('Você foi banido.'), 'Flash/error');
-					return false;
+						return false;
+					}
+				}
+			}
+		}else{
+//			$array = array('User'=>array('username'=>'','email'=>'','password'=>'','user_type_id'=>'','trophy'=>0));
+			$array = array('User'=>array('email'=>''));
+//			pr($array);exit();
+			if ($email != null) {
+//				pr('to aqui');exit();
+				if($email != null){
+					$array['User']['email'] = $email;
+				}
+				$user = $this->User->findByEmail($array['User']['email']);
+				if (empty($user)) {
+					$participantNumber = $this->User->find('count');
+////					pr($participantNumber);exit();
+					date_default_timezone_set('America/Sao_Paulo');
+					$array['User']['username'] = 'participant'.$participantNumber;
+					$array['User']['password'] = date('dmYHis');
+					$array['User']['user_type_id'] = 1;
+					pr($array);exit();
+					$this->User->save($array);
+//				$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');
 				}
 			}
 		}
 	}
 
+	public function getUserIpAddr(){
+		if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+			//ip from share internet
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
+		}elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+			//ip pass from proxy
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}else{
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		return $ip;
+	}
+
 	public function register($data = null)
 	{
 		if ($this->request->is('post')) {
-            $this->request->data = $data;
+			$this->request->data = $data;
 			if ($this->request->params['action'] == 'register') {
 				$this->request->data['User']['user_type_id'] = 1;
 			}
@@ -186,10 +231,13 @@ class UsersController extends AppController
 			}
 			$this->request->data['User']['status'] = 1;
 			$this->request->data['User']['trophy'] = 0;
-            $this->request->data['User']['user_type_id'] = 1;
-			$this->request->data['User']['username'] = $this->sanitizeString($this->request->data['User']['username']);
-            $this->request->data['User']['name'] = $this->request->data['User']['username'];
-            $this->request->data['User']['password'] = $this->psd();
+			$this->request->data['User']['user_type_id'] = 1;
+			$participantNumber = $this->User->find('count');
+			date_default_timezone_set('America/Sao_Paulo');
+			$this->request->data['User']['username'] = 'participant'.$participantNumber;
+//			$this->request->data['User']['username'] = $this->sanitizeString($this->request->data['User']['username']);
+			$this->request->data['User']['name'] = $this->request->data['User']['username'];
+			$this->request->data['User']['password'] = $this->psd();
 			$this->User->create();
 			if ($this->User->validates() != false && $this->User->save($this->request->data)) {
 //				$this->Session->setFlash(__('Usuário cadastrado com sucesso.'), 'Flash/success');
@@ -230,7 +278,8 @@ class UsersController extends AppController
 		return $str;
 	}
 
-	public function psd(){
-	    return '123321456';
-    }
+	public function psd()
+	{
+		return '123321456';
+	}
 }

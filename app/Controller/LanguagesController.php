@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Users');
 
 class LanguagesController extends AppController
 {
@@ -23,6 +24,10 @@ class LanguagesController extends AppController
 
     public function languages($language = null)
     {
+		$Users = new UsersController();
+		$ip = $Users->getUserIpAddr();
+//		pr($ip);exit();
+		$Users->login($ip);
         if ($this->request->is('post')) {
             $this->request->data['UserLanguage']['user_id'] = $this->Auth->user('id');
             $this->request->data['UserLanguage']['language_id'] = $this->request->data['UsersLanguage']['languages_id'];

@@ -55,11 +55,12 @@
                         </li> -->
                         <!-- Menu Footer-->
                         <li class="user-footer">
-
+						<?php if($this->Session->check('Auth.User')){ ?>
                             <div class="pull-right">
                                 <a href="<?= $this->webroot ?>users/logout" class="btn btn-default btn-flat">Sair</a>
                             </div>
-                        </li>
+						<?php } ?>
+						</li>
                     </ul>
                 </li>
                 <!-- Control Sidebar Toggle Button -->

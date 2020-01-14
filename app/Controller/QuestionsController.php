@@ -51,7 +51,7 @@ class QuestionsController extends AppController
         $numberOfTypes = $this->TransformationType->find('count');
 
         // $getAmostration = ($numberOfTransformations / $numberOfTypes);
-        $getAmostration = 3;
+//        $getAmostration = 100;
         // pr($getAmostration);
         // pr(ceil($getAmostration));
         // exit();
@@ -75,21 +75,9 @@ class QuestionsController extends AppController
                     'Transformation.search_event_id' => $id,
                     'Transformation.apt' => "S",
                     'Transformation.transformation_type_id' => $type['TransformationType']['id'],
-                    'Transformation.id <=' => 1073
+                    'Transformation.id <=' => 10
                 ),
-                'limit' => ceil($getAmostration)
-            ));
-
-            $transfPorTipo2 = $this->Transformation->find('all', array(
-                'recursive' => -1,
-                'order' => 'rand()',
-                'conditions' => array(
-                    'Transformation.search_event_id' => $id,
-                    'Transformation.apt' => "S",
-                    'Transformation.transformation_type_id' => $type['TransformationType']['id'],
-                    'Transformation.id >' => 1073
-                ),
-                'limit' => ceil($getAmostration)
+//                'limit' => ceil($getAmostration)
             ));
 
 //             pr($type);
@@ -100,29 +88,24 @@ class QuestionsController extends AppController
                 $arrayFiltradoWeBMiner[$k]['transformation_type_id'] = $type['TransformationType']['id'];
                 $k++;
             }
-            foreach ($transfPorTipo2 as $ar2) {
-                $arrayFiltradoRjtl[$y]['Transformation.id'] = $ar2['Transformation']['id'];
-                $arrayFiltradoRjtl[$y]['transformation_type_id'] = $type['TransformationType']['id'];
-                $y++;
-            }
 //             }
 
-//            pr($arrayFiltrado);
+//            pr($arrayFiltradoWeBMiner);exit();
         }
 
 //
         $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[0]['Transformation.id'];
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[0]['Transformation.id'];
+//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[0]['Transformation.id'];
         $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[1]['Transformation.id'];
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[1]['Transformation.id'];
+//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[1]['Transformation.id'];
+        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[2]['Transformation.id'];
+//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[3]['Transformation.id'];
         $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[3]['Transformation.id'];
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[3]['Transformation.id'];
+//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[4]['Transformation.id'];
         $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[4]['Transformation.id'];
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[4]['Transformation.id'];
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[7]['Transformation.id'];
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[6]['Transformation.id'];
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[9]['Transformation.id'];
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[8]['Transformation.id'];
+//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[6]['Transformation.id'];
+//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[9]['Transformation.id'];
+//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[8]['Transformation.id'];
 
 //        pr($arrayFiltradoWeBMiner);
 //        pr($arrayFiltradoRjtl);
@@ -428,7 +411,7 @@ class QuestionsController extends AppController
             ),
         ));
 
-        // pr($array);exit();
+//         pr($array);exit();
 
         $arrayFiltrado = array();
         $k = 0;
@@ -437,27 +420,27 @@ class QuestionsController extends AppController
             $k++;
         }
         $arrayFiltrado = array_unique($arrayFiltrado);
-        $group = array();
-        $par = array(1022,1026,1042,1178,1180,1183);
-        $impar = array(1060,1061,1070,1185,1188,1192);
-
-        if($this->Auth->user('id') % 2 == 0){
-//            echo $this->Auth->user('id');
-//            echo "par";
-            foreach ($par as $p){
-                if (!in_array($p, $arrayFiltrado)) {
-                    $group[]['Result.transformation_id'] = $p;
-                }
-            }
-        } else {
-//            echo $this->Auth->user('id');
-//            echo "impar";
-            foreach ($impar as $i){
-                if (!in_array($i, $arrayFiltrado)) {
-                    $group[]['Result.transformation_id'] = $i;
-                }
-            }
-        }
+//        $group = array();
+//        $par = array(1022,1026,1042,1178,1180,1183);
+//        $impar = array(1060,1061,1070,1185,1188,1192);
+//		pr($arrayFiltrado);
+//        if($this->Auth->user('id') % 2 == 0){
+////            echo $this->Auth->user('id');
+////            echo "par";
+//            foreach ($par as $p){
+//                if (!in_array($p, $arrayFiltrado)) {
+//                    $group[]['Result.transformation_id'] = $p;
+//                }
+//            }
+//        } else {
+////            echo $this->Auth->user('id');
+////            echo "impar";
+//            foreach ($impar as $i){
+//                if (!in_array($i, $arrayFiltrado)) {
+//                    $group[]['Result.transformation_id'] = $i;
+//                }
+//            }
+//        }
 //        pr($arrayFiltrado);
 //        pr($group);
 //        exit();
@@ -466,13 +449,16 @@ class QuestionsController extends AppController
             'order' => 'rand()',
             'conditions' => array(
 //                'AND' => $arrayFiltrado,
-                'OR' => $group
+                'OR' => $arrayFiltrado
             ),
         ));
+//        pr($question);exit();
 //        echo $question['Result']['transformation_id'];
 //        pr($question['Result']['ResultQuestion']);exit();
 
         if (empty($question) || $respondidas >= 48) {
+//        	pr($question);
+//        	pr('travou aqui');exit();
             $this->Session->setFlash(__('Thank you for responding to the end!'), 'Flash/info');
             $this->redirect(array('controller' => 'pages', 'action' => 'home'));
         }
