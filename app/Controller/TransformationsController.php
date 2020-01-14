@@ -19,49 +19,79 @@ class TransformationsController extends AppController
 
 	public function loadAllTransformationByFolder($pesquisa = null)
 	{
-		pr($pesquisa);
 		$path = WWW_ROOT . 'files';
 		$dirs = scandir($path);
 		$language = 1;
-//		pr($dirs);
 		foreach ($dirs as $dir) {
 			$folder = $path . '/' . $dir;
 			if (is_dir($folder) && ($dir != ".") && ($dir != "..")) {
-//			pr($folder);
 				$snippetPath = scandir($folder);
 				$a = $folder . '/' . $snippetPath[2];
 				$b = $folder . '/' . $snippetPath[3];
 				pr($folder);
-				pr($a);
-				pr($b);
+				$HasAny = $this->Transformation->find('first', array(
+					'conditions' => array('Transformation.diff_id' => $folder),
+				));
+				if(count($HasAny) > 0){
+					continue;
+				}
 				$conteudo1 = file_get_contents($a);
 				$conteudo2 = file_get_contents($b);
 
 				$typeCode1 = $this->checkCodeHasLambda($conteudo1);
 				$typeCode2 = $this->checkCodeHasLambda($conteudo2);
 
-				//pr($typeCode1);
-				pr($typeCode2);
 				if ($typeCode1 === 0 && $typeCode2 !== 0) {
 					$apt = 'S';
 				} else {
 					$apt = 'N';
 				}
-				pr($apt);
-				pr("lang_id = ".$language);
+				$this->Transformation->create();
+
+				$refactor = array(
+					'Transformation' => array(
+						'transformation_type_id' => $typeCode2,
+						'language_id' => $language,
+						'search_event_id' => $pesquisa,
+						'diff_id' => $folder,
+						'code_before' => $conteudo1,
+						'old_code' => $a,
+						'code_after' => $conteudo2,
+						'new_code' => $b,
+						'apt' => $apt
+					),
+				);
+//				pr($refactor);
+				$this->Transformation->save($refactor);
+
+				$lastTransformationCreated = $this->Transformation->find('first', array(
+					'conditions' => array('Transformation.diff_id' => $folder),
+					'order' => array('Transformation.created DESC'),
+				));
+
+				$metricas = $this->Metric->find('all', array(
+					'order' => array('Metric.created DESC'),
+				)) ;
+				foreach ($metricas as $metrica) {
+					$this->Result->create();
+					$result = array(
+						'Result' => array(
+							'transformation_id' => $lastTransformationCreated['Transformation']['id'],
+							'metric_id' => $metrica['Metric']['id'],
+						),
+					);
+					$this->Result->save($result);
+				}
 			}
 		}
-		exit();
+		$this->redirect(array('action' => 'index', $pesquisa));
 	}
 
 	public function checkCodeHasLambda($conteudo = null)
 	{
-//		pr($conteudo);
 		$changed = str_replace("->","LAMBDAARROW",$conteudo);
-//		pr($changed);
 		if (strpos($changed, "LAMBDAARROW") === false) {
 			$transformationType = 0;
-//			pr('n tem');
 			return $transformationType;
 		}
 
@@ -502,939 +532,16 @@ class TransformationsController extends AppController
 		$this->set('qualitativas', $qualitativas);
 	}
 
-	function array_iunique($array)
-	{
-		return array_intersect_key(
-			$array,
-			array_unique(array_map("strtolower", $array))
-		);
-	}
-
-	public
-	function clearString($string = null)
-	{
-		$string = str_replace("+   ", "    ", $string);
-		$string = str_replace("-   ", "    ", $string);
-		return $string;
-	}
-
-	public
-	function posnetReadability($string = null)
-	{
-		$readability = 8.87 - (0.033 * $this->HalsteadV($string)) + (0.40 * $this->locAndAmloc($string)) - (1.5 * $this->entropy($string));
-		$part1 = 8.87 - (0.033 * $this->HalsteadV($string));
-		$part2 = (0.40 * $this->locAndAmloc($string));
-		$part3 = (1.5 * $this->entropy($string));
-		$val = $part1;
-//        pr($part1);
-//        pr($val = $val + $part2);
-//        pr($val = $val - $part3);
-//        exit();
-		return round($readability, 2);
-	}
-
-	public
-	function posnetReadabilityToken($string = null)
-	{
-		$readability = 8.87 - (0.033 * $this->HalsteadV($string)) + (0.40 * $this->locAndAmloc($string)) - (1.5 * $this->entropyByTokens($string));
-		return round($readability, 2);
-	}
-
-	public
-	function entropyByTokens($string = null)
-	{
-		$h = 0;
-		$string = $this->clearString($string);
-		$size = strlen($string);
-		$frequencies = array_count_values(str_word_count($string, 1));
-		$frequencies['=='] = substr_count($string, '==');
-		$frequencies['!='] = substr_count($string, '!=');
-		$frequencies['!='] = substr_count($string, '!=');
-		$frequencies['&gt;'] = substr_count($string, '&gt;');
-		$frequencies['&lt;'] = substr_count($string, '&lt;');
-		$frequencies['&gt;='] = substr_count($string, '&gt;=');
-		$frequencies['&lt;='] = substr_count($string, '&lt;=');
-		$frequencies['&&'] = substr_count($string, '&&');
-		$frequencies['||'] = substr_count($string, '||');
-		$frequencies['+'] = substr_count($string, '+');
-		$frequencies['-'] = substr_count($string, '-');
-		$frequencies['*'] = substr_count($string, '*');
-		$frequencies['%'] = substr_count($string, '%');
-		$frequencies['/'] = substr_count($string, '/');
-		$frequencies['{'] = substr_count($string, '{');
-		$frequencies['}'] = substr_count($string, '}');
-		$frequencies['('] = substr_count($string, '(');
-		$frequencies[')'] = substr_count($string, ')');
-//        $frequencies[' '] = substr_count($string, ' ');
-		foreach ($frequencies as $key => $fr) {
-			if ($fr == 0) {
-				unset($frequencies[$key]);
-			}
-		}
-		foreach ($frequencies as $v) {
-			$p = $v / $size;
-			$h -= $p * log($p) / log(2);
-		}
-		return round($h, 2);
-	}
-
-	public
-	function entropy($string = null)
-	{
-		$string = $this->clearString($string);
-		$h = 0;
-		$size = strlen($string);
-		foreach (count_chars($string, 1) as $v) {
-			$p = $v / $size;
-			$h -= $p * log($p) / log(2);
-		}
-		$entropy = round($h, 2);
-		return $entropy;
-	}
-
-	public
-	function HalsteadV($string = null)
-	{
-		$vocabulary = $this->hln1($string) + $this->hln2($string);
-//        if($vocabulary == 0){
-//            $vocabulary = 1;
-//        }
-		$lenght = $this->hl_N1($string) + $this->hl_N2($string);
-//        if($lenght == 0){
-//            $lenght = 1;
-//        }
-		$volume = $lenght * log($vocabulary, 2);
-		return round($volume, 2);
-	}
-
-	public
-	function hl_N2($string = null)
-	{
-		$string = $this->clearString($string);
-		$keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
-		$keywords = explode(',', $keywords);
-
-		$operators = " - , + ,+=,-=,*=,/=,%=,&=,^=,|=, = ,expr++,expr--,++expr,--expr,+expr,-expr, ~ , ! ,*, / , % ,==,!=, & ,^, | , && , || , ? , : ,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
-			"&lt;&lt;,&gt;&gt;,&gt;&gt;&gt;,&lt;&lt;=,&gt;&gt;=,&gt;&gt;&gt;=";
-		$operators = explode(',', $operators);
-
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayOperator = array();
-		$arrayComp = array();
-		foreach ($str as $key => $line) {
-			$checkOperators = 0;
-			foreach ($operators as $operator) {
-				if (strstr($line, $operator)) {
-					$checkOperators++;
-					$arrayOperator[] = $operator;
-				}
-			}
-			if ($checkOperators >= 1) {
-				$arrayComp[$key] = $line;
-			}
-		}
-		$arrayOperator = array_unique($arrayOperator);
-		$totalWords = 0;
-		$divideString = array();
-		foreach ($arrayComp as $kk => $value) {
-			foreach ($arrayOperator as $opr) {
-//                pr($opr);
-				$divideString[] = explode($opr, $value);
-			}
-		}
-		foreach ($divideString as $ky => $divide) {
-			if (sizeof($divide) <= 1) {
-				unset($divideString[$ky]);
-			} else {
-				$totalWords += count($divide);
-			}
-		}
-		return $totalWords;
-	}
-
-	public
-	function hln2($string = null)
-	{
-		$string = $this->clearString($string);
-		$keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
-		$keywords = explode(',', $keywords);
-
-		$operators = " - , + ,+=,-=,*=,/=,%=,&=,^=,|=, = ,expr++,expr--,++expr,--expr,+expr,-expr, ~ , ! ,*, / , % ,==,!=, & ,^, | , && , || , ? , : ,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
-			"&lt;&lt;,&gt;&gt;,&gt;&gt;&gt;,&lt;&lt;=,&gt;&gt;=,&gt;&gt;&gt;=";
-		$operators = explode(',', $operators);
-
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayOperator = array();
-		$arrayComp = array();
-		foreach ($str as $key => $line) {
-			$checkOperators = 0;
-			foreach ($operators as $operator) {
-				if (strstr($line, $operator)) {
-					$checkOperators++;
-					$arrayOperator[] = $operator;
-				}
-			}
-			if ($checkOperators >= 1) {
-				$arrayComp[$key] = $line;
-			}
-		}
-		$arrayOperator = array_unique($arrayOperator);
-		$totalWords = 0;
-		$divideString = array();
-		foreach ($arrayComp as $kk => $value) {
-			foreach ($arrayOperator as $opr) {
-//                pr($opr);
-				$divideString[] = explode($opr, $value);
-			}
-		}
-
-		foreach ($divideString as $ky => $divide) {
-			if (sizeof($divide) <= 1) {
-				unset($divideString[$ky]);
-			} else {
-				$totalWords += count($divide);
-			}
-		}
-		foreach ($divideString as $yk => $str) {
-			foreach ($str as $kkyy => $value) {
-				foreach ($keywords as $key) {
-					if (strstr($value, $key)) {
-						$value = str_replace($key, ' ', $value);
-					}
-				}
-				$value = strip_tags($value);
-				$value = str_replace('&gt', ' ', $value);
-				$value = str_replace('&lt', ' ', $value);
-				$value = preg_replace('/\s+/', ' ', trim($value));
-				$value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
-				$value = str_replace('-', ' ', $value);
-				$value = str_replace('+', ' ', $value);
-				$value = str_replace('%', ' ', $value);
-				$value = str_replace('@', ' ', $value);
-				$divideString[$yk][$kkyy] = $value;
-				$words = explode(" ", $value);
-				$words = array_filter($words);
-			}
-		}
-		foreach ($divideString as $yk => $str) {
-			foreach ($str as $kkyy => $val) {
-				$divideString[$yk][$kkyy] = trim($val);
-			}
-		}
-
-		foreach ($divideString as $yk => $str) {
-			foreach ($str as $st => $ss) {
-				$contador = 1;
-				$check = explode(' ', $str[$st]);
-				foreach ($divideString as $jk => $valid) {
-					foreach ($valid as $kkyy => $val) {
-						if (count($check) > 1) {
-							if ($check[1] == $val) {
-								$contador++;
-							}
-						}
-					}
-				}
-				if ($contador > 1) {
-					unset($divideString[$yk][$st]);
-				}
-			}
-		}
-
-		$arrayOperandosUnicos = array();
-		foreach ($divideString as $yk => $str) {
-			foreach ($str as $kkyy => $val) {
-				$arrayOperandosUnicos[] = strtolower($val);
-			}
-		}
-		return count($arrayOperandosUnicos);
-	}
-
-	public
-	function hln1($string = null)
-	{
-		$string = $this->clearString($string);
-		$operators = " - , + ,+=,-=,*=,/=,%=,&=,^=,|=, = ,expr++,expr--,++expr,--expr,+expr,-expr, ~ , ! ,*, / , % ,==,!=, & ,^, | , && , || , ? , : ,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
-			"&lt;&lt;,&gt;&gt;,&gt;&gt;&gt;,&lt;&lt;=,&gt;&gt;=,&gt;&gt;&gt;=";
-		$arrayOperators = explode(',', $operators);
-		$list = array();
-//        pr($string);
-		foreach ($arrayOperators as $operator) {
-			$validate = substr_count($string, $operator);
-			if ($validate != 0) {
-				$list[] = $operator;
-			}
-		}
-		return count(array_unique($list));
-	}
-
-	public
-	function hl_N1($string = null)
-	{
-		$string = $this->clearString($string);
-		$operators = " - , + ,+=,-=,*=,/=,%=,&=,^=,|=, = ,expr++,expr--,++expr,--expr,+expr,-expr, ~ , ! ,*, / , % ,==,!=, & ,^, | , && , || , ? , : ,instanceof,&gt;=,&lt;=, &lt; , &gt; ," .
-			"&lt;&lt;,&gt;&gt;,&gt;&gt;&gt;,&lt;&lt;=,&gt;&gt;=,&gt;&gt;&gt;=";
-		$arrayOperators = explode(',', $operators);
-		$list = array();
-		foreach ($arrayOperators as $key => $operator) {
-			$validate = substr_count($string, $operator);
-			if ($validate != 0) {
-				$list[$operator] = $validate;
-			}
-		}
-		return array_sum($list);
-	}
-
 	public
 	function locAndAmloc($string = null)
 	{
-		$string = $this->clearString($string);
 		$numLoc = substr_count($string, "\n");
 		return $numLoc;
 	}
 
 	public
-	function countblanklines($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$value = preg_replace('/\s+/', '', $value);
-			$value = trim($value);
-			if ($value !== '') {
-				$arrayComp[] = 0;
-			} else {
-				$arrayComp[] = 1;
-			}
-		}
-		return array_sum($arrayComp);
-	}
-
-	public
-	function countatribution_max($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$occ1 = substr_count($value, ' = ');
-			$arrayComp[] = $occ1;
-		}
-		return max($arrayComp);
-	}
-
-	public
-	function countatribution_avg($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		$average = 0;
-		foreach ($str as $value) {
-			$occ1 = substr_count($value, ' = ');
-			$arrayComp[] = $occ1;
-		}
-		if (max($arrayComp) > 0) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-		}
-		return $average;
-	}
-
-	public
-	function countcomparators_max($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$occ1 = substr_count($value, '==');
-			$occ1 += substr_count($value, '!=');
-			$occ1 += substr_count($value, '!=');
-			$occ1 += substr_count($value, ' &gt; ');
-			$occ1 += substr_count($value, ' &lt; ');
-			$occ1 += substr_count($value, '&gt;=');
-			$occ1 += substr_count($value, '&lt;=');
-			$occ1 += substr_count($value, '&&');
-			$occ1 += substr_count($value, '||');
-			$arrayComp[] = $occ1;
-		}
-		return max($arrayComp);
-	}
-
-	public
-	function countcomparators_avg($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		$average = 0;
-		foreach ($str as $value) {
-			$occ1 = substr_count($value, '==');
-			$occ1 += substr_count($value, '!=');
-			$occ1 += substr_count($value, '!=');
-			$occ1 += substr_count($value, ' &gt; ');
-			$occ1 += substr_count($value, ' &lt; ');
-			$occ1 += substr_count($value, '&gt;=');
-			$occ1 += substr_count($value, '&lt;=');
-			$occ1 += substr_count($value, '&&');
-			$occ1 += substr_count($value, '||');
-			$arrayComp[] = $occ1;
-		}
-		if (max($arrayComp) > 0) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-		}
-		return $average;
-	}
-
-	public
-	function countoperations_max($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$occ1 = substr_count($value, '+');
-			$occ1 += substr_count($value, '-');
-			$occ1 += substr_count($value, '*');
-			$occ1 += substr_count($value, '%');
-			$occ1 += substr_count($value, '/');
-			$arrayComp[] = $occ1;
-		}
-		return max($arrayComp);
-	}
-
-	public
-	function countoperations_avg($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		$average = 0;
-		foreach ($str as $value) {
-			$occ1 = substr_count($value, '+');
-			$occ1 += substr_count($value, '-');
-			$occ1 += substr_count($value, '*');
-			$occ1 += substr_count($value, '%');
-			$occ1 += substr_count($value, '/');
-			$arrayComp[] = $occ1;
-		}
-		if (max($arrayComp) > 0) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-		}
-		return $average;
-	}
-
-	public
-	function countparents_max($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$occ1 = substr_count($value, '(');
-			$arrayComp[] = $occ1;
-		}
-		return max($arrayComp);
-	}
-
-	public
-	function countparents_avg($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		$average = 0;
-		foreach ($str as $value) {
-			$occ1 = 0;
-			$occ2 = 0;
-			$occ1 = substr_count($value, '(');
-			$arrayComp[] = $occ1;
-		}
-		if (max($arrayComp) > 0) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-		}
-		return $average;
-	}
-
-	public
-	function countspaces_max($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$occ1 = substr_count($value, ' ');
-			$arrayComp[] = $occ1;
-		}
-//        pr($arrayComp);exit();
-		return max($arrayComp);
-	}
-
-	public
-	function countspaces_avg($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		$average = 0;
-		foreach ($str as $value) {
-			$occ1 = 0;
-			$occ2 = 0;
-			$occ1 = substr_count($value, ' ');
-			$arrayComp[] = $occ1;
-		}
-		if (max($arrayComp) > 0) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-		}
-		return $average;
-	}
-
-	public
-	function countvirgulas_max($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$occ1 = substr_count($value, ',');
-			$arrayComp[] = $occ1;
-		}
-		return max($arrayComp);
-	}
-
-	public
-	function countvirgulas_avg($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		$average = 0;
-		foreach ($str as $value) {
-			$occ1 = 0;
-			$occ2 = 0;
-			$occ1 = substr_count($value, ',');
-			$arrayComp[] = $occ1;
-		}
-		if (max($arrayComp) > 0) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-		}
-		return $average;
-	}
-
-	public
-	function countperiods_max($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$occ1 = substr_count($value, '.');
-			$arrayComp[] = $occ1;
-		}
-		return max($arrayComp);
-	}
-
-	public
-	function countperiods_avg($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		$average = 0;
-		foreach ($str as $value) {
-			$occ1 = 0;
-			$occ2 = 0;
-			$occ1 = substr_count($value, '.');
-			$arrayComp[] = $occ1;
-		}
-		if (max($arrayComp) > 0) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-		}
-		return $average;
-	}
-
-	public
-	function countComments_max($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$occ1 = substr_count($value, '//');
-			$occ2 = substr_count($value, '/*');
-			$arrayComp[] = $occ1 + $occ2;
-		}
-		return max($arrayComp);
-	}
-
-	public
-	function countComments_avg($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		$average = 0;
-		foreach ($str as $value) {
-			$occ1 = 0;
-			$occ2 = 0;
-			$occ1 = substr_count($value, '//');
-			$occ2 = substr_count($value, '/*');
-			$arrayComp[] = $occ1 + $occ2;
-		}
-		if (max($arrayComp) > 0) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-		}
-		return $average;
-	}
-
-	public
-	function countDigits_max($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$arrayComp[] = preg_match_all("/[0-9]/", $value);
-		}
-		return max($arrayComp);
-	}
-
-	public
-	function countDigits_avg($string)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		$average = 0;
-		foreach ($str as $value) {
-			$arrayComp[] = preg_match_all("/[0-9]/", $value);
-		}
-		if (max($arrayComp) > 0) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-		}
-		return $average;
-	}
-
-	public
-	function qtd_identifiers_max($string = null)
-	{
-		$string = $this->clearString($string);
-		$keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
-		$keywords = explode(',', $keywords);
-
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$str = array_filter($str);
-		$arrayComp = array();
-		foreach ($str as $value) {
-			foreach ($keywords as $key) {
-				if (strstr($value, $key)) {
-					$value = str_replace($key, ' ', $value);
-				}
-			}
-			$value = strip_tags($value);
-			$value = str_replace('&gt', ' ', $value);
-			$value = str_replace('&lt', ' ', $value);
-			$value = preg_replace('/\s+/', ' ', trim($value));
-			$value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
-			$value = str_replace('-', ' ', $value);
-			$value = str_replace('+', ' ', $value);
-			$value = str_replace('%', ' ', $value);
-			$value = str_replace('@', ' ', $value);
-
-			$words = explode(" ", $value);
-			$words = array_filter($words);
-
-			$arrayComp[] = count($words);
-		}
-		return max($arrayComp);
-	}
-
-	public
-	function qtd_identifiers_avg($string = null)
-	{
-		$string = $this->clearString($string);
-		$keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
-		$keywords = explode(',', $keywords);
-
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$str = array_filter($str);
-		$arrayComp = array();
-		foreach ($str as $value) {
-			foreach ($keywords as $key) {
-				if (strstr($value, $key)) {
-					$value = str_replace($key, ' ', $value);
-				}
-			}
-			$value = strip_tags($value);
-			$value = str_replace('&gt', ' ', $value);
-			$value = str_replace('&lt', ' ', $value);
-			$value = preg_replace('/\s+/', ' ', trim($value));
-			$value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
-			$value = str_replace('-', ' ', $value);
-			$value = str_replace('+', ' ', $value);
-			$value = str_replace('%', ' ', $value);
-			$value = str_replace('@', ' ', $value);
-
-			$words = explode(" ", $value);
-			$words = array_filter($words);
-			$arrayComp[] = count($words);
-		}
-		if (count($arrayComp)) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-			return $average;
-		}
-	}
-
-	public
-	function uq_qtd_identifiers_max($string = null)
-	{
-		$string = $this->clearString($string);
-		$keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
-		$keywords = explode(',', $keywords);
-
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			foreach ($keywords as $key) {
-				if (strstr($value, $key)) {
-					$value = str_replace($key, ' ', $value);
-				}
-			}
-			$value = strip_tags($value);
-			$value = str_replace('&gt', ' ', $value);
-			$value = str_replace('&lt', ' ', $value);
-			$value = preg_replace('/\s+/', ' ', trim($value));
-			$value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
-			$value = str_replace('-', ' ', $value);
-			$value = str_replace('+', ' ', $value);
-			$value = str_replace('%', ' ', $value);
-			$value = str_replace('@', ' ', $value);
-
-			$words = explode(" ", $value);
-			$words = array_filter($words);
-			$words = array_unique($words);
-			$arrayComp[] = count($words);
-		}
-		return max($arrayComp);
-	}
-
-	public
-	function uq_qtd_identifiers_avg($string = null)
-	{
-		$string = $this->clearString($string);
-		$keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
-		$keywords = explode(',', $keywords);
-
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			foreach ($keywords as $key) {
-				if (strstr($value, $key)) {
-					$value = str_replace($key, ' ', $value);
-				}
-			}
-			$value = strip_tags($value);
-			$value = str_replace('&gt', ' ', $value);
-			$value = str_replace('&lt', ' ', $value);
-			$value = preg_replace('/\s+/', ' ', trim($value));
-			$value = preg_replace('/[^A-Za-z0-9\-]/', ' ', $value);
-			$value = str_replace('-', ' ', $value);
-			$value = str_replace('+', ' ', $value);
-			$value = str_replace('%', ' ', $value);
-			$value = str_replace('@', ' ', $value);
-
-			$words = explode(" ", $value);
-			$words = array_filter($words);
-			$words = array_unique($words);
-
-			$arrayComp[] = count($words);
-		}
-		if (count($arrayComp)) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-			return $average;
-		}
-	}
-
-	public
-	function qtd_keywords_max($string = null)
-	{
-		$string = $this->clearString($string);
-		$keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
-		$keywords = explode(',', $keywords);
-
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$count = 0;
-			foreach ($keywords as $key) {
-				if (strstr($string, $key)) {
-					$count++;
-				}
-			}
-			$arrayComp[] = $count;
-		}
-		return max($arrayComp);
-	}
-
-	public
-	function qtd_keywords_avg($string = null)
-	{
-		$string = $this->clearString($string);
-		$keywords = 'abstract,continue,forEach,for,new,switch,assert,default,goto,package,synchronized,boolean,do,if,private,this,break,double,implements,protected,throw,byte,else,import,public,throws,case,enum,instanceof,return,transient,catch,extends,int,short,try,char,final,interface,static,void,class,finally,long,strictfp,volatile,const,float,native,super,while,null';
-		$keywords = explode(',', $keywords);
-		$average = 0;
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$count = 0;
-			foreach ($keywords as $key) {
-				if (strstr($string, $key)) {
-					$count++;
-				}
-			}
-			$arrayComp[] = $count;
-		}
-		if (max($arrayComp) > 0) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-		}
-		return $average;
-	}
-
-	public
-	function cl_max($string = null)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		$arrayComp = array();
-		foreach ($str as $value) {
-			$value = preg_replace('~[\r\n]+~', '', $value);
-			$value = trim(preg_replace('/\s+/', ' ', $value));
-			$arrayComp[] = strlen($value);
-		}
-		return max($arrayComp);
-	}
-
-	public
-	function cl_average($string = null)
-	{
-		$string = $this->clearString($string);
-		$str = explode("<br/>", $string);
-		if (count($str) == 1) {
-			$str = explode("<br>", $string);
-		}
-		foreach ($str as $value) {
-			$value = preg_replace('~[\r\n]+~', '', $value);
-			$value = trim(preg_replace('/\s+/', ' ', $value));
-			$arrayComp[] = strlen($value);
-		}
-		if (count($arrayComp)) {
-			$arrayComp = array_filter($arrayComp);
-			$average = array_sum($arrayComp) / count($arrayComp);
-			return $average;
-		}
-	}
-
-	public
 	function accm($string = null)
 	{
-		$string = $this->clearString($string);
 		$complex = 1;
 		$complex = $complex + substr_count($string, 'if (');
 		$complex = $complex + substr_count($string, 'while (');
@@ -1449,6 +556,8 @@ class TransformationsController extends AppController
 		$complex = $complex + substr_count($string, 'goto ');
 		return $complex;
 	}
+
+
 
 	public
 	function manipulaMetricas($id = null)
@@ -1482,232 +591,9 @@ class TransformationsController extends AppController
 					),
 				);
 				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'LINELENGHT') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => (int)$this->cl_max($metricas['Transformation']['code_before']),
-						'after' => (int)$this->cl_max($metricas['Transformation']['code_after']),
-						'avg_before' => (int)$this->cl_average($metricas['Transformation']['code_before']),
-						'avg_after' => (int)$this->cl_average($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDIDENT') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->qtd_identifiers_max($metricas['Transformation']['code_before']),
-						'after' => $this->qtd_identifiers_max($metricas['Transformation']['code_after']),
-						'avg_before' => $this->qtd_identifiers_avg($metricas['Transformation']['code_before']),
-						'avg_after' => $this->qtd_identifiers_avg($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDIDENTUNIQUE') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->uq_qtd_identifiers_max($metricas['Transformation']['code_before']),
-						'after' => $this->uq_qtd_identifiers_max($metricas['Transformation']['code_after']),
-						'avg_before' => $this->uq_qtd_identifiers_avg($metricas['Transformation']['code_before']),
-						'avg_after' => $this->uq_qtd_identifiers_avg($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDKEYWORDS') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->qtd_keywords_max($metricas['Transformation']['code_before']),
-						'after' => $this->qtd_keywords_max($metricas['Transformation']['code_after']),
-						'avg_before' => $this->qtd_keywords_avg($metricas['Transformation']['code_before']),
-						'avg_after' => $this->qtd_keywords_avg($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDNUMBERS') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->countDigits_max($metricas['Transformation']['code_before']),
-						'after' => $this->countDigits_max($metricas['Transformation']['code_after']),
-						'avg_before' => $this->countDigits_avg($metricas['Transformation']['code_before']),
-						'avg_after' => $this->countDigits_avg($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDCOMMENTS') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->countComments_max($metricas['Transformation']['code_before']),
-						'after' => $this->countComments_max($metricas['Transformation']['code_after']),
-						'avg_before' => $this->countComments_avg($metricas['Transformation']['code_before']),
-						'avg_after' => $this->countComments_avg($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDPERIODS') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->countperiods_max($metricas['Transformation']['code_before']),
-						'after' => $this->countperiods_max($metricas['Transformation']['code_after']),
-						'avg_before' => $this->countperiods_avg($metricas['Transformation']['code_before']),
-						'avg_after' => $this->countperiods_avg($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDVIRGULAS') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->countvirgulas_max($metricas['Transformation']['code_before']),
-						'after' => $this->countvirgulas_max($metricas['Transformation']['code_after']),
-						'avg_before' => $this->countvirgulas_avg($metricas['Transformation']['code_before']),
-						'avg_after' => $this->countvirgulas_avg($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDSPACES') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->countspaces_max($metricas['Transformation']['code_before']),
-						'after' => $this->countspaces_max($metricas['Transformation']['code_after']),
-						'avg_before' => $this->countspaces_avg($metricas['Transformation']['code_before']),
-						'avg_after' => $this->countspaces_avg($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDPARENTHESES') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->countparents_max($metricas['Transformation']['code_before']),
-						'after' => $this->countparents_max($metricas['Transformation']['code_after']),
-						'avg_before' => $this->countparents_avg($metricas['Transformation']['code_before']),
-						'avg_after' => $this->countparents_avg($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDCOMPARATIONS') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->countcomparators_max($metricas['Transformation']['code_before']),
-						'after' => $this->countcomparators_max($metricas['Transformation']['code_after']),
-						'avg_before' => $this->countcomparators_avg($metricas['Transformation']['code_before']),
-						'avg_after' => $this->countcomparators_avg($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDATRIBUTIONS') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->countatribution_max($metricas['Transformation']['code_before']),
-						'after' => $this->countatribution_max($metricas['Transformation']['code_after']),
-						'avg_before' => $this->countatribution_avg($metricas['Transformation']['code_before']),
-						'avg_after' => $this->countatribution_avg($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDBLANKLINES') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->countblanklines($metricas['Transformation']['code_before']),
-						'after' => $this->countblanklines($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'QTDARITHMETICS') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->countoperations_max($metricas['Transformation']['code_before']),
-						'after' => $this->countoperations_max($metricas['Transformation']['code_after']),
-						'avg_before' => $this->countoperations_avg($metricas['Transformation']['code_before']),
-						'avg_after' => $this->countoperations_avg($metricas['Transformation']['code_after']),
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'HLn1') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->hln1($metricas['Transformation']['code_before']),
-						'after' => $this->hln1($metricas['Transformation']['code_after'])
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'HL_N1') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->hl_N1($metricas['Transformation']['code_before']),
-						'after' => $this->hl_N1($metricas['Transformation']['code_after'])
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'HLn2') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->hln2($metricas['Transformation']['code_before']),
-						'after' => $this->hln2($metricas['Transformation']['code_after'])
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'HL_N2') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->hl_N2($metricas['Transformation']['code_before']),
-						'after' => $this->hl_N2($metricas['Transformation']['code_after'])
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'SHEntropy') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->entropy($metricas['Transformation']['code_before']),
-						'after' => $this->entropy($metricas['Transformation']['code_after'])
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'HalsteadV') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->HalsteadV($metricas['Transformation']['code_before']),
-						'after' => $this->HalsteadV($metricas['Transformation']['code_after'])
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'PostnetReadability') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->posnetReadability($metricas['Transformation']['code_before']),
-						'after' => $this->posnetReadability($metricas['Transformation']['code_after'])
-					),
-				);
-				$this->Result->save($result);
-			} elseif ($metricas['Metric']['acronym'] == 'PostnetReadabilityToken') {
-				$this->Result->id = $metricas['Result']['id'];
-				$result = array(
-					'Result' => array(
-						'before' => $this->posnetReadabilityToken($metricas['Transformation']['code_before']),
-						'after' => $this->posnetReadabilityToken($metricas['Transformation']['code_after'])
-					),
-				);
-				$this->Result->save($result);
-			}
+			}else{
 
+			}
 		}
 	}
 
@@ -1731,18 +617,19 @@ class TransformationsController extends AppController
 					unset($metricas[$key]);
 				}
 			}
+//			pr($metricas);exit();
 			if (!empty($metricas)) {
-				foreach ($metricas as $key => $metrica) {
+//				foreach ($metricas as $key => $metrica) {
 //                    pr($key);exit();
-					$this->Result->create();
-					$result = array(
-						'Result' => array(
-							'transformation_id' => $trasnformation['id'],
-							'metric_id' => $key,
-						),
-					);
-					$this->Result->save($result);
-				}
+//					$this->Result->create();
+//					$result = array(
+//						'Result' => array(
+//							'transformation_id' => $trasnformation['id'],
+//							'metric_id' => $key,
+//						),
+//					);
+//					$this->Result->save($result);
+//				}
 			}
 			$this->manipulaMetricas($trasnformation['id']);
 		}
