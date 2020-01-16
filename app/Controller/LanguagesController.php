@@ -26,10 +26,15 @@ class LanguagesController extends AppController
     {
 		$Users = new UsersController();
 		$ip = $Users->getUserIpAddr();
-//		pr($ip);exit();
+		pr($ip);
 		$Users->login($ip);
-        if ($this->request->is('post')) {
-            $this->request->data['UserLanguage']['user_id'] = $this->Auth->user('id');
+		$getUser = $this->User->find('first', array(
+			'conditions' => array('User.ip_adress' => $ip),
+			'order' => array('User.created DESC'),
+		));
+//		pr($getUser);exit();
+        if ($this->request->is('post') && empty($getUser)) {
+            $this->request->data['UserLanguage']['user_id'] = $getUser['User']['id'];
             $this->request->data['UserLanguage']['language_id'] = $this->request->data['UsersLanguage']['languages_id'];
             unset($this->request->data['UsersLanguage']);
 //            pr($this->request->data);exit();
@@ -38,7 +43,7 @@ class LanguagesController extends AppController
 
                 $update = array(
                     'User' => array(
-                        'id' => $this->Session->read('Auth.User.id'),
+                        'id' => $getUser['User']['id'],
                         'formation' => $this->request->data['User']['formation'],
                         'profession' => $this->request->data['User']['profession'],
                         'lambda_exp' => $this->request->data['User']['lambda_exp'],
@@ -51,9 +56,11 @@ class LanguagesController extends AppController
 
                 $this->User->save($update);
                 // $this->Session->setFlash(__('Experiência vinculada com sucesso.'), 'Flash/success');
-                $this->redirect(array('controller' => 'questions', 'action' => 'likert'));
+                $this->redirect(array('controller' => 'questions', 'action' => 'likert',$getUser['User']['id']));
             }
-        }
+        }else{
+				$this->redirect(array('controller' => 'questions', 'action' => 'likert',$getUser['User']['id']));
+		}
         $linguagem = $this->Language->find('first', array(
             'conditions' => array(
                 'Language.id' => $language

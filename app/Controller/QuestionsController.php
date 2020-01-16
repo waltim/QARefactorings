@@ -1,6 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
-
+App::import('Controller', 'Users');
 // App::import('Controller', 'Transformations');
 class QuestionsController extends AppController
 {
@@ -233,9 +233,20 @@ class QuestionsController extends AppController
 
     }
 
-    public function likert()
+    public function likert($user = null)
     {
+		$Users = new UsersController();
+		$ip = $Users->getUserIpAddr();
+//		pr($ip);
+		$Users->login($ip);
+		$getUser = $this->User->find('first', array(
+			'conditions' => array('User.ip_adress' => $ip),
+			'order' => array('User.created DESC'),
+		));
+
         if ($this->request->is('post')) {
+
+        	pr('ta aqui 2');exit();
             $this->request->data['Answer']['end_time'] = date('H:i:s');
 //            $this->request->data['Answer']['choice'][0] = $this->request->data['check'];
 //            unset($this->request->data['check']);
@@ -466,7 +477,7 @@ class QuestionsController extends AppController
         $userLanguage = $this->UserLanguage->find('count', array(
             'conditions' => array(
                 'UserLanguage.language_id' => $question['Result']['Transformation']['language_id'],
-                'UserLanguage.user_id' => $this->Auth->user('id'),
+                'UserLanguage.user_id' => $getUser['User']['id'],
             ),
         ));
 

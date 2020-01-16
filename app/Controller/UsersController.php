@@ -175,8 +175,8 @@ class UsersController extends AppController
 				}
 			}
 		}else{
-//			$array = array('User'=>array('username'=>'','email'=>'','password'=>'','user_type_id'=>'','trophy'=>0));
-			$array = array('User'=>array('email'=>''));
+			$array = array('User'=>array('username'=>'','email'=>'','password'=>'','user_type_id'=>'','trophy'=>0,'ip_adress'=>''));
+//			$array = array('User'=>array('email'=>''));
 //			pr($array);exit();
 			if ($email != null) {
 //				pr('to aqui');exit();
@@ -191,9 +191,12 @@ class UsersController extends AppController
 					$array['User']['username'] = 'participant'.$participantNumber;
 					$array['User']['password'] = date('dmYHis');
 					$array['User']['user_type_id'] = 1;
-					pr($array);exit();
+					$array['User']['ip_adress'] = 1;
+//					pr($array);exit();
 					$this->User->save($array);
 //				$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');
+				}else{
+//					pr('já tem o usuário!!');exit();
 				}
 			}
 		}
