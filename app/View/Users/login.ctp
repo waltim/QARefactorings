@@ -6,10 +6,10 @@
         <input name="data[User][email]" required type="email" class="form-control" placeholder="Email">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
-<!--      <div class="form-group has-feedback">-->
-<!--        <input name="data[User][password]" required type="password" class="form-control" placeholder="Senha">-->
-<!--        <span class="glyphicon glyphicon-lock form-control-feedback"></span>-->
-<!--      </div>-->
+      <div class="form-group has-feedback">
+        <input name="data[User][password]" required type="password" class="form-control" placeholder="Senha">
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
       <div class="row">
         <div class="col-xs-8">
           <div class="checkbox icheck">

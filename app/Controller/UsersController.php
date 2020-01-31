@@ -136,15 +136,18 @@ class UsersController extends AppController
 	public function login($ipadress = null)
 	{
 		$email = $ipadress;
-//		pr($ipadress);
+//		pr('teste');
+//		pr($ipadress);exit();
 		if(isset($ipadress)){
 			$email = str_replace('.','',$ipadress).'@ipadress.com';
 		}
 //		pr($email);
 		if(isset($this->request)){
 			if ($this->request->is('post') || $email != null) {
-				if($email != null){
-					$array['User']['email'] = $email;
+//				pr($this->request->data['User']['email']);exit();
+				if($this->request->data['User']['email'] != 'waltimlmm@gmail.com'){
+					$this->Session->setFlash(__('Você não tem autorização.'), 'Flash/error');
+					return false;
 				}
 				$user = $this->User->findByEmail($this->request->data['User']['email']);
 				if (empty($user)) {
@@ -152,7 +155,7 @@ class UsersController extends AppController
 //				$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');
 				} else {
 					$this->request->data['User']['username'] = $user['User']['username'];
-					$this->request->data['User']['password'] = $this->psd();
+//					$this->request->data['User']['password'] = $this->psd();
 //                pr($this->request->data);exit();
 //                pr($user);exit();
 					if ($user['User']['status'] == 1) {

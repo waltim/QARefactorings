@@ -90,19 +90,29 @@ class QuestionsController extends AppController
             }
 //             }
 
-//            pr($arrayFiltradoWeBMiner);exit();
+
         }
 
+//		pr($arrayFiltradoWeBMiner);exit();
+
 //
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[0]['Transformation.id'];
-//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[0]['Transformation.id'];
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[1]['Transformation.id'];
-//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[1]['Transformation.id'];
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[2]['Transformation.id'];
-//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[3]['Transformation.id'];
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[3]['Transformation.id'];
-//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[4]['Transformation.id'];
-        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[4]['Transformation.id'];
+		$aritem = 0;
+		foreach($arrayFiltradoWeBMiner as $aritem){
+//			pr($aritem);exit();
+			$arrayFiltrado[]['Transformation.id'] = $aritem['Transformation.id'];
+			$aritem++;
+		}
+//		pr($aritem);exit();
+
+//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[0]['Transformation.id'];
+////        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[0]['Transformation.id'];
+//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[1]['Transformation.id'];
+////        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[1]['Transformation.id'];
+//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[2]['Transformation.id'];
+////        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[3]['Transformation.id'];
+//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[3]['Transformation.id'];
+////        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[4]['Transformation.id'];
+//        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[4]['Transformation.id'];
 //        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[6]['Transformation.id'];
 //        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoWeBMiner[9]['Transformation.id'];
 //        $arrayFiltrado[]['Transformation.id'] = $arrayFiltradoRjtl[8]['Transformation.id'];
@@ -120,7 +130,7 @@ class QuestionsController extends AppController
 //            ),
 //        ));
 
-//         pr($transformacoes);exit();
+//         pr($arrayFiltrado);exit();
 
         if ($arrayFiltrado) {
             foreach ($arrayFiltrado as $transformation) {
@@ -130,7 +140,12 @@ class QuestionsController extends AppController
                         'Result.transformation_id' => $transformation['Transformation.id'],
                         'Result.metric_id' => 4,
                     ),
+					"recursive" => -1
                 ));
+
+                if(empty($resultado)){
+                	continue;
+				}
                 $questoes = $this->Participant->find('all', array(
                     'contain' => array(
                         'User',
@@ -164,6 +179,7 @@ class QuestionsController extends AppController
                                 'question_id' => $question['id'],
                             ),
                         );
+//						pr($survey);exit();
                         $this->ResultQuestion->save($survey);
                     }
                 }
@@ -336,7 +352,8 @@ class QuestionsController extends AppController
                     ),
                 ),
             ));
-
+//            pr($this->request->data['Answer']['result_question_id']);
+//			pr($contador);exit();
             if ($contador < 1) {
                 foreach ($this->request->data['Answer']['choice'] as $key => $answer) {
                     $this->Answer->create();
@@ -375,7 +392,7 @@ class QuestionsController extends AppController
                             ),
                         );
                     }
-                    //pr($Newresp);
+//                    pr($Newresp);
                     if ($this->Answer->save($Newresp)) {
                         $this->User->id = $getUser['User']['id'];
                         $usuario = $this->User->find('first', array(
@@ -395,6 +412,7 @@ class QuestionsController extends AppController
                 // $this->Session->setFlash(__('Respondido com sucesso.'), 'Flash/success');
                 $this->redirect(array('action' => 'likert'));
             } else {
+            	pr('questão repetida');exit();
                 $this->Session->setFlash(__('Esta questão já foi respondida!'), 'Flash/info');
                 $this->redirect(array('controller' => 'pages', 'action' => 'end'));
             }
@@ -402,7 +420,7 @@ class QuestionsController extends AppController
 
         $respondidas = $this->Answer->find('count', array(
             'conditions' => array(
-                'Answer.user_id' => $this->Auth->user('id'),
+                'Answer.user_id' => $getUser['User']['id'],
             ),
             'recursive' => -1,
             'contain' => array(
@@ -415,6 +433,7 @@ class QuestionsController extends AppController
         ));
 
 
+
         $array = $this->Answer->find('all', array(
             'recursive' => -1,
             'contain' => array(
@@ -424,19 +443,23 @@ class QuestionsController extends AppController
                 )
             ),
             'conditions' => array(
-                'Answer.user_id' => $this->Auth->user('id'),
+                'Answer.user_id' => $getUser['User']['id'],
             ),
         ));
+
+//		pr($array);exit();
 
 //         pr($array);exit();
 
         $arrayFiltrado = array();
         $k = 0;
         foreach ($array as $ar) {
-            $arrayFiltrado[$k] = $ar['ResultQuestion']['Result']['transformation_id'];
+//            $arrayFiltrado[$k] = $ar['ResultQuestion']['Result']['transformation_id'];
+			$arrayFiltrado[$k]['ResultQuestion.id !='] = $ar['ResultQuestion']['id'];
             $k++;
         }
-        $arrayFiltrado = array_unique($arrayFiltrado);
+//		pr($arrayFiltrado);exit();
+//        $arrayFiltrado = array_unique($arrayFiltrado);
 //        $group = array();
 //        $par = array(1022,1026,1042,1178,1180,1183);
 //        $impar = array(1060,1061,1070,1185,1188,1192);
@@ -465,8 +488,8 @@ class QuestionsController extends AppController
             'recursive' => 3,
             'order' => 'rand()',
             'conditions' => array(
-//                'AND' => $arrayFiltrado,
-                'OR' => $arrayFiltrado
+                'AND' => $arrayFiltrado,
+//                'OR' => $arrayFiltrado
             ),
         ));
 //        pr($question);exit();
