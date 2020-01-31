@@ -138,9 +138,7 @@ class UsersController extends AppController
 		$email = $ipadress;
 //		pr($ipadress);
 		if(isset($ipadress)){
-			$ipadress = str_replace('.','',$ipadress);
-			$email = $ipadress.'@ipadress.com';
-
+			$email = str_replace('.','',$ipadress).'@ipadress.com';
 		}
 //		pr($email);
 		if(isset($this->request)){
@@ -191,7 +189,7 @@ class UsersController extends AppController
 					$array['User']['username'] = 'participant'.$participantNumber;
 					$array['User']['password'] = date('dmYHis');
 					$array['User']['user_type_id'] = 1;
-					$array['User']['ip_adress'] = 1;
+					$array['User']['ip_adress'] = $ipadress;
 //					pr($array);exit();
 					$this->User->save($array);
 //				$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');

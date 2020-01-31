@@ -26,14 +26,14 @@ class LanguagesController extends AppController
     {
 		$Users = new UsersController();
 		$ip = $Users->getUserIpAddr();
-		pr($ip);
+		//pr($ip);
 		$Users->login($ip);
 		$getUser = $this->User->find('first', array(
 			'conditions' => array('User.ip_adress' => $ip),
 			'order' => array('User.created DESC'),
 		));
-//		pr($getUser);exit();
-        if ($this->request->is('post') && empty($getUser)) {
+		//pr($getUser);
+        if ($this->request->is('post')) {
             $this->request->data['UserLanguage']['user_id'] = $getUser['User']['id'];
             $this->request->data['UserLanguage']['language_id'] = $this->request->data['UsersLanguage']['languages_id'];
             unset($this->request->data['UsersLanguage']);
@@ -58,7 +58,7 @@ class LanguagesController extends AppController
                 // $this->Session->setFlash(__('Experiência vinculada com sucesso.'), 'Flash/success');
                 $this->redirect(array('controller' => 'questions', 'action' => 'likert',$getUser['User']['id']));
             }
-        }else{
+        }elseif(!empty($getUser) && !empty($getUser['Language'])){
 				$this->redirect(array('controller' => 'questions', 'action' => 'likert',$getUser['User']['id']));
 		}
         $linguagem = $this->Language->find('first', array(

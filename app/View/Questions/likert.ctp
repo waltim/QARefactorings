@@ -7,9 +7,9 @@
     <section class="content">
         <div class="col-md-12">
             <div id="calcula-height notranslate">
-                <a class="button-piscando" target="_blank"
-                   href="<?= $question['Result']['Transformation']['site_link'] . $question['Result']['Transformation']['line_start'] ?>">Open
-                    code on GitHub</a>
+<!--                <a class="button-piscando" target="_blank"-->
+<!--                   href="--><?//= $question['Result']['Transformation']['site_link'] . $question['Result']['Transformation']['line_start'] ?><!--">Open-->
+<!--                    code on GitHub</a>-->
                 <?php
 
                 // Include the diff class
@@ -40,20 +40,20 @@
                 <div class="notranslate" style="background-color: white; color: black;">
                     <?php
                     // Generate a side by side diff
-                    require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/SideBySide.php';
-                    $renderer = new Diff_Renderer_Html_SideBySide;
-                    echo $diff->Render($renderer);
+                    //require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/SideBySide.php';
+                    //$renderer = new Diff_Renderer_Html_SideBySide;
+                    //echo $diff->Render($renderer);
                     // Generate an inline diff
-//                     require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/Inline.php';
-//                     $renderer = new Diff_Renderer_Html_Inline;
-//                     echo $diff->render($renderer);
+                     require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/Inline.php';
+                     $renderer = new Diff_Renderer_Html_Inline;
+                     echo $diff->render($renderer);
                     // Generate a unified diff
 //                    require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Unified.php';
 //                    $renderer = new Diff_Renderer_Text_Unified;
 //                    echo htmlspecialchars($diff->render($renderer));
                     // Generate a context diff
-//                    require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Context.php';
-//                    $renderer = new Diff_Renderer_Text_Context;
+ //                   require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Context.php';
+ //                   $renderer = new Diff_Renderer_Text_Context;
 //                    echo htmlspecialchars($diff->render($renderer));
                     ?>
                 </div>
@@ -128,35 +128,35 @@
                                                required="required"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="1" class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="DP<?= $z ?>">Strongly disagree</label>
+                                        <label for="DP<?= $z ?>">worsened considerably</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="D<?= $z ?>"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="2"
                                                class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="D<?= $z ?>">Disagree</label>
+                                        <label for="D<?= $z ?>">worsened</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="NDNC<?= $z ?>"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="3"
                                                class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="NDNC<?= $z ?>">Neutral</label>
+                                        <label for="NDNC<?= $z ?>">Kept</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="C<?= $z ?>"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="4"
                                                class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="C<?= $z ?>">Agree</label>
+                                        <label for="C<?= $z ?>">improved</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="CP<?= $z ?>"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="5"
                                                class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="CP<?= $z ?>">Strongly agree</label>
+                                        <label for="CP<?= $z ?>">improved considerably</label>
                                     </div>
                                 </div>
                                 <!-- <div class="form-group">

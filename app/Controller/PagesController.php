@@ -165,4 +165,8 @@ class PagesController extends AppController
 
 		$this->set(compact('ranking', 'totalQuestions','ranking2'));
 	}
+
+	public function end(){
+
+	}
 }

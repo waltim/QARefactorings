@@ -55,9 +55,9 @@
                     <!-- Navbar Right Menu -->
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
-                            <li style="margin-top: 4%;">
-                                <div id="google_translate_element"></div>
-                            </li>
+<!--                            <li style="margin-top: 4%;">-->
+<!--                                <div id="google_translate_element"></div>-->
+<!--                            </li>-->
                             <li class="dropdown user user-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <?php if ($this->Session->read('Auth.User.sex') == 'Masculino') {?>
