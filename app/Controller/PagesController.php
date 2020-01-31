@@ -49,9 +49,9 @@ class PagesController extends AppController
                     'User.id' => $this->Auth->user('id')
                 )
             ));
-            if ($id['User']['trophy'] < 30 && $id['UserType']['description'] == 'candidato') {
-                $this->redirect(array('controller' => 'questions', 'action' => 'likert'));
-            }
+//            if ($id['User']['trophy'] < 30 && $id['UserType']['description'] == 'candidato') {
+//                $this->redirect(array('controller' => 'questions', 'action' => 'likert'));
+//            }
         }
 	}
 

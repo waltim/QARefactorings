@@ -297,14 +297,14 @@ class QuestionsController extends AppController
 //            unset($this->request->data['Answer']['result_question_id'][9]);
 //            $arr[10] = $this->request->data['Answer']['result_question_id'][10];
 //            unset($this->request->data['Answer']['result_question_id'][10]);
-
+			//pr($this->request->data);
             $choices = array();
 //            pr($this->request->data['Answer']['choice']);
             $choices[0] = $this->request->data['Answer']['choice'][1];
             unset($this->request->data['Answer']['choice'][1]);
-            $choices[1] = $this->request->data['Answer']['choice'][2];
-            unset($this->request->data['Answer']['choice'][2]);
-            $choices[2] = $this->request->data['Answer']['choice'][3];
+            $choices[1] = $this->request->data['Answer']['choice'][3];
+            unset($this->request->data['Answer']['choice'][3]);
+            $choices[2] = $this->request->data['Answer']['choice'][4];
             unset($this->request->data['Answer']['choice'][3]);
 //            $choices[8] = $this->request->data['Answer']['choice'][9];
 //            unset($this->request->data['Answer']['choice'][9]);
@@ -352,10 +352,10 @@ class QuestionsController extends AppController
                     ),
                 ),
             ));
-//            pr($this->request->data['Answer']['result_question_id']);
+            //pr($this->request->data);
 //			pr($contador);exit();
             if ($contador < 1) {
-                foreach ($this->request->data['Answer']['choice'] as $key => $answer) {
+                foreach ($this->request->data['Answer']['result_question_id'] as $key => $answer) {
                     $this->Answer->create();
                     if ($key == 1) {
                         $Newresp = array(
@@ -368,13 +368,61 @@ class QuestionsController extends AppController
                                 'end_time' => $this->request->data['Answer']['end_time'],
                             ),
                         );
-                    } elseif ($key == 2) {
+                    } elseif ($key == 4) {
 						$Newresp = array(
 							'Answer' => array(
 								'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
 								'user_id' => $this->request->data['Answer']['user_id'],
-								'justify' => $this->request->data['Answer']['justify'][3],
+								'justify' => $this->request->data['Answer']['justify'][5],
 								'choice' => 'N/A',
+								'start_time' => $this->request->data['Answer']['start_time'],
+								'end_time' => $this->request->data['Answer']['end_time'],
+							),
+						);
+					}
+					elseif ($key == 5) {
+						$Newresp = array(
+							'Answer' => array(
+								'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
+								'user_id' => $this->request->data['Answer']['user_id'],
+								'justify' => null,
+								'choice' => $this->request->data['check'],
+								'start_time' => $this->request->data['Answer']['start_time'],
+								'end_time' => $this->request->data['Answer']['end_time'],
+							),
+						);
+					}
+					elseif ($key == 0) {
+						$Newresp = array(
+							'Answer' => array(
+								'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
+								'user_id' => $this->request->data['Answer']['user_id'],
+								'justify' => null,
+								'choice' => $this->request->data['Answer']['choice'][0],
+								'start_time' => $this->request->data['Answer']['start_time'],
+								'end_time' => $this->request->data['Answer']['end_time'],
+							),
+						);
+					}
+					elseif ($key == 2) {
+						$Newresp = array(
+							'Answer' => array(
+								'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
+								'user_id' => $this->request->data['Answer']['user_id'],
+								'justify' => null,
+								'choice' => $this->request->data['Answer']['choice'][1],
+								'start_time' => $this->request->data['Answer']['start_time'],
+								'end_time' => $this->request->data['Answer']['end_time'],
+							),
+						);
+					}
+					elseif ($key == 3) {
+						$Newresp = array(
+							'Answer' => array(
+								'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
+								'user_id' => $this->request->data['Answer']['user_id'],
+								'justify' => null,
+								'choice' => $this->request->data['Answer']['choice'][2],
 								'start_time' => $this->request->data['Answer']['start_time'],
 								'end_time' => $this->request->data['Answer']['end_time'],
 							),
@@ -392,7 +440,7 @@ class QuestionsController extends AppController
                             ),
                         );
                     }
-//                    pr($Newresp);
+                    //pr($Newresp);
                     if ($this->Answer->save($Newresp)) {
                         $this->User->id = $getUser['User']['id'];
                         $usuario = $this->User->find('first', array(
@@ -412,7 +460,7 @@ class QuestionsController extends AppController
                 // $this->Session->setFlash(__('Respondido com sucesso.'), 'Flash/success');
                 $this->redirect(array('action' => 'likert'));
             } else {
-            	pr('questão repetida');exit();
+            	//pr('questão repetida');exit();
                 $this->Session->setFlash(__('Esta questão já foi respondida!'), 'Flash/info');
                 $this->redirect(array('controller' => 'pages', 'action' => 'end'));
             }
@@ -496,7 +544,7 @@ class QuestionsController extends AppController
 //        echo $question['Result']['transformation_id'];
 //        pr($question['Result']['ResultQuestion']);exit();
 
-        if (empty($question) || $respondidas >= 30) {
+        if (empty($question) || $respondidas >= 60) {
 //        	pr($question);
 //        	pr('travou aqui');exit();
             $this->Session->setFlash(__('Thank you for responding to the end!'), 'Flash/info');

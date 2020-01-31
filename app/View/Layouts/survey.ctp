@@ -51,45 +51,6 @@
                             <span class="logo-lg"><b>QAR</b>efactorings</span>
                         </a>
                     </div>
-                    <!-- /.navbar-collapse -->
-                    <!-- Navbar Right Menu -->
-                    <div class="navbar-custom-menu">
-                        <ul class="nav navbar-nav">
-<!--                            <li style="margin-top: 4%;">-->
-<!--                                <div id="google_translate_element"></div>-->
-<!--                            </li>-->
-                            <li class="dropdown user user-menu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <?php if ($this->Session->read('Auth.User.sex') == 'Masculino') {?>
-                                    <img src="<?=$this->webroot?>dist/img/male.jpg" class="user-image" alt="User Image">
-                                    <?php } else {?>
-                                    <img src="<?=$this->webroot?>dist/img/female.jpg" class="user-image" alt="User Image">
-                                    <?php }?>
-                                    <span class="hidden-xs">
-                                        <?=$this->Session->read('Auth.User.email')?></span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <!-- User image -->
-                                    <li class="user-header">
-                                        <?php if ($this->Session->read('Auth.User.sex') == 'Masculino') {?>
-                                        <img src="<?=$this->webroot?>dist/img/male.jpg" class="img-circle" alt="User Image">
-                                        <?php } else {?>
-                                        <img src="<?=$this->webroot?>dist/img/female.jpg" class="img-circle" alt="User Image">
-                                        <?php }?>
-                                        <p>
-                                            <?=$this->Session->read('Auth.User.name')?>
-                                            <small>
-                                                <?=date('d/m/Y', strtotime($this->Session->read('Auth.User.created')));?></small>
-                                        </p>
-                                    </li>
-                                    <li class="user-footer">
-                                        <div class="pull-right">
-                                            <a href="<?=$this->webroot?>users/logout" class="btn btn-default btn-flat">Sair</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
                     </div>
                     <!-- /.navbar-custom-menu -->
                 </div>
