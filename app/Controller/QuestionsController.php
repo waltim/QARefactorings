@@ -597,14 +597,14 @@ class QuestionsController extends AppController
 //				)
 //			),
 			//'group' => array('Answer.id'),
-			'order' => array('ResultQuestion.answer_count' => 'DESC'),
+			'order' => array('ResultQuestion.answer_count' => 'ASC'),
             'conditions' => array(
                 'AND' => $arrayFiltrado,
 //                'OR' => $arrayFiltrado
             ),
 			//'fields' => array('ResultQuestion.*','count(Answer.result_question_id)')
         ));
-        pr($question);exit();
+        //pr($question);exit();
 //        echo $question['Result']['transformation_id'];
 //        pr($question['Result']['ResultQuestion']);exit();
 

@@ -15,12 +15,16 @@
 	.form-control {
 		border-color: #222e47!important;
 	}
+
+	table.Differences.DifferencesSideBySide {
+		background-color: white!important;
+	}
 </style>
 <div class="container">
     <!-- Main content -->
     <section class="content">
         <div class="col-md-12">
-            <div id="calcula-height notranslate">
+            <div id="calcula-height notranslate" style="overflow-x: scroll;">
 <!--                <a class="button-piscando" target="_blank"-->
 <!--                   href="--><?//= $question['Result']['Transformation']['site_link'] . $question['Result']['Transformation']['line_start'] ?><!--">Open-->
 <!--                    code on GitHub</a>-->
