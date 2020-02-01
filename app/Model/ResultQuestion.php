@@ -10,6 +10,10 @@ App::uses('AppModel', 'Model');
 
 class ResultQuestion extends AppModel{
 
+
+
+	public $actsAs = array('Containable');
+
     public $validate = array(
         'result_id' => array(
             'result_id' => array(

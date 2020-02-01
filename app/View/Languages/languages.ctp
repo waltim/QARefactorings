@@ -24,19 +24,17 @@
                         to the terms for this research.</p>
 
                     <h3>INSTRUCTIONS</h3>
-                    <p style="text-align: justify">To participate in this survey, it is necessary to answer 11 questions
+                    <p style="text-align: justify">To participate in this survey, it is necessary to answer 6 questions
                         for each pair of code snippets presented at the top of the screen.<br>
-                        - The code snippets are organized in: the <b>previous code</b> (code before the change to add
-                        the new
-                        constructions) and the <b>transformed code</b> (after the change and introduction of lambda
-                        expressions
-                        to the snippet).<br>
+                        - The code snippets are organized in: the <b>Old Version</b> (code before to add
+                        the lambda expression) and the <b>New Version</b> (after the change and introduction of lambda
+                        expressions to the snippet).<br>
                         - Below the participant will have 5 options to inform their agreement / disagreement level
                         according to their observation regarding the two codes presented.<br>
                         - In addition to the questions with options to be selected, the participant can inform the
                         reason for their choices through a text field (<b>Optional, but of extreme importance for
                         contribution to the research</b>) located at the bottom of the page just below the options. <br>
-                        - <b>The participant may evaluate 6 pieces of code answering the 11 questions presented on the screen.</b>.
+                        - <b>The participant may evaluate 10 pieces of code answering the 6 questions presented on the screen.</b>.
 
                     </p>
                 </div>

@@ -36,7 +36,7 @@ class AppController extends Controller
 	public $components = array(
 		'Session',
 		'Auth' => array(
-			'loginRedirect' => array('controller' => 'pages', 'action' => 'home'),
+			'loginRedirect' => array('controller' => 'Languages', 'action' => 'languages',1),
 			'logoutRedirect' => array('controller' => 'Users', 'action' => 'login'),
 			'Form' => array(
 				'fields' => array('username' => 'email')
@@ -48,7 +48,7 @@ class AppController extends Controller
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
-		$this->Auth->allow('login', 'register');
+		$this->Auth->allow('login', 'likert', 'languages', 'end');
 //		$this->Auth->allow('login');
 	}
 
