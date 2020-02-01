@@ -28,7 +28,7 @@
 
                 // Include the diff class
                 require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff.php';
-
+				//pr(file_get_contents($question['Result']['Transformation']['diff_id'] . '/a.txt'));exit();
                 // Include two sample files for comparison
                 $a = explode("\n", file_get_contents($question['Result']['Transformation']['diff_id'] . '/a.txt'));
                 $b = explode("\n", file_get_contents($question['Result']['Transformation']['diff_id'] . '/b.txt'));
@@ -44,8 +44,8 @@
                 // html_entity_decode($str);
                 // Options for generating the diff
                 $options = array(
-                    //'ignoreWhitespace' => true,
-                    //'ignoreCase' => true,
+                    'ignoreWhitespace' => true,
+                    'ignoreCase' => true,
                 );
 
                 // Initialize the diff class
