@@ -532,15 +532,79 @@ class QuestionsController extends AppController
 //        pr($arrayFiltrado);
 //        pr($group);
 //        exit();
+
+//		$questionWithoutAnswers = $this->ResultQuestion->find('all', array(
+//			'recursive' =>-1,
+//			'contain' => array(
+//				'Answer'
+//			),
+//			'conditions' => array(
+//				'AND' => $arrayFiltrado,
+//			),
+//			'order' => array('ResultQuestion.id' => 'asc')
+//		));
+//
+//		$questionsWithAnswersCounted = array();
+//
+//		$contadorDeResp = 0;
+//        foreach ($questionWithoutAnswers as $qwa){
+//			$questionsWithAnswersCounted[$contadorDeResp]['ResultQuestion'] = $qwa['ResultQuestion'];
+//
+//			$countAnswers = $this->Answer->find('count',array(
+//				'conditions' => array(
+//					'Answer.result_question_id' => $qwa['ResultQuestion']['id'],
+//				)
+//			));
+//			$questionsWithAnswersCounted[$contadorDeResp]['ResultQuestion']['answer_count'] = $countAnswers;
+//			$contadorDeResp++;
+//		}
+//		pr($arrayFiltrado);
+//
+//		pr($questionsWithAnswersCounted);exit();
+
+		//$this->ResultQuestion->Answer->virtualFields['answer_count'] = 'count(Answer.result_question_id)';
+
         $question = $this->ResultQuestion->find('first', array(
-            'recursive' => 3,
-            'order' => 'rand()',
+            'recursive' => -1,
+			'contain' => array(
+				'Result' => array(
+					'fields' => array('Result.*'),
+					'Transformation'=> array(
+						'fields' => array('Transformation.*')
+					),
+					'ResultQuestion' => array(
+						'fields' => array('ResultQuestion.*'),
+						'Question' => array(
+							'fields' => array('Question.*')
+						),
+					)
+				),
+				'Answer' => array(
+					'fields' => array('Answer.*')
+				),
+				'Question' => array(
+					'fields' => array('Question.*')
+				),
+			),
+//			'joins' => array(
+//				array(
+//					'table' => 'answers',
+//					'alias' => 'Answer',
+//					'type' => 'LEFT',
+//					'conditions' => array(
+//						'Answer.result_question_id = ResultQuestion.id'
+//					)
+//				)
+//			),
+			//'group' => array('Answer.id'),
+			'order' => array('ResultQuestion.answer_count' => 'DESC'),
             'conditions' => array(
                 'AND' => $arrayFiltrado,
 //                'OR' => $arrayFiltrado
             ),
+			//'fields' => array('ResultQuestion.*','count(Answer.result_question_id)')
         ));
-//        pr($question);exit();
+        pr($question);exit();
 //        echo $question['Result']['transformation_id'];
 //        pr($question['Result']['ResultQuestion']);exit();
 

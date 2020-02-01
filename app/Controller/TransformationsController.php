@@ -28,7 +28,7 @@ class TransformationsController extends AppController
 				$snippetPath = scandir($folder);
 				$a = $folder . '/' . $snippetPath[2];
 				$b = $folder . '/' . $snippetPath[3];
-				pr($folder);
+				//pr($folder);
 				$HasAny = $this->Transformation->find('first', array(
 					'conditions' => array('Transformation.diff_id' => $folder),
 				));

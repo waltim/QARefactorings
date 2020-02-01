@@ -45,6 +45,7 @@ class Answer extends AppModel {
             'offset' => '',
             'finderQuery' => '',
             'with' => '',
+			'counterCache' => true
         )
     );
 }

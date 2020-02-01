@@ -44,8 +44,8 @@
                 // html_entity_decode($str);
                 // Options for generating the diff
                 $options = array(
-                    'ignoreWhitespace' => true,
-                    'ignoreCase' => true,
+                    //'ignoreWhitespace' => true,
+                    //'ignoreCase' => true,
                 );
 
                 // Initialize the diff class
