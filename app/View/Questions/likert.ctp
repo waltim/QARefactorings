@@ -31,11 +31,13 @@
                 <?php
 
                 // Include the diff class
+				$caminho = explode("/var/www/html/QARefactorings/app/webroot/", $question['Result']['Transformation']['diff_id']);
+				$caminho = ROOT . DS . 'app' . DS . 'webroot' . DS . $caminho[1];
                 require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff.php';
 				//pr(file_get_contents($question['Result']['Transformation']['diff_id'] . '/a.txt'));exit();
                 // Include two sample files for comparison
-                $a = explode("\n", file_get_contents($question['Result']['Transformation']['diff_id'] . '/a.txt'));
-                $b = explode("\n", file_get_contents($question['Result']['Transformation']['diff_id'] . '/b.txt'));
+                $a = explode("\n", file_get_contents($caminho . '/a.txt'));
+                $b = explode("\n", file_get_contents($caminho . '/b.txt'));
                 foreach ($a as $key => $value) {
                     $a[$key] = html_entity_decode($value);
                 }
