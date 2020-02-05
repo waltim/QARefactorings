@@ -85,6 +85,7 @@
                             <input type="hidden" onkeypress="return event.keyCode != 13;" id="result-<?= $z ?>"
                                    name="data[Answer][result_question_id][]"
                                    value="<?= $question['Result']['ResultQuestion'][$key]['id']; ?>">
+							<?php if ($questoes['Question']['id'] == 9) { ?>
                             <div id="questao-<?= $z ?>">
                                 <div class="form-group text-center">
                                     <h3>
@@ -97,43 +98,84 @@
                                                required="required"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="1" class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="DP<?= $z ?>">Much worse</label>
+                                        <label for="DP<?= $z ?>">Not at all important</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="D<?= $z ?>"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="2"
                                                class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="D<?= $z ?>">Somewhat worse</label>
+                                        <label for="D<?= $z ?>">Low importance</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="NDNC<?= $z ?>"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="3"
                                                class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="NDNC<?= $z ?>">About the same</label>
+                                        <label for="NDNC<?= $z ?>">Neutral</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="C<?= $z ?>"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="4"
                                                class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="C<?= $z ?>">Somewhat better</label>
+                                        <label for="C<?= $z ?>">Moderately important</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="CP<?= $z ?>"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="5"
                                                class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="CP<?= $z ?>">Much better</label>
+                                        <label for="CP<?= $z ?>">Very important</label>
                                     </div>
                                 </div>
-                                <!-- <div class="form-group">
-                                    <label>Justificativa (Opcional)</label>
-                                    <textarea rows="5" maxlength="1200" name="data[Answer][justify][]" class="form-control"
-                                        placeholder="Detalhe sua escolha aqui."></textarea>
-                                </div> -->
                             </div>
+							<?php }else{ ?>
+								<div id="questao-<?= $z ?>">
+									<div class="form-group text-center">
+										<h3>
+											<?php echo $z.') ' ; ?> <?= $questoes['Question']['description']; ?>
+										</h3>
+									</div>
+									<div class="form-group text-center" style="font-size: 18px;">
+										<div class="borda-radio">
+											<input onkeypress="return event.keyCode != 13;" type="radio" id="DP<?= $z ?>"
+												   required="required"
+												   name="data[Answer][choice][<?= $z ?>]"
+												   value="1" class="btn btn-raised btn-default flat-red" type="submit">
+											<label for="DP<?= $z ?>">Strongly disagree</label>
+										</div>
+										<div class="borda-radio">
+											<input onkeypress="return event.keyCode != 13;" type="radio" id="D<?= $z ?>"
+												   name="data[Answer][choice][<?= $z ?>]"
+												   value="2"
+												   class="btn btn-raised btn-default flat-red" type="submit">
+											<label for="D<?= $z ?>">Disagree</label>
+										</div>
+										<div class="borda-radio">
+											<input onkeypress="return event.keyCode != 13;" type="radio" id="NDNC<?= $z ?>"
+												   name="data[Answer][choice][<?= $z ?>]"
+												   value="3"
+												   class="btn btn-raised btn-default flat-red" type="submit">
+											<label for="NDNC<?= $z ?>">Neither agree or disagree</label>
+										</div>
+										<div class="borda-radio">
+											<input onkeypress="return event.keyCode != 13;" type="radio" id="C<?= $z ?>"
+												   name="data[Answer][choice][<?= $z ?>]"
+												   value="4"
+												   class="btn btn-raised btn-default flat-red" type="submit">
+											<label for="C<?= $z ?>">Agree</label>
+										</div>
+										<div class="borda-radio">
+											<input onkeypress="return event.keyCode != 13;" type="radio" id="CP<?= $z ?>"
+												   name="data[Answer][choice][<?= $z ?>]"
+												   value="5"
+												   class="btn btn-raised btn-default flat-red" type="submit">
+											<label for="CP<?= $z ?>">Strongly agree</label>
+										</div>
+									</div>
+								</div>
+							<?php } ?>
                         <?php }
                         elseif ($questoes['Question']['question_type_id'] == 2) { ?>
                         <input type="hidden" id="result-<?= $z ?>" name="data[Answer][result_question_id][]"
@@ -146,8 +188,8 @@
                             </div>
                             <div class="form-group text-center" style="font-size: 18px;">
                                 <div class="form-group">
-<!--                                    <label>(Optional)</label>-->
-                                    <textarea rows="5" maxlength="1200" required name="data[Answer][justify][<?= $z ?>]"
+                                    <label>(Optional)</label>
+                                    <textarea rows="5" maxlength="1200" name="data[Answer][justify][<?= $z ?>]"
                                               class="form-control"
                                               placeholder="Write here."></textarea>
                                 </div>
