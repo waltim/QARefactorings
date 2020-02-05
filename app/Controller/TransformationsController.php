@@ -45,6 +45,7 @@ class TransformationsController extends AppController
 					$apt = 'S';
 				} else {
 					$apt = 'N';
+					$typeCode2 = 1;
 				}
 				$this->Transformation->create();
 
@@ -90,6 +91,8 @@ class TransformationsController extends AppController
 	public function checkCodeHasLambda($conteudo = null)
 	{
 		$changed = str_replace(" -> ","LAMBDAARROW",$conteudo);
+		$changed = str_replace(")-> ","LAMBDAARROW",$changed);
+		$changed = str_replace(")->{","LAMBDAARROW",$changed);
 		if (strpos($changed, "LAMBDAARROW") === false) {
 			$transformationType = 0;
 			return $transformationType;
@@ -437,8 +440,8 @@ class TransformationsController extends AppController
 			$this->Session->setFlash(__('Transformação não encontrada.'), 'Flash/error');
 		} else {
 			$this->Transformation->delete($id);
-			$path = str_replace('a.txt', "", $Selected['Transformation']['old_code']);
-			$this->delTree($path);
+//			$path = str_replace('a.txt', "", $Selected['Transformation']['old_code']);
+//			$this->delTree($path);
 			$this->Session->setFlash(__('Deletada com sucesso!'), 'Flash/success');
 			$this->redirect(array('action' => 'index', $pesquisa));
 		}
@@ -452,8 +455,8 @@ class TransformationsController extends AppController
 		));
 		foreach ($Selected as $todel) {
 			$this->Transformation->delete($todel['Transformation']['id']);
-			$path = str_replace('a.txt', "", $todel['Transformation']['old_code']);
-			$this->delTree($path);
+			//$path = str_replace('a.txt', "", $todel['Transformation']['old_code']);
+			//$this->delTree($path);
 		}
 		$this->Session->setFlash(__('Deletadados com sucesso!'), 'Flash/success');
 		$this->redirect(array('action' => 'index', $pesquisa));
