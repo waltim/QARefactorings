@@ -26,9 +26,9 @@
 		<div class="col-md-12" style="text-align: center">
 
 			<?php if($respondidas == 0) { ?>
-			<h3> 1 of 10 snippets analyzed</h3>
+			<h3> 1 of 10 pair of snippets</h3>
 			<?php } else{ ?>
-				<h3><?php echo $respondidas/5?> of 10 snippets analyzed</h3>
+				<h3><?php echo $respondidas/5?> of 10 pair of snippets</h3>
 			<?php } ?>
 		</div>
 		<div class="timeline-body col-md-12">
