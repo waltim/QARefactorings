@@ -52,8 +52,11 @@
                                 <?php echo $this->Form->input('UserLanguage.experience', array(
                                     'type' => 'select',
                                     'label' => false,
-                                    'options' => array('1 to 2 years' => '1 to 2 years', '2 to 4 years' => '2 to 4 years', '4 to 6 years' => '4 to 6 years', '8 or more' => '8 or more'),
-                                    'default' => "2 to 4 years",
+                                    'options' => array('less than one year' => 'less than one year',
+										'between one and four years' => 'between one and four years',
+										'between five and ten years' => 'between five and ten years',
+										'more than ten years' => 'more than ten years'),
+                                    'default' => "between one and four years",
                                     'class' => 'form-control'
                                 )); ?>
                             </div>

@@ -302,9 +302,11 @@ class QuestionsController extends AppController
 //            pr($this->request->data['Answer']['choice']);
             $choices[0] = $this->request->data['Answer']['choice'][1];
             unset($this->request->data['Answer']['choice'][1]);
-            $choices[1] = $this->request->data['Answer']['choice'][3];
+			$choices[1] = $this->request->data['Answer']['choice'][2];
+			unset($this->request->data['Answer']['choice'][2]);
+            $choices[2] = $this->request->data['Answer']['choice'][3];
             unset($this->request->data['Answer']['choice'][3]);
-            $choices[2] = $this->request->data['Answer']['choice'][4];
+            $choices[3] = $this->request->data['Answer']['choice'][4];
             unset($this->request->data['Answer']['choice'][3]);
 //            $choices[8] = $this->request->data['Answer']['choice'][9];
 //            unset($this->request->data['Answer']['choice'][9]);
@@ -312,8 +314,8 @@ class QuestionsController extends AppController
 //            unset($this->request->data['Answer']['choice'][10]);
 
             $this->request->data['Answer']['choice'] = $choices;
-//            pr($this->request->data['Answer']);
-//            exit();
+            //pr($this->request->data['Answer']);
+            //exit();
 
 			//pr($this->request->data['Answer']['choice']);
 
@@ -352,20 +354,20 @@ class QuestionsController extends AppController
                     ),
                 ),
             ));
-            //pr($this->request->data);
+			//pr($this->request->data);
 //			pr($contador);exit();
             if ($contador < 1) {
                 foreach ($this->request->data['Answer']['result_question_id'] as $key => $answer) {
                     $this->Answer->create();
                     if ($key == 1) {
                         $Newresp = array(
-                            'Answer' => array(
-                                'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
-                                'user_id' => $this->request->data['Answer']['user_id'],
-                                'justify' => $this->request->data['Answer']['justify'][2],
-                                'choice' => 'N/A',
-                                'start_time' => $this->request->data['Answer']['start_time'],
-                                'end_time' => $this->request->data['Answer']['end_time'],
+							'Answer' => array(
+								'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
+								'user_id' => $this->request->data['Answer']['user_id'],
+								'justify' => null,
+								'choice' => $this->request->data['Answer']['choice'][1],
+								'start_time' => $this->request->data['Answer']['start_time'],
+								'end_time' => $this->request->data['Answer']['end_time'],
                             ),
                         );
                     } elseif ($key == 4) {
@@ -375,18 +377,6 @@ class QuestionsController extends AppController
 								'user_id' => $this->request->data['Answer']['user_id'],
 								'justify' => $this->request->data['Answer']['justify'][5],
 								'choice' => 'N/A',
-								'start_time' => $this->request->data['Answer']['start_time'],
-								'end_time' => $this->request->data['Answer']['end_time'],
-							),
-						);
-					}
-					elseif ($key == 5) {
-						$Newresp = array(
-							'Answer' => array(
-								'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
-								'user_id' => $this->request->data['Answer']['user_id'],
-								'justify' => null,
-								'choice' => $this->request->data['check'],
 								'start_time' => $this->request->data['Answer']['start_time'],
 								'end_time' => $this->request->data['Answer']['end_time'],
 							),
@@ -410,7 +400,7 @@ class QuestionsController extends AppController
 								'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
 								'user_id' => $this->request->data['Answer']['user_id'],
 								'justify' => null,
-								'choice' => $this->request->data['Answer']['choice'][1],
+								'choice' => $this->request->data['Answer']['choice'][2],
 								'start_time' => $this->request->data['Answer']['start_time'],
 								'end_time' => $this->request->data['Answer']['end_time'],
 							),
@@ -422,24 +412,24 @@ class QuestionsController extends AppController
 								'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
 								'user_id' => $this->request->data['Answer']['user_id'],
 								'justify' => null,
-								'choice' => $this->request->data['Answer']['choice'][2],
+								'choice' => $this->request->data['Answer']['choice'][3],
 								'start_time' => $this->request->data['Answer']['start_time'],
 								'end_time' => $this->request->data['Answer']['end_time'],
 							),
 						);
 					}
-                    else {
-                        $Newresp = array(
-                            'Answer' => array(
-                                'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
-                                'user_id' => $this->request->data['Answer']['user_id'],
-                                'justify' => null,
-                                'choice' => $this->request->data['Answer']['choice'][$key],
-                                'start_time' => $this->request->data['Answer']['start_time'],
-                                'end_time' => $this->request->data['Answer']['end_time'],
-                            ),
-                        );
-                    }
+//                    else {
+//                        $Newresp = array(
+//                            'Answer' => array(
+//                                'result_question_id' => $this->request->data['Answer']['result_question_id'][$key],
+//                                'user_id' => $this->request->data['Answer']['user_id'],
+//                                'justify' => null,
+//                                'choice' => $this->request->data['Answer']['choice'][$key],
+//                                'start_time' => $this->request->data['Answer']['start_time'],
+//                                'end_time' => $this->request->data['Answer']['end_time'],
+//                            ),
+//                        );
+//                    }
                     //pr($Newresp);
                     if ($this->Answer->save($Newresp)) {
                         $this->User->id = $getUser['User']['id'];
@@ -495,10 +485,6 @@ class QuestionsController extends AppController
             ),
         ));
 
-//		pr($array);exit();
-
-//         pr($array);exit();
-
         $arrayFiltrado = array();
         $k = 0;
         foreach ($array as $ar) {
@@ -506,63 +492,7 @@ class QuestionsController extends AppController
 			$arrayFiltrado[$k]['ResultQuestion.id !='] = $ar['ResultQuestion']['id'];
             $k++;
         }
-//		pr($arrayFiltrado);exit();
-//        $arrayFiltrado = array_unique($arrayFiltrado);
-//        $group = array();
-//        $par = array(1022,1026,1042,1178,1180,1183);
-//        $impar = array(1060,1061,1070,1185,1188,1192);
-//		pr($arrayFiltrado);
-//        if($this->Auth->user('id') % 2 == 0){
-////            echo $this->Auth->user('id');
-////            echo "par";
-//            foreach ($par as $p){
-//                if (!in_array($p, $arrayFiltrado)) {
-//                    $group[]['Result.transformation_id'] = $p;
-//                }
-//            }
-//        } else {
-////            echo $this->Auth->user('id');
-////            echo "impar";
-//            foreach ($impar as $i){
-//                if (!in_array($i, $arrayFiltrado)) {
-//                    $group[]['Result.transformation_id'] = $i;
-//                }
-//            }
-//        }
-//        pr($arrayFiltrado);
-//        pr($group);
-//        exit();
 
-//		$questionWithoutAnswers = $this->ResultQuestion->find('all', array(
-//			'recursive' =>-1,
-//			'contain' => array(
-//				'Answer'
-//			),
-//			'conditions' => array(
-//				'AND' => $arrayFiltrado,
-//			),
-//			'order' => array('ResultQuestion.id' => 'asc')
-//		));
-//
-//		$questionsWithAnswersCounted = array();
-//
-//		$contadorDeResp = 0;
-//        foreach ($questionWithoutAnswers as $qwa){
-//			$questionsWithAnswersCounted[$contadorDeResp]['ResultQuestion'] = $qwa['ResultQuestion'];
-//
-//			$countAnswers = $this->Answer->find('count',array(
-//				'conditions' => array(
-//					'Answer.result_question_id' => $qwa['ResultQuestion']['id'],
-//				)
-//			));
-//			$questionsWithAnswersCounted[$contadorDeResp]['ResultQuestion']['answer_count'] = $countAnswers;
-//			$contadorDeResp++;
-//		}
-//		pr($arrayFiltrado);
-//
-//		pr($questionsWithAnswersCounted);exit();
-
-		//$this->ResultQuestion->Answer->virtualFields['answer_count'] = 'count(Answer.result_question_id)';
 
         $question = $this->ResultQuestion->find('first', array(
             'recursive' => -1,
