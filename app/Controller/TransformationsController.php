@@ -89,7 +89,7 @@ class TransformationsController extends AppController
 
 	public function checkCodeHasLambda($conteudo = null)
 	{
-		$changed = str_replace("->","LAMBDAARROW",$conteudo);
+		$changed = str_replace(" -> ","LAMBDAARROW",$conteudo);
 		if (strpos($changed, "LAMBDAARROW") === false) {
 			$transformationType = 0;
 			return $transformationType;

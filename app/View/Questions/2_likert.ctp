@@ -23,25 +23,78 @@
 <div class="container">
     <!-- Main content -->
     <section class="content">
-		<div class="timeline-body col-md-12">
-			<div class="col-md-6">
-				<h3>Old Code</h3>
-				<?php
-				$codigoAntigo = str_replace("&nbsp; }", "}", $question['Result']['Transformation']['code_before']);
-				$codigoAntigo = strip_tags($codigoAntigo, '<br/>');
-				?>
-				<pre id="codigo1"
-					  class="brush: java"><?php echo $codigoAntigo; ?></pre>
-			</div>
-			<div class="col-md-6">
-				<h3>New Code</h3>
-				<?php
-				$codigoDepois = str_replace("&nbsp; }", "}", $question['Result']['Transformation']['code_after']);
-				$codigoDepois = strip_tags($codigoDepois, '<br/>');
-				?>
-				<pre id="codigo2" class="brush: java"><?php echo $codigoDepois; ?></pre>
-			</div>
-		</div>
+        <div class="col-md-12">
+            <div id="calcula-height notranslate" style="overflow-x: scroll;">
+<!--                <a class="button-piscando" target="_blank"-->
+<!--                   href="--><?//= $question['Result']['Transformation']['site_link'] . $question['Result']['Transformation']['line_start'] ?><!--">Open-->
+<!--                    code on GitHub</a>-->
+                <?php
+
+                // Include the diff class
+				$caminho = explode("/var/www/html/QARefactorings/app/webroot/", $question['Result']['Transformation']['diff_id']);
+				$caminho = ROOT . DS . 'app' . DS . 'webroot' . DS . $caminho[1];
+                require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff.php';
+				//pr(file_get_contents($question['Result']['Transformation']['diff_id'] . '/a.txt'));exit();
+                // Include two sample files for comparison
+                $a = explode("\n", file_get_contents($caminho . '/a.txt'));
+                $b = explode("\n", file_get_contents($caminho . '/b.txt'));
+                foreach ($a as $key => $value) {
+                    $a[$key] = html_entity_decode($value);
+                }
+                foreach ($b as $key => $value) {
+                    $b[$key] = html_entity_decode($value);
+                }
+                // pr($a);
+                // pr($b);
+                // exit();
+                // html_entity_decode($str);
+                // Options for generating the diff
+                $options = array(
+                    //'ignoreWhitespace' => true,
+                    //'ignoreCase' => true,
+                );
+
+                // Initialize the diff class
+                $diff = new Diff($a, $b, $options);
+                ?>
+                <div class="notranslate" style="background-color: white; color: black;">
+                    <?php
+                    // Generate a side by side diff
+                    require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/SideBySide.php';
+                    $renderer = new Diff_Renderer_Html_SideBySide;
+                    echo $diff->Render($renderer);
+                    // Generate an inline diff
+//                     require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Html/Inline.php';
+//                     $renderer = new Diff_Renderer_Html_Inline;
+//                     echo $diff->render($renderer);
+                    // Generate a unified diff
+//                    require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Unified.php';
+//                    $renderer = new Diff_Renderer_Text_Unified;
+//                    echo htmlspecialchars($diff->render($renderer));
+                    // Generate a context diff
+ //                   require_once ROOT . DS . 'app' . DS . 'Vendor' . DS . 'php-diff/lib/Diff/Renderer/Text/Context.php';
+ //                   $renderer = new Diff_Renderer_Text_Context;
+//                    echo htmlspecialchars($diff->render($renderer));
+                    ?>
+                </div>
+                <!-- <div id="codigo-antes" class="form-group">
+                                                    <h4>Código anterior</h4>
+                                                    <?php
+                $codigoAntigo = str_replace("&nbsp; }", "}", $question['Result']['Transformation']['code_before']);
+                $codigoAntigo = strip_tags($codigoAntigo, '<br/>');
+                ?>
+                                                    <code id="codigo1" class="brush: diff"><?php echo $codigoAntigo; ?></code>
+                                                </div>
+                                                <div id="codigo-depois" class="form-group">
+                                                    <h4>Código transformado</h4>
+                                                    <?php
+                $codigoDepois = str_replace("&nbsp; }", "}", $question['Result']['Transformation']['code_after']);
+                $codigoDepois = strip_tags($codigoDepois, '<br/>');
+                ?>
+                                                    <code id="codigo2" class="brush: diff"><?php echo $codigoDepois; ?></code>
+                                                </div> -->
+            </div>
+        </div>
         <div class="col-md-12">
             <div id="distancia-medida" style="margin-top: 30px;" class="box box-default">
                 <div class="box-body">
@@ -97,35 +150,35 @@
                                                required="required"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="1" class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="DP<?= $z ?>">Much worse</label>
+                                        <label for="DP<?= $z ?>">Worsened considerably</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="D<?= $z ?>"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="2"
                                                class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="D<?= $z ?>">Somewhat worse</label>
+                                        <label for="D<?= $z ?>">Worsened</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="NDNC<?= $z ?>"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="3"
                                                class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="NDNC<?= $z ?>">About the same</label>
+                                        <label for="NDNC<?= $z ?>">Kept</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="C<?= $z ?>"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="4"
                                                class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="C<?= $z ?>">Somewhat better</label>
+                                        <label for="C<?= $z ?>">Improved</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="CP<?= $z ?>"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="5"
                                                class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="CP<?= $z ?>">Much better</label>
+                                        <label for="CP<?= $z ?>">Improved considerably</label>
                                     </div>
                                 </div>
                                 <!-- <div class="form-group">
@@ -147,7 +200,7 @@
                             <div class="form-group text-center" style="font-size: 18px;">
                                 <div class="form-group">
 <!--                                    <label>(Optional)</label>-->
-                                    <textarea rows="5" maxlength="1200" required name="data[Answer][justify][<?= $z ?>]"
+                                    <textarea rows="5" maxlength="1200" name="data[Answer][justify][<?= $z ?>]"
                                               class="form-control"
                                               placeholder="Write here."></textarea>
                                 </div>
@@ -199,13 +252,6 @@
 													   value="4"
 													   class="btn btn-raised btn-default flat-red" type="submit">
 												<label for="C<?= $z ?>">Often</label>
-											</div>
-											<div class="borda-radio">
-												<input onkeypress="return event.keyCode != 13;" type="radio" id="CP<?= $z ?>"
-													   name="data[Answer][choice][<?= $z ?>]"
-													   value="5"
-													   class="btn btn-raised btn-default flat-red" type="submit">
-												<label for="CP<?= $z ?>">Always</label>
 											</div>
 										</div>
 									</div>
