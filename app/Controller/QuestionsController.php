@@ -538,7 +538,7 @@ class QuestionsController extends AppController
 //        echo $question['Result']['transformation_id'];
 //        pr($question['Result']['ResultQuestion']);exit();
 
-        if (empty($question) || $respondidas >= 50) {
+        if (empty($question) || $respondidas >= 25) {
 //        	pr($question);
 //        	pr('travou aqui');exit();
             $this->Session->setFlash(__('Thank you for responding to the end!'), 'Flash/info');

@@ -26,9 +26,9 @@
 		<div class="col-md-12" style="text-align: center">
 
 			<?php if($respondidas == 0) { ?>
-			<h3> Page 1 of 10</h3>
+			<h3> Page 1 of 5</h3>
 			<?php } else { ?>
-				<h3> Page <?php echo ($respondidas/5)+1?> of 10</h3>
+				<h3> Page <?php echo ($respondidas/5)+1?> of 5</h3>
 			<?php } ?>
 		</div>
 		<div class="timeline-body col-md-12">

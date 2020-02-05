@@ -70,6 +70,7 @@
                                     <option disabled selected value>Choose One</option>
                                     <option value="hsn">Some high school, no diploma</option>
                                     <option value="hsg">High school graduate</option>
+									<option value="under">Undergraduate</option>
                                     <option value="bd">Bachelor’s degree</option>
                                     <option value="md">Master’s degree</option>
                                     <option value="dd">Doctorate degree</option>
