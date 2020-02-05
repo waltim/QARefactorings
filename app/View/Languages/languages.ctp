@@ -52,12 +52,14 @@
                                 <?php echo $this->Form->input('UserLanguage.experience', array(
                                     'type' => 'select',
                                     'label' => false,
-                                    'options' => array('less than one year' => 'less than one year',
+                                    'options' => array(
+                                    	'less than one year' => 'less than one year',
 										'between one and four years' => 'between one and four years',
 										'between five and ten years' => 'between five and ten years',
 										'more than ten years' => 'more than ten years'),
-                                    'default' => "between one and four years",
-                                    'class' => 'form-control'
+                                    'class' => 'form-control',
+									'required' => 'required',
+									'empty'=>'Choose One'
                                 )); ?>
                             </div>
                         </div>
@@ -65,7 +67,7 @@
                             <label for="inputEmail3" class="col-sm-2 control-label">Education</label>
                             <div class="col-sm-4">
                                 <select name="data[User][formation]" required class="form-control">
-                                    <option disabled selected value> -- Select One --</option>
+                                    <option disabled selected value>Choose One</option>
                                     <option value="hsn">Some high school, no diploma</option>
                                     <option value="hsg">High school graduate</option>
                                     <option value="bd">Bachelor’s degree</option>

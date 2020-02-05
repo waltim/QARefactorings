@@ -26,9 +26,9 @@
 		<div class="col-md-12" style="text-align: center">
 
 			<?php if($respondidas == 0) { ?>
-			<h3> 1 of 10 pair of snippets</h3>
-			<?php } else{ ?>
-				<h3><?php echo $respondidas/5?> of 10 pair of snippets</h3>
+			<h3> Page 1 of 10</h3>
+			<?php } else { ?>
+				<h3> Page <?php echo ($respondidas/5)+1?> of 10</h3>
 			<?php } ?>
 		</div>
 		<div class="timeline-body col-md-12">
@@ -106,7 +106,7 @@
                                                required="required"
                                                name="data[Answer][choice][<?= $z ?>]"
                                                value="1" class="btn btn-raised btn-default flat-red" type="submit">
-                                        <label for="DP<?= $z ?>">Not at all important</label>
+                                        <label for="DP<?= $z ?>">Not important at all</label>
                                     </div>
                                     <div class="borda-radio">
                                         <input onkeypress="return event.keyCode != 13;" type="radio" id="D<?= $z ?>"
