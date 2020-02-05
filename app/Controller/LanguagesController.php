@@ -44,11 +44,7 @@ class LanguagesController extends AppController
                 $update = array(
                     'User' => array(
                         'id' => $getUser['User']['id'],
-                        'formation' => $this->request->data['User']['formation'],
-                        'profession' => $this->request->data['User']['profession'],
-                        'lambda_exp' => $this->request->data['User']['lambda_exp'],
-                        'functional_program' => $this->request->data['User']['functional_program'],
-                        'sex' => $this->request->data['User']['sex']
+                        'formation' => $this->request->data['User']['formation']
                     )
                 );
 

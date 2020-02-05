@@ -30,6 +30,8 @@
     '../dist/css/AdminLTE.min.css',
     '../dist/css/skins/_all-skins.min.css',
     '../php-form/form.css',
+	'../syntaxhighlighter/styles/shCoreEclipse.css',
+	//'../syntaxhighlighter/styles/shCoreDefault.css',
 ));
 ?>
 
@@ -81,6 +83,9 @@
     '../bower_components/fastclick/lib/fastclick.js',
     '../dist/js/adminlte.min.js',
     '../dist/js/demo.js',
+	'../syntaxhighlighter/scripts/XRegExp.js',
+	'../syntaxhighlighter/scripts/shCore.js',
+	'../syntaxhighlighter/scripts/shBrushJava.js',
 ));
 ?>
     <!-- jQuery 3 -->
@@ -240,12 +245,18 @@
     //     }
     // });
 </script>
-<script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'pt',
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-        }, 'google_translate_element');
-    }
+<script type="text/javascript"
+		src="<?=$this->webroot;?>syntaxhighlighter/scripts/shBrushDiff.js"></script>
+<script>
+	SyntaxHighlighter.config.tagName = "code";
+	SyntaxHighlighter.defaults['gutter'] = true;
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.config.bloggerMode = true;
+	SyntaxHighlighter.defaults['diff'] = [1, 2.3];
+	var element1 = document.getElementById('codigo1');
+	var element2 = document.getElementById('codigo2');
+	SyntaxHighlighter.defaults['highlight'] = [<?=$question['Result']['Transformation']['deletions']?>];
+	SyntaxHighlighter.highlight(undefined, element1);
+	SyntaxHighlighter.defaults['highlight'] = [<?=$question['Result']['Transformation']['additions']?>];
+	SyntaxHighlighter.highlight(undefined, element2);
 </script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
