@@ -23,6 +23,14 @@
 <div class="container">
     <!-- Main content -->
     <section class="content">
+		<div class="col-md-12" style="text-align: center">
+
+			<?php if($respondidas == 0) { ?>
+			<h3> 1 of 10 snippets analyzed</h3>
+			<?php } else{ ?>
+				<h3><?php echo $respondidas/5?> of 10 snippets analyzed</h3>
+			<?php } ?>
+		</div>
 		<div class="timeline-body col-md-12">
 			<div class="col-md-6">
 				<h3>Old Code</h3>

@@ -538,7 +538,7 @@ class QuestionsController extends AppController
 //        echo $question['Result']['transformation_id'];
 //        pr($question['Result']['ResultQuestion']);exit();
 
-        if (empty($question) || $respondidas >= 60) {
+        if (empty($question) || $respondidas >= 50) {
 //        	pr($question);
 //        	pr('travou aqui');exit();
             $this->Session->setFlash(__('Thank you for responding to the end!'), 'Flash/info');
@@ -556,7 +556,10 @@ class QuestionsController extends AppController
             $this->Session->setFlash(__('Please fill in the information below to start the survey.'), 'Flash/info');
             $this->redirect(array('controller' => 'languages', 'action' => 'languages', $question['Result']['Transformation']['language_id']));
         }
-        $this->set('question', $question);
+        $this->set(array(
+        	'question' => $question,
+			'respondidas' => $respondidas
+			));
     }
 
     public function responder()
