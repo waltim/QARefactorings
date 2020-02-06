@@ -55,7 +55,7 @@ class LanguagesController extends AppController
                 $this->redirect(array('controller' => 'questions', 'action' => 'likert',$getUser['User']['id']));
             }
         }elseif(!empty($getUser) && !empty($getUser['Language'])){
-				$this->redirect(array('controller' => 'questions', 'action' => 'likert',$getUser['User']['id']));
+				//$this->redirect(array('controller' => 'questions', 'action' => 'likert',$getUser['User']['id']));
 		}
         $linguagem = $this->Language->find('first', array(
             'conditions' => array(
@@ -63,7 +63,7 @@ class LanguagesController extends AppController
             ),
             'recursive' => -1
         ));
-        $this->set(compact('linguagem'));
+        $this->set(compact('linguagem','getUser'));
     }
 
     public function edit()
