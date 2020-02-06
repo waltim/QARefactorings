@@ -58,7 +58,7 @@
                                value="<?= $tempo = date('H:i:s'); ?>">
 						<div class="form-group text-center">
 							<h3>
-								1) What is your opinion about the following setences:
+								1) What is your opinion about the following sentences:
 							</h3>
 						</div>
 						<hr>
