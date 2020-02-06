@@ -29,7 +29,7 @@
                         - The code snippets are organized in: the <b>Old Version</b> (code before adding
                         the lambda expression) and the <b>New Version</b> (after the change and introduction of lambda
                         expressions to the snippet).<br>
-                        - Below the participant will have 5 options to inform their agreement / disagreement level
+                        - Below, the participants will have 5 options to inform their agreement / disagreement level
                         according to their observation regarding the two codes presented.<br>
 						- The final question is not mandatory and allows you to write your opinion about the other questions answered previously. But this question is very important for this research and we need to you answer it.
                         - <b>The participant may evaluate 5 snippets of code answering the 7 questions presented on the screen.</b>.
