@@ -24,20 +24,20 @@
                         to the terms for this research</b>.</p>
 
                     <h3>INSTRUCTIONS</h3>
-                    <p style="text-align: justify; font-size: 16px;">To participate in this survey, it is necessary to answer 6 questions
+                    <p style="text-align: justify; font-size: 16px;">To participate in this survey, it is necessary to answer 7 questions
                         for each pair of code snippets presented at the top of the screen.<br>
-                        - The code snippets are organized in: the <b>Old Version</b> (code before to add
+                        - The code snippets are organized in: the <b>Old Version</b> (code before adding
                         the lambda expression) and the <b>New Version</b> (after the change and introduction of lambda
                         expressions to the snippet).<br>
                         - Below the participant will have 5 options to inform their agreement / disagreement level
                         according to their observation regarding the two codes presented.<br>
-                        - In addition to the questions with options to be selected, the participant can inform the
-                        reason for their choices through a text field (<b>Optional, but of extreme importance for
-                        contribution to the research</b>) located at the bottom of the page just below the options. <br>
-                        - <b>The participant may evaluate 10 pieces of code answering the 6 questions presented on the screen.</b>.
+						- The final question is not mandatory and allows you to write your opinion about the other questions answered previously. But this question is very important for this research and we need to you answer it.
+                        - <b>The participant may evaluate 5 snippets of code answering the 7 questions presented on the screen.</b>.
 
                     </p>
                 </div>
+
+				<?php if(empty($getUser['Language'])){ ?>
                 <div class="box-header with-border">
                     <h3 class="box-title">
 						developer experience
@@ -87,6 +87,11 @@
                     </div>
                     <!-- /.box-footer -->
                 </form>
+				<?php }else{ ?>
+					<div class="box-footer">
+						<a href="<?php $this->webroot;?>/questions/likert" class="btn btn-info pull-right"> Go to survey </a>
+					</div>
+				<?php } ?>
             </div>
         </div>
         <!-- /.col-->

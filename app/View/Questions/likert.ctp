@@ -28,11 +28,11 @@
 			<?php if($respondidas == 0) { ?>
 			<h3> Page 1 of 5</h3>
 			<?php } else { ?>
-				<h3> Page <?php echo ($respondidas/5)+1?> of 5</h3>
+				<h3> Page <?php echo ($respondidas/7)+1?> of 5</h3>
 			<?php } ?>
 		</div>
 		<div class="timeline-body col-md-12">
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<h3>Old Code</h3>
 				<?php
 				$codigoAntigo = str_replace("&nbsp; }", "}", $question['Result']['Transformation']['code_before']);
@@ -41,7 +41,7 @@
 				<pre id="codigo1"
 					  class="brush: java"><?php echo $codigoAntigo; ?></pre>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<h3>New Code</h3>
 				<?php
 				$codigoDepois = str_replace("&nbsp; }", "}", $question['Result']['Transformation']['code_after']);
@@ -56,8 +56,14 @@
                     <form id="reused_form" method="post" action="<?= $this->webroot ?>questions/likert">
                         <input type="hidden" name="data[Answer][start_time]" onkeypress="return event.keyCode != 13;"
                                value="<?= $tempo = date('H:i:s'); ?>">
+						<div class="form-group text-center">
+							<h3>
+								1) What is your opinion about the following setences:
+							</h3>
+						</div>
 						<hr>
-                        <?php $z = 1;
+                        <?php
+						$z = 1;
                         $ww = 1;
                         foreach ($question['Result']['ResultQuestion'] as $key => $questoes) { ?>
 
@@ -68,7 +74,7 @@
                             <div id="questao-<?= $z ?>">
                                 <div class="form-group text-center">
                                     <h3>
-										<?php echo $z.') ' ; ?><?= $questoes['Question']['description']; ?>
+										<?php echo $questoes['Question']['question_label']; ?><?= $questoes['Question']['description']; ?>
                                     </h3>
                                 </div>
                                 <div class="form-group text-center" style="font-size: 18px;">
@@ -97,7 +103,7 @@
                             <div id="questao-<?= $z ?>">
                                 <div class="form-group text-center">
                                     <h3>
-										<?php echo $z.') ' ; ?> <?= $questoes['Question']['description']; ?>
+										<?php echo $questoes['Question']['question_label']; ?> <?= $questoes['Question']['description']; ?>
                                     </h3>
                                 </div>
                                 <div class="form-group text-center" style="font-size: 18px;">
@@ -142,7 +148,7 @@
 								<div id="questao-<?= $z ?>">
 									<div class="form-group text-center">
 										<h3>
-											<?php echo $z.') ' ; ?> <?= $questoes['Question']['description']; ?>
+											<?php echo $questoes['Question']['question_label'].' '; ?> <?= $questoes['Question']['description']; ?>
 										</h3>
 									</div>
 									<div class="form-group text-center" style="font-size: 18px;">
@@ -191,7 +197,7 @@
                         <div id="questao-<?= $z ?>">
                             <div class="form-group text-center">
                                 <h3>
-									<?php echo $z.') ' ; ?><?= $questoes['Question']['description']; ?>
+									<?php echo $questoes['Question']['question_label'].' '; ?><?= $questoes['Question']['description']; ?>
                                 </h3>
                             </div>
                             <div class="form-group text-center" style="font-size: 18px;">
@@ -209,7 +215,7 @@
                                 if ($ww == 1) { ?>
                                     <div class="form-group text-center">
 									<h3>
-										<?php echo $z.') '; ?><?= $questoes['Question']['description']; ?>
+										<?php echo $questoes['Question']['question_label'].' '; ?><?= $questoes['Question']['description']; ?>
 									</h3>
                                 <?php } ?>
                                 <input type="hidden" onkeypress="return event.keyCode != 13;" id="result-<?= $z ?>"
@@ -270,12 +276,16 @@
                             <?php $z++;
                             echo '<hr>';
                             } ?>
-                            <a href="<?= $this->webroot ?>questions/responder">
-                                <button class="btn btn-raised btn-primary" value="responder"
-                                        name="data[Answer][botao]">
-                                    Submit
-                                </button>
-                            </a>
+							<div class="box-footer">
+								<a href="<?php $this->webroot;?>/languages/languages/1" class="btn btn-info"> Return to survey informations </a>
+
+								<a href="<?= $this->webroot ?>questions/responder">
+									<button class="btn btn-raised btn-primary" value="responder"
+											name="data[Answer][botao]">
+										Submit
+									</button>
+								</a>
+							</div>
                     </form>
                 </div>
             </div>
