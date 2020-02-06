@@ -99,7 +99,7 @@
                             <input type="hidden" onkeypress="return event.keyCode != 13;" id="result-<?= $z ?>"
                                    name="data[Answer][result_question_id][]"
                                    value="<?= $question['Result']['ResultQuestion'][$key]['id']; ?>">
-							<?php if ($questoes['Question']['id'] == 9) { ?>
+							<?php if ($questoes['Question']['id'] == 15) { ?>
                             <div id="questao-<?= $z ?>">
                                 <div class="form-group text-center">
                                     <h3>
