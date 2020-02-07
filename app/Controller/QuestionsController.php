@@ -531,7 +531,7 @@ class QuestionsController extends AppController
         if (empty($question) || $respondidas >= 35) {
 //        	pr($question);
 //        	pr('travou aqui');exit();
-            $this->Session->setFlash(__('Thank you for responding to the end!'), 'Flash/info');
+//            $this->Session->setFlash(__('Thank you for responding to the end!'), 'Flash/info');
             $this->redirect(array('controller' => 'users', 'action' => 'end'));
         }
 
