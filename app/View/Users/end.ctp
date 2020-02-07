@@ -7,7 +7,7 @@
 <div style="min-width: 800px">
     <h1>
 		Thanks!<br>
-		do you completed the survey until the end!<br>
+		You completed the entire survey!<br>
 		=)
 	</h1>
 </div>
