@@ -40,7 +40,7 @@
 				<?php if(empty($getUser['Language'])){ ?>
                 <div class="box-header with-border">
                     <h3 class="box-title">
-						developer experience
+						Developer experience
                     </h3>
                 </div>
 
@@ -77,6 +77,21 @@
                                 </select>
                             </div>
                         </div>
+
+						<div class="form-group">
+							<label for="inputEmail3" class="col-sm-2 control-label">Employment</label>
+							<div class="col-sm-4">
+								<select name="data[User][profession]" required class="form-control">
+									<option disabled selected value>Choose One</option>
+									<option value="dfullst">Developer, full-stack</option>
+									<option value="dback">Developer, back-and</option>
+									<option value="dfront">Developer, front-and</option>
+									<option value="dmbile">Developer, mobile</option>
+									<option value="dmbile">Educator</option>
+									<option value="dmbile">Student</option>
+								</select>
+							</div>
+						</div>
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">

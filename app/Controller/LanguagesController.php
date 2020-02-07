@@ -26,7 +26,6 @@ class LanguagesController extends AppController
     {
 		$Users = new UsersController();
 		$ip = $Users->getUserIpAddr();
-		//pr($ip);
 		$Users->login($ip);
 		$getUser = $this->User->find('first', array(
 			'conditions' => array('User.ip_adress' => $ip),
@@ -44,7 +43,8 @@ class LanguagesController extends AppController
                 $update = array(
                     'User' => array(
                         'id' => $getUser['User']['id'],
-                        'formation' => $this->request->data['User']['formation']
+                        'formation' => $this->request->data['User']['formation'],
+						'profession' => $this->request->data['User']['profession']
                     )
                 );
 
