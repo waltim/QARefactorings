@@ -7,7 +7,7 @@ class UsersController extends AppController
 	{
 		parent::beforeFilter();
 		if ($this->action == 'login' || $this->action == 'register'
-			|| $this->action == 'forgot') {
+			|| $this->action == 'forgot' || $this->action == 'end') {
 			$this->layout = 'authentication';
 		} else {
 			$this->layout = 'admin';
@@ -20,6 +20,11 @@ class UsersController extends AppController
 			'order' => array('User.name DESC')
 		));
 		$this->set('usuarios', $usuarios);
+	}
+
+	public function end()
+	{
+
 	}
 
 	public function view($id = null)
@@ -176,24 +181,34 @@ class UsersController extends AppController
 				}
 			}
 		}else{
-			$array = array('User'=>array('username'=>'','email'=>'','password'=>'','user_type_id'=>'','trophy'=>0,'ip_adress'=>''));
-//			$array = array('User'=>array('email'=>''));
-//			pr($array);exit();
+			$array = array(
+				'User'=> array(
+					'username'=>'',
+					'email'=>'',
+					'password'=>''
+					,'user_type_id'=>''
+					,'trophy'=>0,
+					'ip_adress'=>'',
+					'country' =>'',
+					'region' => '',
+					'city' => ''
+				));
 			if ($email != null) {
-//				pr('to aqui');exit();
-				if($email != null){
-					$array['User']['email'] = $email;
-				}
+				$array['User']['email'] = $email;
+
+				$details = json_decode(file_get_contents("http://ipinfo.io/{$ipadress}/json"));
+
 				$user = $this->User->findByEmail($array['User']['email']);
 				if (empty($user)) {
 					$participantNumber = $this->User->find('count');
-////					pr($participantNumber);exit();
 					date_default_timezone_set('America/Sao_Paulo');
 					$array['User']['username'] = 'participant'.$participantNumber;
 					$array['User']['password'] = date('dmYHis');
 					$array['User']['user_type_id'] = 1;
 					$array['User']['ip_adress'] = $ipadress;
-//					pr($array);exit();
+					$array['User']['city'] = $details->city;
+					$array['User']['region'] = $details->region;
+					$array['User']['country'] = $details->country;
 					$this->User->save($array);
 //				$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');
 				}else{

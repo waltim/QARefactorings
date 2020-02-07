@@ -532,7 +532,7 @@ class QuestionsController extends AppController
 //        	pr($question);
 //        	pr('travou aqui');exit();
             $this->Session->setFlash(__('Thank you for responding to the end!'), 'Flash/info');
-            $this->redirect(array('controller' => 'pages', 'action' => 'end'));
+            $this->redirect(array('controller' => 'users', 'action' => 'end'));
         }
 
         $userLanguage = $this->UserLanguage->find('count', array(
