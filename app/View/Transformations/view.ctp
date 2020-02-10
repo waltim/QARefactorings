@@ -64,10 +64,10 @@
                             <h3>Código anterior</h3>
                             <?php
                             $codigoAntigo = str_replace("&nbsp; }", "}", $transformation['Transformation']['code_before']);
-                            $codigoAntigo = strip_tags($codigoAntigo, '<br/>');
+                            //$codigoAntigo = strip_tags($codigoAntigo, '<br/>');
                             ?>
-                            <code id="codigo1"
-                                  class="brush: diff"><?php echo $codigoAntigo; ?></code>
+                            <xmp id="codigo1"
+                                  class="brush: diff"><?php echo $codigoAntigo; ?></xmp>
                             <form class="form-horizontal" method="post"
                                   action="<?= $this->webroot ?>transformations/view/<?= $transformation['Transformation']['id']; ?>">
                                 <div class="box-body">
@@ -85,9 +85,9 @@
                             <h3>Código transformado</h3>
                             <?php
                             $codigoDepois = str_replace("&nbsp; }", "}", $transformation['Transformation']['code_after']);
-                            $codigoDepois = strip_tags($codigoDepois, '<br/>');
+                            //$codigoDepois = strip_tags($codigoDepois, '<br/>');
                             ?>
-                            <code id="codigo2" class="brush: diff"><?php echo $codigoDepois; ?></code>
+                            <xmp id="codigo2" class="brush: diff"><?php echo $codigoDepois; ?></xmp>
                             <form class="form-horizontal" method="post"
                                   action="<?= $this->webroot ?>transformations/view/<?= $transformation['Transformation']['id']; ?>">
                                 <div class="box-body">
@@ -146,7 +146,7 @@
 
                     <div class="timeline-body">
                     <table class="table">
-                    <thead class="thead-dark">        
+                    <thead class="thead-dark">
                             <tr>
                                 <th>Métrica</th>
 								<th>Antes</th>
