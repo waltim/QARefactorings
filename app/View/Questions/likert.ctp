@@ -36,18 +36,18 @@
 				<h3>Old Code</h3>
 				<?php
 				$codigoAntigo = str_replace("&nbsp; }", "}", $question['Result']['Transformation']['code_before']);
-				$codigoAntigo = strip_tags($codigoAntigo, '<br/>');
+				//$codigoAntigo = strip_tags($codigoAntigo, '<br/>');
 				?>
-				<pre id="codigo1"
-					  class="brush: java"><?php echo $codigoAntigo; ?></pre>
+				<xmp id="codigo1"
+					  class="brush: java"><?php echo $codigoAntigo; ?></xmp>
 			</div>
 			<div class="col-md-12">
 				<h3>New Code</h3>
 				<?php
 				$codigoDepois = str_replace("&nbsp; }", "}", $question['Result']['Transformation']['code_after']);
-				$codigoDepois = strip_tags($codigoDepois, '<br/>');
+				//$codigoDepois = strip_tags($codigoDepois, '<br/>');
 				?>
-				<pre id="codigo2" class="brush: java"><?php echo $codigoDepois; ?></pre>
+				<xmp id="codigo2" class="brush: java"><?php echo $codigoDepois; ?></xmp>
 			</div>
 		</div>
         <div class="col-md-12">
