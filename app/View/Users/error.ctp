@@ -1,7 +1,7 @@
 <style>
 	.login-box-body {
 		 background: transparent!important;
-
+	}
 	.login-page {
 		margin-right: 25%!important;
 	}
@@ -9,8 +9,6 @@
 
 <div style="min-width: 800px">
     <h1>
-		Thanks!<br>
-		You completed the entire survey!<br>
-		=)
+		Sorry, there was an unexpected error. Could you answer the questionnaire using anoter device?
 	</h1>
 </div>

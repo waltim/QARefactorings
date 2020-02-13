@@ -7,7 +7,8 @@ class UsersController extends AppController
 	{
 		parent::beforeFilter();
 		if ($this->action == 'login' || $this->action == 'register'
-			|| $this->action == 'forgot' || $this->action == 'end') {
+			|| $this->action == 'forgot' || $this->action == 'end'
+			|| $this->action == 'error') {
 			$this->layout = 'authentication';
 		} else {
 			$this->layout = 'admin';
@@ -23,6 +24,11 @@ class UsersController extends AppController
 	}
 
 	public function end()
+	{
+
+	}
+
+	public function error()
 	{
 
 	}

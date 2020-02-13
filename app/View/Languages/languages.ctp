@@ -97,14 +97,14 @@
                     <div class="box-footer">
                         <button type="submit" name="data[UsersLanguage][languages_id]"
                                 value="<?= $linguagem['Language']['id']; ?>"
-                                class="btn btn-info pull-right">Save
+                                class="btn btn-info pull-right">Go to survey
                         </button>
                     </div>
                     <!-- /.box-footer -->
                 </form>
 				<?php }else{ ?>
 					<div class="box-footer">
-						<a href="<?php $this->webroot;?>/questions/likert" class="btn btn-info pull-right"> Go to survey </a>
+						<a href="<?php $this->webroot;?>/questions/likert" class="btn btn-info pull-right"> Return to survey </a>
 					</div>
 				<?php } ?>
             </div>
