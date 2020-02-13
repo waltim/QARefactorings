@@ -45,10 +45,44 @@ class AppController extends Controller
 		)
 	);
 
+	public function getProtectedValue($obj,$val){
+		$array = (array)$obj;
+		//pr($array);exit();
+		if(in_array($val,$array)){
+			return true;
+		}else{
+			return false;
+		}
+
+	}
+
+	public function getUserIpAddr(){
+		if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+			//ip from share internet
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
+		}elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+			//ip pass from proxy
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}else{
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		return $ip;
+	}
+
+	public function appError($error){
+		$value = $this->getProtectedValue($error,"404");
+		$ip = $this->getUserIpAddr();
+		if($value){
+			$this->redirect(array('controller' => 'users', 'action' => 'error'));
+		}elseif (is_null($ip)){
+			$this->redirect(array('controller' => 'users', 'action' => 'error'));
+		}
+	}
+
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
-		$this->Auth->allow('login', 'likert', 'languages', 'end');
+		$this->Auth->allow('login', 'likert', 'languages', 'end','error');
 //		$this->Auth->allow('login');
 	}
 
