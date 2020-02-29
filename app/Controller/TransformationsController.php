@@ -144,36 +144,44 @@ class TransformationsController extends AppController
 
 	public function MatchDiffsAndReturnMetricsForAllCodes()
 	{
-		$arquivo = fopen('C:\Users\03873243130\Desktop\lambdaanalysisresults\allTransformationMetrics\estatisticaExtratorCodigo.txt', 'r');
+		$arquivo = fopen('/home/walterlucas/export-data_survey/metrics-posnett.txt', 'r');
 		$linhas = array();
 		while (!feof($arquivo)) {
 			$linhas[] = fgets($arquivo, 1024);
 		}
 		fclose($arquivo);
 		foreach ($linhas as $linha) {
+			//pr($linha);
+			$pos = strpos($linha,"snippet");
+			if($pos === false){
+				continue;
+			}
 			$diff = explode(" - ", $linha);
+			//pr($diff);
 			$transformation = $this->Transformation->find('first', array(
 				'recursive' => -1,
 				'conditions' => array(
-					'Transformation.diff_id' => $diff[0]
+					'Transformation.diff_id LIKE' => '%'.$diff[0].'%'
 				),
 			));
-			pr($transformation['Transformation']['id']);
-			if (!empty($transformation)) {
-				$metric = explode(" | ", $diff[1]);
+			//pr($transformation['Transformation']);
+			if (empty($transformation)) {
+				continue;
 			}
+			$metric = explode(" | ", $diff[1]);
+			//pr($metric);
 			$this->Result->create();
 			$result = array(
 				'Result' => array(
 					'transformation_id' => $transformation['Transformation']['id'],
-					'metric_id' => 28,
+					'metric_id' => 6,
 					'before' => str_replace(',', '.', $metric[0]),
 					'after' => str_replace(',', '.', $metric[1]
 					),
 				)
 			);
 			$this->Result->save($result);
-		}
+		}//exit();
 		$this->redirect(array('controller' => 'SearchEvents', 'action' => 'index'));
 	}
 
@@ -364,45 +372,45 @@ class TransformationsController extends AppController
 			// pr($refactoring);exit();
 			if ($this->Transformation->save($refactoring)) {
 
-				$transformationModificada = $this->Transformation->find('first', array(
-					'conditions' => array(
-						'Transformation.id' => $refactoring['Transformation']['id'],
-					),
-				));
-
-				$nomecode = $transformationModificada['Transformation']['diff_id'];
-				$pasta = WWW_ROOT . "files/" . $nomecode . "/";
-				$caminho = $pasta;
-				$oldmask = umask(0);
-
-				$path = str_replace('a.txt', "", $transformationModificada['Transformation']['old_code']);
-				$this->delTree($path);
-
-				if (file_exists($pasta)) {
-					echo 'já existe';
-				} else {
-					mkdir($pasta, 0777, true);
-				}
-
-				$a = fopen($pasta . "a.txt", "w+");
-				$b = fopen($pasta . "b.txt", "w+");
-
-				$valorA = str_replace("+   ", "", $refactoring['Transformation']['code_after']);
-				$valorA = str_replace("    +", "", $refactoring['Transformation']['code_after']);
-				$valorA = strip_tags($valorA);
-				fwrite($b, utf8_encode($valorA));
-				$valorB = str_replace("-   ", "", $refactoring['Transformation']['code_before']);
-				$valorB = str_replace("   -", "", $refactoring['Transformation']['code_before']);
-				$valorB = strip_tags($valorB);
-				fwrite($a, utf8_encode($valorB));
-
-				fclose($a);
-				fclose($b);
-
-				umask($oldmask);
+//				$transformationModificada = $this->Transformation->find('first', array(
+//					'conditions' => array(
+//						'Transformation.id' => $refactoring['Transformation']['id'],
+//					),
+//				));
+//
+//				$nomecode = $transformationModificada['Transformation']['diff_id'];
+//				$pasta = WWW_ROOT . "files/" . $nomecode . "/";
+//				$caminho = $pasta;
+//				$oldmask = umask(0);
+//
+//				$path = str_replace('a.txt', "", $transformationModificada['Transformation']['old_code']);
+//				$this->delTree($path);
+//
+//				if (file_exists($pasta)) {
+//					echo 'já existe';
+//				} else {
+//					mkdir($pasta, 0777, true);
+//				}
+//
+//				$a = fopen($pasta . "a.txt", "w+");
+//				$b = fopen($pasta . "b.txt", "w+");
+//
+//				$valorA = str_replace("+   ", "", $refactoring['Transformation']['code_after']);
+//				$valorA = str_replace("    +", "", $refactoring['Transformation']['code_after']);
+//				$valorA = strip_tags($valorA);
+//				fwrite($b, utf8_encode($valorA));
+//				$valorB = str_replace("-   ", "", $refactoring['Transformation']['code_before']);
+//				$valorB = str_replace("   -", "", $refactoring['Transformation']['code_before']);
+//				$valorB = strip_tags($valorB);
+//				fwrite($a, utf8_encode($valorB));
+//
+//				fclose($a);
+//				fclose($b);
+//
+//				umask($oldmask);
 
 				$this->Session->setFlash(__('Transformação atualizada com sucesso.'), 'Flash/success');
-				$this->redirect(array('action' => 'edit', $refactoring['Transformation']['id']));
+				$this->redirect(array('action' => 'view', $refactoring['Transformation']['id']));
 			}
 		}
 
@@ -539,7 +547,7 @@ class TransformationsController extends AppController
 	function locAndAmloc($string = null)
 	{
 		$numLoc = substr_count($string, "\n");
-		return $numLoc;
+		return $numLoc+1;
 	}
 
 	public
@@ -623,7 +631,7 @@ class TransformationsController extends AppController
 //			pr($metricas);exit();
 			if (!empty($metricas)) {
 //				foreach ($metricas as $key => $metrica) {
-//                    pr($key);exit();
+//                    //pr($key);exit();
 //					$this->Result->create();
 //					$result = array(
 //						'Result' => array(

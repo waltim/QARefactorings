@@ -87,8 +87,8 @@
 									<option value="dback">Developer, back-and</option>
 									<option value="dfront">Developer, front-and</option>
 									<option value="dmbile">Developer, mobile</option>
-									<option value="dmbile">Educator</option>
-									<option value="dmbile">Student</option>
+									<option value="edu">Educator</option>
+									<option value="stu">Student</option>
 								</select>
 							</div>
 						</div>

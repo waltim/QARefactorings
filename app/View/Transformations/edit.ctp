@@ -78,39 +78,37 @@
                         <?php
                     } ?>
                     <!-- /.box -->
-                    <div class="col-md-6">
-                        <div class="box">
-                            <div class="box-header">
-                                <h3 class="box-title">Código Anterior
-                                </h3>
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body pad">
-																	<textarea class="textarea"
-                                                                              name="data[Transformation][code_before]"
-                                                                              placeholder="Cole o código aqui"
-                                                                              style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-																						<?= $transformation['Transformation']['code_before']; ?>
-																					</textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="box">
-                            <div class="box-header">
-                                <h3 class="box-title"> Código Transformado
-                                </h3>
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body pad">
-												<textarea class="textarea" name="data[Transformation][code_after]"
-                                                          placeholder="Cole o código aqui"
-                                                          style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-																<?= $transformation['Transformation']['code_after']; ?>
-																</textarea>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="col-md-6">-->
+<!--                        <div class="box">-->
+<!--                            <div class="box-header">-->
+<!--                                <h3 class="box-title">Código Anterior-->
+<!--                                </h3>-->
+<!--                            </div>-->
+<!--                            <div class="box-body pad">-->
+<!--																	<textarea class="textarea"-->
+<!--                                                                              name="data[Transformation][code_before]"-->
+<!--                                                                              placeholder="Cole o código aqui"-->
+<!--                                                                              style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">-->
+<!--																						--><?//= $transformation['Transformation']['code_before']; ?>
+<!--																					</textarea>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-6">-->
+<!--                        <div class="box">-->
+<!--                            <div class="box-header">-->
+<!--                                <h3 class="box-title"> Código Transformado-->
+<!--                                </h3>-->
+<!--                            </div>-->
+<!--                            <div class="box-body pad">-->
+<!--												<textarea class="textarea" name="data[Transformation][code_after]"-->
+<!--                                                          placeholder="Cole o código aqui"-->
+<!--                                                          style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">-->
+<!--																--><?//= $transformation['Transformation']['code_after']; ?>
+<!--																</textarea>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                     <div class="form-group">
                         <label for="exampleInputEmail1">Link da transformação</label>
                         <input type="text" value="<?= $transformation['Transformation']['site_link']; ?>" name="data[Transformation][site_link]" class="form-control"
