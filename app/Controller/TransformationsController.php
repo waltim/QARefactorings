@@ -97,7 +97,8 @@ class TransformationsController extends AppController
 		return ".".substr($string, $ini, $len);
 	}
 
-	public function updateTypeOfTransformations($research = null){
+
+	public function ClassifierOfTransformations($research = null){
 
 		$kinds = array();
 
@@ -105,46 +106,59 @@ class TransformationsController extends AppController
 			"recursive" => -1,
 			"conditions" => array(
 				"Transformation.search_event_id" => $research,
-				//"Transformation.transformation_type_id !=" => 1
 			)
 		));
-
 		foreach($trfs as $tr){
-			//pr($tr["Transformation"]["id"]);
-			//pr($tr["Transformation"]["code_before"]);
-			$isLoopOld = 0;
-			$isLoopNew = 0;
-			$array = explode("\n", file_get_contents($tr["Transformation"]["new_code"]));
-				$verify = $this->parserType($array,$tr["Transformation"]["code_after"]);
+				$value = $this->updateTypeOfTransformation($tr["Transformation"]["id"]);
+			$kinds[$tr["Transformation"]["id"]] = $value;
+		}
 
-			$isLoopOld = $isLoopOld + substr_count($tr["Transformation"]["code_before"], 'while (');
-			$isLoopOld = $isLoopOld + substr_count($tr["Transformation"]["code_before"], 'for (');
-			$isLoopOld = $isLoopOld + substr_count($tr["Transformation"]["code_before"], 'forEach(');
-
-			$isLoopNew = $isLoopNew + substr_count($tr["Transformation"]["code_after"], '() ->');
-//				pr($isLoop);
-//				pr($verify);exit();
-				if(strlen($verify) > 0 && $isLoopOld > 0 && $isLoopNew == 0) {
-					$verify = str_replace(".","->",$verify);
-					$verify = substr($verify, 2);
-					$kinds[$tr["Transformation"]["id"]] = "Loop To ".$verify;
-				}else{
-					$kinds[$tr["Transformation"]["id"]] = "Anonymous Inner Class To Lambda Expression";
-				}
-//				$refactor = array(
+		//				$refactor = array(
 //					'Transformation' => array(
 //						'id' => $tr["Transformation"]["id"],
 //						'transformation_type_id' => $chain
 //					),
 //				);
 //				$this->Transformation->save($refactor);
-		}
+
 		pr(sizeof($kinds));
 		$kindsList = array_unique($kinds);
 		pr($kindsList);
 		pr($kinds);
 		exit();
+
 		$this->redirect(array('action' => 'index', $research));
+	}
+
+	public function updateTypeOfTransformation($transformation = null){
+
+		$tr = $this->Transformation->find("first", array(
+			"recursive" => -1,
+			"conditions" => array(
+				"Transformation.id" => $transformation,
+			)
+		));
+		//pr($tr["Transformation"]["id"]);
+		//pr($tr["Transformation"]["code_before"]);
+		$isLoopOld = 0;
+		$isLoopNew = 0;
+		$array = explode("\n", file_get_contents($tr["Transformation"]["new_code"]));
+			$verify = $this->parserType($array,$tr["Transformation"]["code_after"]);
+
+		$isLoopOld = $isLoopOld + substr_count($tr["Transformation"]["code_before"], 'while (');
+		$isLoopOld = $isLoopOld + substr_count($tr["Transformation"]["code_before"], 'for (');
+		$isLoopOld = $isLoopOld + substr_count($tr["Transformation"]["code_before"], 'forEach(');
+
+		$isLoopNew = $isLoopNew + substr_count($tr["Transformation"]["code_after"], '() ->');
+//				pr($isLoop);
+//				pr($verify);exit();
+			if(strlen($verify) > 0 && $isLoopOld > 0 && $isLoopNew == 0) {
+				$verify = str_replace(".","->",$verify);
+				$verify = substr($verify, 2);
+				return "Loop To ".$verify;
+			}else{
+				return "Anonymous Inner Class To Lambda Expression";
+			}
 	}
 
 	public function parserType($conteudo = null, $code = null){
