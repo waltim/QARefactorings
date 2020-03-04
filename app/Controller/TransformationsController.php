@@ -88,6 +88,201 @@ class TransformationsController extends AppController
 		$this->redirect(array('action' => 'index', $pesquisa));
 	}
 
+	public function get_string_between($string, $start, $end){
+		$string = ' ' . $string;
+		$ini = strpos($string, $start);
+		if ($ini == 0) return '';
+		$ini += strlen($start);
+		$len = strpos($string, $end, $ini) - $ini;
+		return ".".substr($string, $ini, $len);
+	}
+
+	public function updateTypeOfTransformations($research = null){
+
+		$kinds = array();
+
+		$trfs = $this->Transformation->find("all", array(
+			"recursive" => -1,
+			"conditions" => array(
+				"Transformation.search_event_id" => $research,
+				//"Transformation.transformation_type_id !=" => 1
+			)
+		));
+
+		foreach($trfs as $tr){
+			//pr($tr["Transformation"]["id"]);
+			//pr($tr["Transformation"]["code_before"]);
+			$isLoopOld = 0;
+			$isLoopNew = 0;
+			$array = explode("\n", file_get_contents($tr["Transformation"]["new_code"]));
+				$verify = $this->parserType($array,$tr["Transformation"]["code_after"]);
+
+			$isLoopOld = $isLoopOld + substr_count($tr["Transformation"]["code_before"], 'while (');
+			$isLoopOld = $isLoopOld + substr_count($tr["Transformation"]["code_before"], 'for (');
+			$isLoopOld = $isLoopOld + substr_count($tr["Transformation"]["code_before"], 'forEach(');
+
+			$isLoopNew = $isLoopNew + substr_count($tr["Transformation"]["code_after"], '() ->');
+//				pr($isLoop);
+//				pr($verify);exit();
+				if(strlen($verify) > 0 && $isLoopOld > 0 && $isLoopNew == 0) {
+					$verify = str_replace(".","->",$verify);
+					$verify = substr($verify, 2);
+					$kinds[$tr["Transformation"]["id"]] = "Loop To ".$verify;
+				}else{
+					$kinds[$tr["Transformation"]["id"]] = "Anonymous Inner Class To Lambda Expression";
+				}
+//				$refactor = array(
+//					'Transformation' => array(
+//						'id' => $tr["Transformation"]["id"],
+//						'transformation_type_id' => $chain
+//					),
+//				);
+//				$this->Transformation->save($refactor);
+		}
+		pr(sizeof($kinds));
+		$kindsList = array_unique($kinds);
+		pr($kindsList);
+		pr($kinds);
+		exit();
+		$this->redirect(array('action' => 'index', $research));
+	}
+
+	public function parserType($conteudo = null, $code = null){
+
+		$kind = '';
+		//pr($conteudo);
+		$functionsList = array();
+		foreach ($conteudo as $key => $line){
+			//pr($key);
+			if(strlen($line) > 0) {
+				$line = str_replace(".", ".#", $line);
+				$pieces = explode(".", $line);
+				//pr($pieces);
+				foreach ($pieces as $piece){
+					$changed = str_replace(" -> ","LAMBDAARROW",$piece);
+					$changed = str_replace(")-> ","LAMBDAARROW",$changed);
+					$changed = str_replace(")->{","LAMBDAARROW",$changed);
+					$piece = str_replace("#", ".", $piece);
+					//pr($changed);
+					if(substr_count($changed, 'LAMBDAARROW') > 0){
+						//pr($piece);
+						if(strlen($this->get_string_between($piece, '.', '(')) > 0){
+							$pos = strpos($code,$this->get_string_between($piece, '.', '('));
+							//pr($pos);
+							$functionsList[$pos] = $this->get_string_between($piece, '.', '(');
+							//pr($this->get_string_between($piece, '.', '('));
+						}
+					}else{
+						continue;
+					}
+				}
+			}else{
+				continue;
+			}
+		}
+		ksort($functionsList);
+		$functionsList = array_unique($functionsList);
+		//pr($functionsList);
+		//exit();
+		foreach ($functionsList as $func){
+			$kind .= $func;
+		}
+		return $kind;
+	}
+
+	public function verifyIsChaining($research = null){
+
+		$trfs = $this->Transformation->find("all", array(
+			"recursive" => -1,
+			"conditions" => array(
+				"Transformation.search_event_id" => $research,
+				//"Transformation.transformation_type_id !=" => 1
+			)
+		));
+
+		foreach($trfs as $tr){
+			$typeCode1 = $this->checkCodeHasLambda($tr["Transformation"]["code_before"]);
+			$typeCode2 = $this->checkCodeHasLambda($tr["Transformation"]["code_after"]);
+			if ($typeCode1 === 0 && $typeCode2 !== 0) {
+				$apt = 'S';
+			} else {
+				$apt = 'N';
+				$typeCode2 = 1;
+			}
+//			pr($tr["Transformation"]["id"]);
+			//pr($tr["Transformation"]["code_after"]);
+			//pr($apt);
+			if($apt === 'S'){
+				$verify = $this->parserChaining($tr["Transformation"]["code_after"]);
+//				pr($verify);
+				if(strlen($verify) > 0) {
+					$pieces = explode(".", $verify);
+					$sizeChain = sizeof($pieces) - 1;
+					if($sizeChain > 1){
+						$chain = "CHAINING";
+					}else{
+						$chain = "NOT CHAINING";
+					}
+				}else{
+					$chain = "NOT CHAINING";
+				}
+				$refactor = array(
+					'Transformation' => array(
+						'id' => $tr["Transformation"]["id"],
+						'is_cascade' => $chain
+					),
+				);
+				$this->Transformation->save($refactor);
+			}
+		}
+		$this->redirect(array('action' => 'index', $research));
+	}
+
+	public function parserChaining($conteudo = null){
+
+		$chaining = '';
+
+		pr($conteudo);exit();
+
+		$tokenFilter = substr_count($conteudo, '.filter(');
+		$tokenCount = substr_count($conteudo, '.count(');
+		$tokenCollect = substr_count($conteudo, '.collect(');
+		$tokenMap = substr_count($conteudo, '.map(');
+		$tokenReduce = substr_count($conteudo, '.reduce(');
+		$tokenForeach = substr_count($conteudo, '.forEach(');
+		$tokenAnyMatch = substr_count($conteudo, '.anyMatch(');
+		$tokenFlatMap = substr_count($conteudo, '.flatMap(');
+		$tokenForeachOrdered = substr_count($conteudo, '.forEachOrdered(');
+		if($tokenFilter > 0){
+			$chaining .= ".filter";
+		}
+		if($tokenCount > 0){
+			$chaining .= ".count";
+		}
+		if($tokenCollect > 0){
+			$chaining .= ".collect";
+		}
+		if($tokenMap > 0){
+			$chaining .= ".map";
+		}
+		if($tokenReduce > 0){
+			$chaining .= ".reduce";
+		}
+		if($tokenForeach > 0){
+			$chaining .= ".forEach";
+		}
+		if($tokenForeachOrdered > 0){
+			$chaining .= ".forEachOrdered";
+		}
+		if($tokenAnyMatch > 0){
+			$chaining .= ".anyMatch";
+		}
+		if($tokenFlatMap > 0){
+			$chaining .= ".flatMap";
+		}
+		return $chaining;
+	}
+
 	public function checkCodeHasLambda($conteudo = null)
 	{
 		$changed = str_replace(" -> ","LAMBDAARROW",$conteudo);
@@ -106,6 +301,20 @@ class TransformationsController extends AppController
 		$tokenForeach = strpos($conteudo, '.forEach');
 		$tokenAnyMatch = strpos($conteudo, '.anyMatch');
 		$tokenFlatMap = strpos($conteudo, '.flatMap');
+
+		if ($tokenFilter != null) {
+			$transformationType = 3;
+		} elseif ($tokenForeach != null) {
+			$transformationType = 2;
+		} elseif ($tokenMap != null) {
+			$transformationType = 5;
+		} elseif ($tokenAnyMatch != null) {
+			$transformationType = 4;
+		} elseif ($tokenFlatMap != null) {
+			$transformationType = 16;
+		} else {
+			$transformationType = 1;
+		}
 
 		if ($tokenFilter != null && $tokenCount != null) {
 			$transformationType = 8;
