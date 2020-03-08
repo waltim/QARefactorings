@@ -7,10 +7,6 @@ class TransformationType extends AppModel {
 
     public $validate = array(
         'description' => array(
-            'alphaNumeric' => array(
-                'rule' => 'alphaNumeric',
-                'message' => 'Use apenas letras e números.'
-            ),
             'unique' => array(
                 'rule' => 'isUnique',
                 'message' => 'Este tipo já foi cadastrado.'

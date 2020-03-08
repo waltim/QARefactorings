@@ -99,7 +99,7 @@ class TransformationsController extends AppController
 
 
 	public function ClassifierOfTransformations($research = null){
-
+		$this->loadModel('TransformationType');
 		$kinds = array();
 
 		$trfs = $this->Transformation->find("all", array(
@@ -112,21 +112,57 @@ class TransformationsController extends AppController
 				$value = $this->updateTypeOfTransformation($tr["Transformation"]["id"]);
 			$kinds[$tr["Transformation"]["id"]] = $value;
 		}
-
-		//				$refactor = array(
-//					'Transformation' => array(
-//						'id' => $tr["Transformation"]["id"],
-//						'transformation_type_id' => $chain
-//					),
-//				);
-//				$this->Transformation->save($refactor);
-
-		pr(sizeof($kinds));
 		$kindsList = array_unique($kinds);
-		pr($kindsList);
-		pr($kinds);
-		exit();
 
+		foreach ($kindsList as $ty){
+			$types = $this->TransformationType->find("first", array(
+				"conditions" => array(
+					"TransformationType.description" => $ty
+				)
+			));
+			//$typesCount = $this->TransformationType->find("count");
+			//pr($typesCount);
+			if(sizeof($types) == 0){
+			//pr($type);
+				$this->TransformationType->create();
+				$newType = array(
+					'TransformationType' => array(
+						//'id' => $typesCount+1,
+						'description' => $ty,
+					),
+				);
+				//pr($newType);
+				if($this->TransformationType->save($newType)){
+				}else{
+					debug($this->TransformationType->validationErrors);
+				}
+			}else{
+				continue;
+			}
+		}
+
+		foreach($trfs as $tr){
+			$value = $this->updateTypeOfTransformation($tr["Transformation"]["id"]);
+			$typeChange = $this->TransformationType->find("first", array(
+				"conditions" => array(
+					"TransformationType.description" => $value
+				)
+			));
+			$refactor = array(
+				'Transformation' => array(
+					'id' => $tr["Transformation"]["id"],
+					'transformation_type_id' => $typeChange["TransformationType"]["id"]
+				),
+			);
+			//pr($refactor);
+			$this->Transformation->save($refactor);
+		}
+		//pr(sizeof($kinds));
+		//$kindsList = array_unique($kinds);
+		//pr(sizeof($kindsList));
+		//pr($kindsList);
+		//pr($kinds);
+		//exit();
 		$this->redirect(array('action' => 'index', $research));
 	}
 
@@ -139,7 +175,7 @@ class TransformationsController extends AppController
 			)
 		));
 		//pr($tr["Transformation"]["id"]);
-		//pr($tr["Transformation"]["code_before"]);
+		//pr($tr["Transformation"]["code_after"]);
 		$isLoopOld = 0;
 		$isLoopNew = 0;
 		$array = explode("\n", file_get_contents($tr["Transformation"]["new_code"]));
@@ -155,20 +191,32 @@ class TransformationsController extends AppController
 			if(strlen($verify) > 0 && $isLoopOld > 0 && $isLoopNew == 0) {
 				$verify = str_replace(".","->",$verify);
 				$verify = substr($verify, 2);
+				if(substr_count($verify,"|") > 0){
+					$verify = str_replace("|->","|",$verify);
+					$lfin = substr($verify, -1);
+					if(substr_count($verify,"|") == 1 && $lfin == "|"){
+						//pr(strlen($verify));
+						//pr($verify);
+						$verify = str_replace("|","",$verify);
+					}
+				}
+				//pr($verify);exit();
 				return "Loop To ".$verify;
 			}else{
+				//pr("Anonymous Inner Class To Lambda Expression");
 				return "Anonymous Inner Class To Lambda Expression";
-			}
+			}//exit();
 	}
 
 	public function parserType($conteudo = null, $code = null){
 
 		$kind = '';
 		//pr($conteudo);
+		//pr(array_search(end ($conteudo ),$conteudo));//exit();
 		$functionsList = array();
 		foreach ($conteudo as $key => $line){
-			//pr($key);
-			if(strlen($line) > 0) {
+			//pr($key.'-'.strlen($line));
+			if(strlen($line) > 1) {
 				$line = str_replace(".", ".#", $line);
 				$pieces = explode(".", $line);
 				//pr($pieces);
@@ -178,19 +226,25 @@ class TransformationsController extends AppController
 					$changed = str_replace(")->{","LAMBDAARROW",$changed);
 					$piece = str_replace("#", ".", $piece);
 					//pr($changed);
-					if(substr_count($changed, 'LAMBDAARROW') > 0){
+					if(substr_count($changed, 'LAMBDAARROW') > 0 || substr_count($changed, 'collect(') > 0
+						|| substr_count($changed, 'reduce(') > 0){
 						//pr($piece);
 						if(strlen($this->get_string_between($piece, '.', '(')) > 0){
-							$pos = strpos($code,$this->get_string_between($piece, '.', '('));
+							//$pos = strpos($code,$this->get_string_between($piece, '.', '('));
 							//pr($pos);
-							$functionsList[$pos] = $this->get_string_between($piece, '.', '(');
+							$functionsList[] = $this->get_string_between($piece, '.', '(');
 							//pr($this->get_string_between($piece, '.', '('));
 						}
+						//pr($functionsList);
 					}else{
+						//pr($functionsList);
 						continue;
 					}
+
 				}
-			}else{
+			}elseif(($key != sizeof($conteudo)-1) && strlen($line) < 2 && sizeof($functionsList) > 0){
+				$functionsList[] = "|";
+			} else{
 				continue;
 			}
 		}
