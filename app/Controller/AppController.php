@@ -82,7 +82,7 @@ class AppController extends Controller
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
-		$this->Auth->allow('login', 'likert', 'languages', 'end','error');
+		$this->Auth->allow('login', 'likert', 'languages', 'end','error','oacoding');
 //		$this->Auth->allow('login');
 	}
 

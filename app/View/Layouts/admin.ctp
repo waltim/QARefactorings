@@ -18,7 +18,7 @@
     //'../bower_components/bootstrap-daterangepicker/daterangepicker.css',
     //'../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css',
     '../fancybox/dist/jquery.fancybox.min.css',
-    
+
 ));
 ?>
 
@@ -31,7 +31,7 @@
     ?>
         <?php
 
-} elseif ($this->request->params['action'] == 'index') {?>
+} elseif ($this->request->params['action'] == 'index' || $this->request->params['action'] == 'oacoding') {?>
         <?php echo $this->Html->css(array(
     '../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
     '../dist/css/AdminLTE.min.css',
@@ -163,7 +163,7 @@ function js_array($array)
     </script>
 <?php
 
-} elseif ($this->request->params['action'] == 'index') {?>
+} elseif ($this->request->params['action'] == 'index' || $this->request->params['action'] == 'oacoding') {?>
 <?php echo $this->Html->script(array(
     '../bower_components/datatables.net/js/jquery.dataTables.min.js',
     '../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js',

@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::import('Controller', 'Users');
+App::import('Vendor', 'XLSXReader', array('file' => 'XLSXReader/XLSXReader.php'));
 
 class LanguagesController extends AppController
 {
@@ -11,6 +12,16 @@ class LanguagesController extends AppController
         $this->loadModel('User');
         $this->loadModel('UserLanguage');
     }
+
+    public function oacoding(){
+		ini_set('memory_limit', '2048M');
+    	$filepath = WWW_ROOT . 'answers-open-axial-coding-3.xlsx';
+		$xlsx = new XLSXReader($filepath);
+//		$sheets = $xlsx->getSheetNames();
+		$data = $xlsx->getSheetData(1);
+		unset($data[0]);
+		$this->set(compact('data'));
+	}
 
     public function index()
     {

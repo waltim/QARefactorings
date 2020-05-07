@@ -161,6 +161,11 @@ class UsersController extends AppController
 					return false;
 				}
 				$user = $this->User->findByEmail($this->request->data['User']['email']);
+//				pr(Configure::read('Security'));
+//				pr($user['User']);
+//				$nosecret = $decrypted = Security::rijndael($user['User']["password"], Configure::read('Security.salt'), 'decrypt');
+//				pr($nosecret);
+//				exit();
 				if (empty($user)) {
 					$this->register($this->request->data);
 //				$this->Session->setFlash(__('Email ou senha inválidos, tente novamente.'), 'Flash/error');

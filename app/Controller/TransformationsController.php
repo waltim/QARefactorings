@@ -421,7 +421,7 @@ class TransformationsController extends AppController
 
 	public function MatchDiffsAndReturnMetricsForAllCodes()
 	{
-		$arquivo = fopen('/home/walterlucas/export-data_survey/metrics-posnett.txt', 'r');
+		$arquivo = fopen('/home/walterlucas/export-data_survey/metrics-buse.txt', 'r');
 		$linhas = array();
 		while (!feof($arquivo)) {
 			$linhas[] = fgets($arquivo, 1024);
@@ -451,7 +451,7 @@ class TransformationsController extends AppController
 			$result = array(
 				'Result' => array(
 					'transformation_id' => $transformation['Transformation']['id'],
-					'metric_id' => 6,
+					'metric_id' => 5,
 					'before' => str_replace(',', '.', $metric[0]),
 					'after' => str_replace(',', '.', $metric[1]
 					),
@@ -468,14 +468,20 @@ class TransformationsController extends AppController
 		$transformations = $this->Transformation->find('all', array(
 			'recursive' => -1,
 			'order' => array('Transformation.id DESC'),
+			'conditions' => array(
+				"Transformation.apt" => "S",
+				"Transformation.id <=" => 1072
+			)
+
 		));
 		$projects = array();
 		foreach ($transformations as $tr) {
-//            pr($tr['Transformation']['site_link']);
+//			pr($tr['Transformation']['site_link']);
 			$aux = explode('/', $tr['Transformation']['site_link']);
-//            pr($aux);exit();
-			$projects[] = $aux[3];
+//           pr($aux);
+			$projects[] = $aux[4];
 		}
+//		exit();
 		pr(array_count_values($projects));
 		exit();
 	}
