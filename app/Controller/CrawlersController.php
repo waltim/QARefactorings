@@ -99,6 +99,8 @@ class CrawlersController extends AppController
 			$dom = new \DOMDocument('1.0', 'UTF-8');
 			$dom->loadHTML($html);
 
+//			pr($html);
+
 			$classname="question-hyperlink";
 			$finder = new DomXPath($dom);
 			$title = $finder->query("//*[contains(@class, '$classname')]");
@@ -112,10 +114,18 @@ class CrawlersController extends AppController
 			$qvote = htmlspecialchars($vote->item(0)->nodeValue);
 			$objectQuestion["Question"]["votes"] = $qvote;
 
+			$classname1="answered-accepted";
+			$answered = $finder->query("//*[contains(@class, '$classname1')]");
+			if($answered->length == 1){
+				$objectQuestion["Question"]["answer_accepted"] = true;
+			}else{
+				$objectQuestion["Question"]["answer_accepted"] = false;
+			}
+
 			$classname2="views";
 			$views = $finder->query("//*[contains(@class, '$classname2')]");
-			$qviews = str_replace("k views","000",trim(htmlspecialchars($views->item(0)->textContent)));
-			$objectQuestion["Question"]["views"] = $qviews;
+			$qviews = explode("k views",trim(htmlspecialchars($views->item(0)->textContent)));
+			$objectQuestion["Question"]["views"] = $this->convertKtoThousand($qviews[0]);
 
 			$classname3="status";
 			$answers = $finder->query("//*[contains(@class, '$classname3')]");
@@ -144,8 +154,8 @@ class CrawlersController extends AppController
 
 			$classname6="reputation-score";
 			$reputation = $finder->query("//*[contains(@class, '$classname6')]");
-			$userreputation = str_replace("k","000",trim($reputation->item(0)->textContent));
-			$objectQuestion["Question"]["User"]["reputation"] = $userreputation;
+			$userreputation = explode("k",trim($reputation->item(0)->textContent));
+			$objectQuestion["Question"]["User"]["reputation"] = $this->convertKtoThousand($userreputation[0]);
 			$objectQuestion["Question"]["description"] = null;
 //			pr($objectQuestion);
 
@@ -194,7 +204,7 @@ class CrawlersController extends AppController
 			if($key == 0){
 				continue;
 			}
-			pr($resp);
+//			pr($resp);
 
 			$doc3 = new \DOMDocument('1.0', 'UTF-8');
 			$doc3->encoding = 'utf-8';
@@ -217,27 +227,61 @@ class CrawlersController extends AppController
 			$answerspt = $finder2->query("//*[contains(@class, '$class')]");
 			$objectQuestion["Question"]["Answers"][$key]["post-text"] = htmlspecialchars($answerspt->item(0)->textContent);
 
-			$class="post-text";
+//			$class="post-text";
+//			$finder2 = new DomXPath($dom3);
+//			$answerspt = $finder2->query("//*[contains(@class, '$class')]");
+//			$objectQuestion["Question"]["Answers"][$key]["post-text"] = htmlspecialchars($answerspt->item(0)->textContent);
+//
+//			$class="post-text";
+//			$finder2 = new DomXPath($dom3);
+//			$answerspt = $finder2->query("//*[contains(@class, '$class')]");
+//			$objectQuestion["Question"]["Answers"][$key]["post-text"] = htmlspecialchars($answerspt->item(0)->textContent);
+
+			$class="post-signature";
 			$finder2 = new DomXPath($dom3);
-			$answerspt = $finder2->query("//*[contains(@class, '$class')]");
-			$objectQuestion["Question"]["Answers"][$key]["post-text"] = htmlspecialchars($answerspt->item(0)->textContent);
+			$postSignature = $finder2->query("//*[contains(@class, '$class')]");
+//			pr($postSignature);
 
-			$class="post-text";
-			$finder2 = new DomXPath($dom3);
-			$answerspt = $finder2->query("//*[contains(@class, '$class')]");
-			$objectQuestion["Question"]["Answers"][$key]["post-text"] = htmlspecialchars($answerspt->item(0)->textContent);
+			foreach ($postSignature as $k => $sig){
+				pr($sig);
+				$array = array_filter(explode(" ",trim($sig->nodeValue)));
+				pr($array);
+				$string = $array[1];
+				$month_number = date("n",strtotime($string));
+				$postime = date("Y-m-d", strtotime(str_replace("'","",$array[3]).'-'.$month_number.'-'.$array[2]));
 
-//			respondent
-			pr($objectQuestion);
-			exit();
+//				pr($array[0]);
+//				pr($postime);
 
+				if (array_key_exists("38", $array)) {
+					$respname = $array[37].' '.$array[38];
+					$respReputation = $this->convertKtoThousand($array[58]);
+				}else{
+					$respname = $array[37];
+					$respReputation = $this->convertKtoThousand($array[57]);
+				}
+
+				$objectQuestion["Question"]["Answers"][$key]["Respondents"][$k]["action"] = $array[0];
+				$objectQuestion["Question"]["Answers"][$key]["Respondents"][$k]["name"] = $respname;
+				$objectQuestion["Question"]["Answers"][$key]["Respondents"][$k]["post_date"] = $postime;
+				$objectQuestion["Question"]["Answers"][$key]["Respondents"][$k]["reputation"] = $respReputation;
+
+			}
+
+//			exit();
 		}
-
-
-
-
+		pr($objectQuestion);
 	}
 
-
-
+	public function convertKtoThousand($string = null){
+		$string = explode("k",$string);
+		$string = $string[0];
+		if(strpos($string,".")){
+			$string = $string."00";
+			$string = str_replace(".","",$string);
+		}else{
+			$string = $string."000";
+		}
+		return $string;
+	}
 }
