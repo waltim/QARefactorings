@@ -11,16 +11,33 @@ class LanguagesController extends AppController
         $this->layout = 'admin';
         $this->loadModel('User');
         $this->loadModel('UserLanguage');
+		$this->loadModel('Answer');
+		$this->loadModel('ResultQuestion');
+		$this->loadModel('Result');
+		$this->loadModel('Transformation');
     }
 
     public function oacoding(){
 		ini_set('memory_limit', '2048M');
     	$filepath = WWW_ROOT . 'answers-open-axial-coding-3.xlsx';
 		$xlsx = new XLSXReader($filepath);
-//		$sheets = $xlsx->getSheetNames();
-		$data = $xlsx->getSheetData(1);
-		unset($data[0]);
-		$this->set(compact('data'));
+
+		$array = $xlsx->getSheetData(1);
+		unset($array[0]);
+		foreach ($array as $key => $data) {
+			$array[$key][9] = "/transformations/view/".$this->searchTransformation($data[0]);
+		}
+		$this->set(compact('array'));
+	}
+
+	public function searchTransformation($answerId = null){
+    	$transformationId = $this->Answer->find('first', array(
+    		'recursive' => 2,
+    		'conditions' => array(
+    			'Answer.id' => $answerId
+			)
+			));
+    	return $transformationId["ResultQuestion"]['Result']['transformation_id'];
 	}
 
     public function index()

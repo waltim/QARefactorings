@@ -19,10 +19,10 @@
 					</tr>
 					</thead>
 					<tbody>
-					<?php foreach ($data as $evaluatings) { ?>
+					<?php foreach ($array as $evaluatings) { ?>
 						<tr>
 							<td>
-								<?= $evaluatings[0]; ?>
+								<a href="<?= $evaluatings[9]; ?>"><?= $evaluatings[0]; ?></a>
 							</td>
 							<td>
 								<?= $evaluatings[1]; ?>

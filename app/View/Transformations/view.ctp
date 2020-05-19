@@ -1,18 +1,10 @@
 <?php //pr(substr_count($transformation['Transformation']['code_before'], '<br>'));exit();?>
 <div class="row">
     <div class="col-md-12 pull-right">
-        <a href="<?= $this->webroot ?>transformations/edit/<?= $transformation['Transformation']['id'] ?>"
-           title="Editar">
-            <button class="btn btn-primary pull-right">Editar</button>
-        </a>
-        <a href="<?= $this->webroot ?>transformations/index/<?= $transformation['Transformation']['search_event_id'] ?>"
-           title="Tabela de transformações">
-            <button class="btn btn-primary pull-right">Banco da pesquisa</button>
-        </a>
-        <a href="<?= $this->webroot ?>transformations/AtualizaMetricasIndividual/<?= $transformation['Transformation']['id'] ?>"
-           title="Tabela de transformações">
-            <button class="btn btn-primary pull-right">Recalcular métricas</button>
-        </a>
+		<a href="<?= $this->webroot ?>languages/oacoding/"
+		   title="Tabela de transformações">
+			<button class="btn btn-primary pull-right">Voltar as respostas</button>
+		</a>
     </div>
     <div class="col-md-12">
         <!-- The time line -->
@@ -68,18 +60,6 @@
                             ?>
                             <xmp id="codigo1"
                                   class="brush: diff"><?php echo $codigoAntigo; ?></xmp>
-                            <form class="form-horizontal" method="post"
-                                  action="<?= $this->webroot ?>transformations/view/<?= $transformation['Transformation']['id']; ?>">
-                                <div class="box-body">
-                                    <div class="form-group">
-                                        <input name="data[Transformation][deletions]"
-                                               value="<?= $transformation['Transformation']['deletions'] ?>"
-                                               type="text" class="form-control"
-                                               placeholder="Destacar uma linha, ex: 1 ou para varias linhas, ex: 1,2,3...n">
-                                        <button type="submit" class="btn btn-info">Atualizar</button>
-                                    </div>
-                                </div>
-                            </form>
                         </div>
                         <div class="col-md-12">
                             <h3>Código transformado</h3>
@@ -88,18 +68,6 @@
                             //$codigoDepois = strip_tags($codigoDepois, '<br/>');
                             ?>
                             <xmp id="codigo2" class="brush: diff"><?php echo $codigoDepois; ?></xmp>
-                            <form class="form-horizontal" method="post"
-                                  action="<?= $this->webroot ?>transformations/view/<?= $transformation['Transformation']['id']; ?>">
-                                <div class="box-body">
-                                    <div class="form-group">
-                                        <input name="data[Transformation][additions]"
-                                               value="<?= $transformation['Transformation']['additions'] ?>"
-                                               type="text" class="form-control"
-                                               placeholder="Destacar uma linha, ex: 1 ou para varias linhas, ex: 1,2,3...n">
-                                        <button type="submit" class="btn btn-info">Atualizar</button>
-                                    </div>
-                                </div>
-                            </form>
                         </div>
                     </div>
                     <div class="timeline-footer">
@@ -183,31 +151,31 @@
                     </div>
                 </div>
             </li>
-            <li class="time-label">
-                  <span class="bg-blue">
-                    Métricas Qualitativas
-                  </span>
-            </li>
+<!--            <li class="time-label">-->
+<!--                  <span class="bg-blue">-->
+<!--                    Métricas Qualitativas-->
+<!--                  </span>-->
+<!--            </li>-->
             <!-- /.timeline-label -->
             <!-- timeline item -->
-            <li>
-                <i class="fa fa-pie-chart bg-purple"></i>
-
-                <div class="timeline-item">
-                    <!-- <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span> -->
-
-                    <h3 class="timeline-header"><a>Detalhe e respostas</a></h3>
-
-                    <div class="timeline-body">
-                        <?php foreach ($qualitativas as $key => $metrica) { ?>
-                            <p><b><?= $metrica['Metric']['acronym'] ?>:</b> <?= $metrica['Metric']['description'] ?></p>
-                        <?php } ?>
-                    </div>
-                    <div class="timeline-footer">
-                        .
-                    </div>
-                </div>
-            </li>
+<!--            <li>-->
+<!--                <i class="fa fa-pie-chart bg-purple"></i>-->
+<!---->
+<!--                <div class="timeline-item">-->
+                   <!-- <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span> -->
+<!---->
+<!--                    <h3 class="timeline-header"><a>Detalhe e respostas</a></h3>-->
+<!---->
+<!--                    <div class="timeline-body">-->
+<!--                        --><?php //foreach ($qualitativas as $key => $metrica) { ?>
+<!--                            <p><b>--><?//= $metrica['Metric']['acronym'] ?><!--:</b> --><?//= $metrica['Metric']['description'] ?><!--</p>-->
+<!--                        --><?php //} ?>
+<!--                    </div>-->
+<!--                    <div class="timeline-footer">-->
+<!--                        .-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </li>-->
             <!-- <li>
   <i class="fa fa-camera bg-purple"></i>
 
@@ -254,7 +222,8 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-<?php if (isset($respostas)) { ?>
+<?php// if (isset($respostas)) { ?>
+<?php if (false) { ?>
     <div class="row" style="margin-top: 10px;">
         <div class="col-md-12">
             <div class="box box-primary">
