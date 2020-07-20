@@ -31,9 +31,7 @@
                         <p><b>Data
                                 cadastro:</b> <?= date('d/m/Y', strtotime($transformation['Transformation']['created'])); ?>
                         </p>
-                        <p><b>Link da transformação:</b> <a target="_blank"
-                                                            href="<?= $transformation['Transformation']['site_link'].$transformation['Transformation']['line_start'] ?>">Clique
-                                aqui para abrir o local</a></p>
+                        <p><b>Link da transformação:</b> <a target="_blank"><?= $transformation['Transformation']['diff_id']?></a></p>
                     </div>
                     <div class="timeline-footer">
                         <!-- <a class="btn btn-primary btn-xs">editar</a>
@@ -222,8 +220,8 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-<?php// if (isset($respostas)) { ?>
-<?php if (false) { ?>
+<?php if (isset($respostas)) { ?>
+<?php// if (false) { ?>
     <div class="row" style="margin-top: 10px;">
         <div class="col-md-12">
             <div class="box box-primary">
@@ -234,8 +232,8 @@
                     <table id="example2" class="table table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th>Usuário</th>
-                            <th>Questão</th>
+                            <th>Participant</th>
+							<th>Questões</th>
                             <th>Escolha</th>
                             <th>Justificativa</th>
                         </tr>
@@ -243,17 +241,17 @@
                         <tbody>
                         <?php foreach ($respostas as $resp) { ?>
                             <tr>
-                                <td><?= $resp['User']['email'] ?></td>
-                                <td><?= $resp['ResultQuestion']['question_id'] ?></td>
-                                <td><?= $resp['Answer']['choice'] ?></td>
-                                <td><?= $resp['Answer']['justify'] ?></td>
+                                <td><?= "P".$resp['user_id'] ?></td>
+								<td><?= $resp['question_id'] ?></td>
+                                <td><?= $resp['choice'] ?></td>
+                                <td><?= $resp['justify'] ?></td>
                             </tr>
                         <?php } ?>
                         </tbody>
                         <tfoot>
                         <tr>
-                            <th>Usuário</th>
-                            <th>Questão</th>
+                            <th>Participant</th>
+							<th>Questões</th>
                             <th>Escolha</th>
                             <th>Justificativa</th>
                         </tr>

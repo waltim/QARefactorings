@@ -1,3 +1,9 @@
+<style>
+	.intersected{
+		color:red !important;
+	}
+</style>
+
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
@@ -22,7 +28,8 @@
                     <thead>
                     <tr>
                         <th>Número</th>
-                        <th>Linguagem</th>
+						<th>Id</th>
+						<th>IDE</th>
                         <th>Tipo</th>
                         <th>Transformação</th>
                         <th>Ações</th>
@@ -30,11 +37,18 @@
                     </thead>
                     <tbody>
                     <?php $i = 1; foreach ($transformations as $transformation) { ?>
-                        <tr>
+						<?php
+						if($transformation['Transformation']['intersection'] == "true"){
+							echo "<tr class=\"intersected\">";
+						}else{
+							echo "<tr>";
+						}
+						?>
                             <td><?=$i?></td>
-                            <td><?= $transformation['Language']['description']; ?></td>
+                            <td><?= $transformation['Transformation']['id']; ?></td>
+							<td><?= $transformation['Transformation']['ide']; ?></td>
                             <td><?= $transformation['TransformationType']['description']; ?></td>
-                            <td> <?= $transformation['Transformation']['code_after']; ?></td>
+						<td> <pre><?= $transformation['Transformation']['code_after']; ?></pre></td>
                             <td>
                                 <a href="<?= $this->webroot ?>transformations/view/<?= $transformation['Transformation']['id'] ?>"
                                    title="Visualizar">
@@ -57,8 +71,9 @@
                     <tfoot>
                     <tr>
                         <th>Número</th>
-                        <th>Linguagem</th>
-                        <th>Tipo</th>
+						<th>Id</th>
+						<th>IDE</th>
+						<th>Tipo</th>
                         <th>Transformação</th>
                         <th>Ações</th>
                     </tr>

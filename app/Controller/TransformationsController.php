@@ -502,6 +502,19 @@ class TransformationsController extends AppController
 			));
 		}
 
+		$arrayInterc = array(554,553,552,551,550,546,544,542,541,
+			540,539,538,537,536,535,534,533,528,527,525,
+			524,523,522,515,507,506,505,498,491,487,486,477,476,475,
+			474,473,470,469,468,466,465,464,463,461,460,459,458,457,456);
+//		pr($arrayInterc);exit();
+		foreach ($transformations as $key => $trf){
+			if(in_array($trf["Transformation"]['id'], $arrayInterc)){
+				$transformations[$key]["Transformation"]["intersection"] = "true";
+			}else{
+				$transformations[$key]["Transformation"]["intersection"] = "false";
+			}
+		}
+//		pr($transformations);exit();
 		$this->set(compact('transformations'));
 		$this->set('pesquisa', $pesquisa);
 	}
@@ -806,24 +819,45 @@ class TransformationsController extends AppController
 				'Transformation.id' => $id,
 			),
 		));
-		//pr($questao);exit();
+//		pr($questao);exit();
 		if (!empty($questao['ResultQuestion'])) {
 			$k = 0;
 			foreach ($questao['ResultQuestion'] as $rq) {
-				$respostas[$k] = $this->Answer->find('first', array(
+				$itemresp = $this->Answer->find('all', array(
 					'conditions' => array(
 						'Answer.result_question_id' => $rq['id'],
 					),
 				));
-				$k++;
+
+				foreach ($itemresp as $itrp){
+					$itrp['Answer']['question_id'] = $this->getQuestion($itrp['ResultQuestion']['question_id']);
+//					pr($itrp);exit();
+					$respostas[$k] = $itrp['Answer'];
+					$k++;
+				}
+//				pr($itemresp);exit();
+
+//				$respostas[$k];
+//				$k++;
 			}
-			$respostas = array_filter($respostas);
+//			$respostas = array_filter($respostas);
+//			pr($respostas);exit();
 			$this->set('respostas', $respostas);
 		}
 
 		$this->set('transformation', $show);
 		$this->set('quantitativas', $quantitativas);
 		$this->set('qualitativas', $qualitativas);
+	}
+
+	public function getQuestion($id = null){
+
+		$name = $this->Question->find('first',array(
+			'conditions' => array(
+				'Question.id' => $id,
+			),
+		));
+		return $name["Question"]["description"];
 	}
 
 	public

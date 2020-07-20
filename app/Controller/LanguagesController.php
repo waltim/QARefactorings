@@ -18,15 +18,51 @@ class LanguagesController extends AppController
     }
 
     public function oacoding(){
-		ini_set('memory_limit', '2048M');
-    	$filepath = WWW_ROOT . 'answers-open-axial-coding-3.xlsx';
+		ini_set('memory_limit', '4096M');
+    	$filepath = WWW_ROOT . 'answers-open-axial-coding-4.xlsx';
 		$xlsx = new XLSXReader($filepath);
 
 		$array = $xlsx->getSheetData(1);
 		unset($array[0]);
 		foreach ($array as $key => $data) {
 			$array[$key][9] = "/transformations/view/".$this->searchTransformation($data[0]);
+			$array[$key][10] = "P".$this->searchParticipant($data[1]);
 		}
+		$categories = array();
+		$k = 0;
+		foreach ($array as $key => $categorie){
+			if($categorie[5] == 'bad example'){
+				continue;
+			}else {
+				$categories[$k] = trim($categorie[4]);
+			}
+			$k++;
+		}
+
+		$categories = array_unique($categories);
+
+//		exit();
+		$subcategories = array();
+		$sk = 0;
+		foreach ($array as $key => $subcategorie){
+			if($subcategorie[5] == 'bad example'){
+				continue;
+			}
+			$kk = array_search($subcategorie[4], $categories);
+//			pr($subcategorie[4]);
+//			pr($categories);
+//			pr($kk);
+//			pr("teste");
+			$subcategories[$categories[$kk]][$sk] = trim($subcategorie[5]);
+			$sk++;
+		}
+		foreach ($subcategories as $key => $sub){
+			$subcategories[$key] = array_unique($sub);
+		}
+//		pr($subcategories);
+//		exit();
+
+		//pr($array);exit();
 		$this->set(compact('array'));
 	}
 
@@ -38,6 +74,23 @@ class LanguagesController extends AppController
 			)
 			));
     	return $transformationId["ResultQuestion"]['Result']['transformation_id'];
+	}
+
+	public function searchParticipant($resp=null)
+	{
+		$Responser = $this->Answer->find('first', array(
+			'recursive' => 1,
+			'conditions' => array(
+				'Answer.justify LIKE' => "%".trim(substr($resp, -15))."%"
+			)
+		));
+		if (sizeof($Responser) < 1) {
+		pr("Não achou o participant");
+//		pr(trim(substr($resp, 0, 30)));
+//		pr($Responser);
+		} else {
+		return $Responser["Answer"]['user_id'];
+		}
 	}
 
     public function index()

@@ -10,12 +10,13 @@
 					<thead>
 					<tr>
 						<th>ID</th>
+						<th>Participant</th>
 						<th>Answers</th>
-						<th>Open Coding</th>
-						<th>Polarity</th>
-						<th>Categories</th>
-						<th>Subcategories</th>
-						<th>Observation</th>
+<!--						<th>Open Coding</th>-->
+<!--						<th>Polarity</th>-->
+<!--						<th>Categories</th>-->
+<!--						<th>Subcategories</th>-->
+<!--						<th>Observation</th>-->
 					</tr>
 					</thead>
 					<tbody>
@@ -25,35 +26,39 @@
 								<a href="<?= $evaluatings[9]; ?>"><?= $evaluatings[0]; ?></a>
 							</td>
 							<td>
+								<?= $evaluatings[10]; ?>
+							</td>
+							<td>
 								<?= $evaluatings[1]; ?>
 							</td>
-							<td>
-								<?= $evaluatings[2]; ?>
-							</td>
-							<td>
-								<?= $evaluatings[3]; ?>
-							</td>
-							<td>
-								<?= $evaluatings[4]; ?>
-							</td>
-							<td>
-								<?= $evaluatings[5]; ?>
-							</td>
-							<td>
-								<?= $evaluatings[6]; ?>
-							</td>
+<!--							<td>-->
+<!--								--><?//= $evaluatings[2]; ?>
+<!--							</td>-->
+<!--							<td>-->
+<!--								--><?//= $evaluatings[3]; ?>
+<!--							</td>-->
+<!--							<td>-->
+<!--								--><?//= $evaluatings[4]; ?>
+<!--							</td>-->
+<!--							<td>-->
+<!--								--><?//= $evaluatings[5]; ?>
+<!--							</td>-->
+<!--							<td>-->
+<!--								--><?//= $evaluatings[6]; ?>
+<!--							</td>-->
 						</tr>
 					<?php } ?>
 					</tbody>
 					<tfoot>
 					<tr>
 						<th>ID</th>
+						<th>Participant</th>
 						<th>Answers</th>
-						<th>Open Coding</th>
-						<th>Polarity</th>
-						<th>Categories</th>
-						<th>Subcategories</th>
-						<th>Observation</th>
+<!--						<th>Open Coding</th>-->
+<!--						<th>Polarity</th>-->
+<!--						<th>Categories</th>-->
+<!--						<th>Subcategories</th>-->
+<!--						<th>Observation</th>-->
 					</tr>
 					</tfoot>
 				</table>
